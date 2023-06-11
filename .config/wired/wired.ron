@@ -1,0 +1,246 @@
+(
+    max_notifications: 0,
+    timeout: 5000,
+    poll_interval: 16,
+    //idle_threshold: 3600,
+    replacing_enabled: true,
+    replacing_resets_timeout: true,
+    closing_enabled: true,
+    //history_length: 10,
+    focus_follows: Mouse,
+    print_to_file: "/tmp/wired.log",
+    //min_window_width: 1,
+    //min_window_height: 1,
+    debug: false,
+    debug_color: Color(hex: "#00FFAA"), // Primary color for debug rectangles.
+    debug_color_alt: Color(hex: "#FF00FF"), // Secondary color for debug rectangles.
+
+    layout_blocks: [
+    (
+        name: "root",
+        parent: "",
+        hook: Hook(parent_anchor: MT, self_anchor: MT),
+        offset: Vec2(x: 0.0, y: 36.0),
+        render_anti_criteria: [Or([Note("osd"), Note("screenshot")])],
+        params: NotificationBlock((
+		        monitor: -1,
+		        border_width: 2.0,
+		        border_rounding: 10.0,
+		        // border_rounding: 0.0,
+
+                background_color: Color(hex: "#C01E1E2E"),
+                border_color: Color(hex: "#89B4FA"),
+                border_color_low: Color(hex: "#94E2D5"),
+                border_color_critical: Color(hex: "#F38BA8"),
+                border_color_paused: Color(hex: "#F5E0DC"),
+
+                gap: Vec2(x: 0.0, y: 8.0),
+                notification_hook: Hook(parent_anchor: MB, self_anchor: MT),
+	    )),
+    ),
+
+    (
+        name: "image",
+        parent: "root",
+        hook: Hook(parent_anchor: TL, self_anchor: TL),
+        offset: Vec2(x: 0.0, y: 0.0),
+        params: ImageBlock((
+                image_type: HintThenApp,
+                padding: Padding(left: 7.0, right: 0.0, top: 7.0, bottom: 7.0),
+                rounding: 3.0,
+                scale_width: 50,
+                scale_height: 50,
+                filter_mode: Lanczos3,
+        )),
+    ),
+
+    (
+        name: "summary",
+        parent: "image",
+        hook: Hook(parent_anchor: TR, self_anchor: TL),
+        offset: Vec2(
+            x: 0.0,
+            y: 0.0
+        ),
+
+        params: TextBlock((
+                text: "%s",
+                font: "Inter Bold 13",
+                ellipsize: NoEllipsize,
+                color: Color(
+                    hex: "#CCCCCC"
+                ),
+
+                padding: Padding(
+                    left: 7.0,
+                    right: 7.0,
+                    top: 7.0,
+                    bottom: 7.0
+                ),
+
+                dimensions: (
+                    width: (min: 50, max: 300),
+                    height: (min: 0, max: 2)
+                ),
+        )),
+        ),
+
+        (
+            name: "body",
+            parent: "summary",
+            hook: Hook(
+                parent_anchor: BL,
+                self_anchor: TL
+            ),
+
+            offset: Vec2(
+                x: 0.0,
+                y: 0.0
+            ),
+
+            params: TextBlock((
+                    text: "%b",
+                    font: "Inter 11",
+                    color: Color(
+                        hex: "#CCCCCC"
+                    ),
+
+		            ellipsize: NoEllipsize,
+                    padding: Padding(
+                        left: 7.0,
+                        right: 7.0,
+                        top: 0.0,
+                        bottom: 7.0
+                    ),
+                    dimensions: (
+                        width: (min: 200, max: 300),
+                        height: (min: 0, max: -1)
+                    ),
+            )),
+            ),
+
+            (
+                name: "progress",
+                parent: "body",
+                hook: Hook(parent_anchor: MB, self_anchor: MT),
+                offset: Vec2(x: 0.0, y: 0.0),
+                render_criteria: [Progress],
+                params: ProgressBlock((
+		                padding: Padding(left: 7.0, right: 7.0, top: 0.0, bottom: 7.0),
+		                border_width: 2.0,
+		                border_rounding: 8.0,
+		                fill_rounding: 7.0,
+
+                        border_color: Color(hex: "#5c5855"),
+                        background_color: Color(hex: "#5c5855"),
+                        fill_color: Color(hex: "#89B4FA"),
+
+		                width: -1.0,
+		                height: 16.0,
+	            )),
+            ),
+
+            (
+                name: "osd_root",
+                parent: "",
+                hook: Hook(parent_anchor: MB, self_anchor: MB),
+                offset: Vec2(x: 0.0, y: -20.0),
+                render_criteria: [Or([Note("osd"), Note("screenshot")])],
+                params: NotificationBlock((
+		                monitor: -1,
+		                border_width: 2.0,
+		                border_rounding: 10.0,
+		                // border_rounding: 0.0,
+
+                        background_color: Color(hex: "#C01E1E2E"),
+                        border_color: Color(hex: "#89B4FA"),
+                        border_color_low: Color(hex: "#94E2D5"),
+                        border_color_critical: Color(hex: "#F38BA8"),
+                        border_color_paused: Color(hex: "#F5E0DC"),
+
+                        gap: Vec2(x: 0.0, y: -10.0),
+                        notification_hook: Hook(parent_anchor: MT, self_anchor: MB),
+	            )),
+            ),
+
+            (
+                name: "osd_image",
+                parent: "osd_root",
+                hook: Hook(parent_anchor: MT, self_anchor: MT),
+                offset: Vec2(x: 0.0, y: 0.0),
+                params: ImageBlock((
+                        image_type: HintThenApp,
+                        padding: Padding(left: 35.0, right: 35.0, top: 7.0, bottom: 7.0),
+                        rounding: 3.0,
+                        scale_width: 70,
+                        scale_height: 70,
+                        filter_mode: Triangle,
+                )),
+            ),
+
+            (
+                name: "osd_wideimage",
+                parent: "osd_image",
+                hook: Hook(parent_anchor: MT, self_anchor: MT),
+                offset: Vec2(x: 0.0, y: 0.0),
+                render_criteria: [Note("screenshot")],
+                params: ImageBlock((
+                        image_type: AppThenHint,
+                        padding: Padding(left: 15.0, right: 15.0, top: 7.0, bottom: 7.0),
+                        rounding: 3.0,
+                        scale_width: 125,
+                        scale_height: 70,
+                        filter_mode: Triangle,
+                )),
+            ),
+
+            (
+                name: "osd_summary",
+                parent: "osd_image",
+                hook: Hook(parent_anchor: MB, self_anchor: MT),
+                offset: Vec2(x: 0.0, y: 0.0),
+                params: TextBlock((
+                        text: "%s",
+                        font: "Inter 12",
+                        ellipsize: End,
+                        color: Color(hex: "#CCCCCC"),
+                        padding: Padding(left: 15.0, right: 15.0, top: 0.0, bottom: 7.0),
+                        dimensions: (width: (min: 1, max: 200), height: (min: 0, max: 0)),
+                )),
+            ),
+
+            (
+                name: "osd_progress",
+                parent: "osd_summary",
+                hook: Hook(parent_anchor: MB, self_anchor: MT),
+                offset: Vec2(x: 0.0, y: 0.0),
+                render_criteria: [Progress],
+                params: ProgressBlock((
+                        padding: Padding(left: 15.0, right: 15.0, top: 0.0, bottom: 7.0),
+                        border_width: 2.0,
+                        border_rounding: 8.0,
+		                fill_rounding: 7.0,
+
+                        border_color: Color(hex: "#5c5855"),
+                        background_color: Color(hex: "#5c5855"),
+                        fill_color: Color(hex: "#94E2D5"),
+
+		                width: 134.0,
+		                height: 16.0,
+                )),
+            ),
+            ],
+
+            // https://github.com/Toqozz/wired-notify/wiki/Shortcuts
+            shortcuts: ShortcutsConfig (
+                notification_interact: 1,
+                notification_close: 2,
+                // notification_closeall: 99,
+                notification_pause: 9,
+
+                notification_action1: 3,
+                // notification_action2: 99,
+                // notification_action3: 99,
+                // notification_action4: 99,
+            ),
+            )

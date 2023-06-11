@@ -1,0 +1,21 @@
+static const float colors[18][3] = {{
+    {{{color0.red}, {color0.green}, {color0.blue}}},
+    {{{color1.red}, {color1.green}, {color1.blue}}},
+    {{{color2.red}, {color2.green}, {color2.blue}}},
+    {{{color3.red}, {color3.green}, {color3.blue}}},
+    {{{color4.red}, {color4.green}, {color4.blue}}},
+    {{{color5.red}, {color5.green}, {color5.blue}}},
+    {{{color6.red}, {color6.green}, {color6.blue}}},
+    {{{color7.red}, {color7.green}, {color7.blue}}},
+    {{{color8.red}, {color8.green}, {color8.blue}}},
+    {{{color9.red}, {color9.green}, {color9.blue}}},
+    {{{color10.red}, {color10.green}, {color10.blue}}},
+    {{{color11.red}, {color11.green}, {color11.blue}}},
+    {{{color12.red}, {color12.green}, {color12.blue}}},
+    {{{color13.red}, {color13.green}, {color13.blue}}},
+    {{{color14.red}, {color14.green}, {color14.blue}}},
+    {{{color15.red}, {color15.green}, {color15.blue}}},
+
+    {{{foreground.red}, {foreground.green}, {foreground.blue}}},
+    {{{background.red}, {background.green}, {background.blue}}},
+}};

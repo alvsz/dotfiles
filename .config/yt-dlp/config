@@ -1,0 +1,2 @@
+--downloader aria2c
+-o /mnt/hdd/Videos/yt-dlp/%(title)s.%(ext)s
