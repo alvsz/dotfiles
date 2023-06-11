@@ -1,0 +1,41 @@
+(defwidget pwcalculator [cmd class]
+  (box :orientation "v"
+       :space-evenly false
+       :spacing 10
+       :class class
+
+    (input :value domain
+           :onchange "eww update domain='{}'"
+           :onaccept cmd
+           :hexpand true)
+
+    (input :value secret
+           :onchange "eww update secret='{}'"
+           :onaccept cmd
+           :hexpand true
+           :password true)
+
+    (button :onclick cmd
+            :hexpand true
+      "ativar")))
+
+(defwindow pwcalc
+  :monitor 0
+  :stacking "fg"
+  ;; :focusable true
+  :windowtype "dialog"
+  ;; :exclusive false
+  ;; :namespace "eww_pwcalc"
+  :wm-ignore false
+  (pwcalculator
+    :class "pwcalc"
+    :cmd "pwcalculator.lua '${secret}' '${domain}' | xclip -selection c; ${EWW_CMD} close pwcalc; ${EWW_CMD} update domain=''; ${EWW_CMD} update secret='';"))
+
+(defwindow pwcalc-wayland
+  :monitor 0
+  :focusable true
+  :exclusive false
+  :namespace "eww_pwcalc"
+  (pwcalculator
+    :class "pwcalc"
+    :cmd "pwcalculator.lua '${secret}' '${domain}' | wl-copy -p; ${EWW_CMD} close pwcalc-wayland; ${EWW_CMD} update domain=''; ${EWW_CMD} update secret=''"))

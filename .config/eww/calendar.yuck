@@ -1,0 +1,471 @@
+(defwidget calendario []
+    (box :orientation "v"
+         :class "base"
+         :style "padding: 0.8em"
+         :space-evenly false
+         :spacing 5
+      (label :text {mesano}
+             :style "font-size: 15pt; font-weight: bold;"
+             :halign "center")
+
+      (box :orientation "h"
+           :space-evenly "true"
+           :style "font-weight: bold; color: ${color6}; margin: 0em 0.4em 0em 0.4em; font-size: .9em"
+           :hexpand "true"
+			  (label :text "dom")
+			  (label :text "seg")
+			  (label :text "ter")
+			  (label :text "qua")
+			  (label :text "qui")
+			  (label :text "sex")
+			  (label :text "sáb"))
+
+      (calendar :day {data.day}
+		 					  :month {data.month_num}
+		 					  :year {data.year}
+		 					  :show-details false
+		 					  :show-heading false
+		 	          :show-day-names false
+		 	          :show-week-numbers false
+		 					  :active true
+		 	          :onclick '${EWW_CMD} update events="$(${EWW_CONFIG_DIR}/scripts/eventos {0} {1} {2})"'
+							  :timeout "10s"
+			          :style "padding: 0.5em 0px 0px 0.5px"
+			  )))
+
+(defwidget events []
+  (overlay :visible { arraylength(events.events) > 0 || arraylength(events.todo) > 0 }
+      (box :space-evenly false
+           :orientation "v"
+    	     :spacing 16
+    	     :class "base"
+    	     :style "padding: 0.8em"
+    	     :hexpand true
+    	  (box :space-evenly false
+             :orientation "v"
+	    	     :visible { arraylength(events.events) > 0 }
+    	       :spacing 8
+
+	        (label :text "Eventos:"
+	               :style "font-weight: bold"
+	               :halign "start")
+
+	        (for entry in {events.events}
+		 		    (box :orientation "h"
+		 				     :space-evenly false
+		 			       :spacing 10
+		          (circular-progress :value 100
+		                             :thickness 5
+		      									     :valign "center"
+		      									     :style "color: ${color5}")
+		          (box :orientation "v"
+							     :space-evenly false
+		      			   :valign "center"
+		      			   :halign "start"
+		      	    (label :text {entry.name}
+		      			 	     :valign "center"
+		      			 	     :halign "start"
+		      		         :wrap true)
+		      	    (label :text "${entry.starttime} - ${entry.endtime}"
+		      				     :wrap true
+		      				     :halign "start"
+		      				     :valign "center"
+		      		         :visible { entry.starttime != "null" && entry.endtime != "null" ? true : false } )))
+		        ))
+
+    	  (box :space-evenly false
+             :orientation "v"
+	    	     :visible { arraylength(events.todo) > 0 }
+    	       :spacing 8
+
+	        (label :text "Tarefas:"
+	               :style "font-weight: bold"
+	    			     :halign "start")
+
+	        (for entry in {events.todo}
+		 		    (box :orientation "h"
+		 		         :space-evenly false
+		 		         :spacing 10
+		          (circular-progress :value 100
+		                             :thickness 5
+		                             :valign "center"
+		                             :style "color: ${color4}")
+		          (box :orientation "v"
+							     :space-evenly false
+							     :hexpand true
+		      			   :valign "center"
+		      		:halign "start"
+		            (label :text {entry.summary}
+		      			       :valign "center"
+		      			       :halign "start"
+		      			       :wrap true)
+
+		      			;; (label :text {entry.description}
+		      			;;        :visible {entry.description != "null" && entry.description != ""}
+		      			;;        :halign "start")
+
+		      			(label :text {entry.list + (entry.due == "null" ? "" :
+		      			                             ( " - " +
+		      			                                 (entry.duetime == "00:00" ? "" : entry.duetime)
+		      			                                 + entry.duedate )
+		      			                             )}
+		      			       :valign "center"
+		      			       :halign "start"
+		      			       :wrap true))
+
+		      		(checkbox :onchecked "notify-send check"
+		      		          :onunchecked "notify-send uncheck"
+		      		          :class "button3"
+		      		          :valign "center")
+		      		)
+		      		)))
+
+		  (button :class "button3"
+		          :onclick "scratchpad vdirsyncer sync"
+		          :halign "end"
+		          :valign "start"
+		          :style "padding: 0.4em; margin: 0.4em 0.4em 0.4em 0.4em"
+		    (image :path {gtkicons["sync-synchronizing-symbolic"]}))
+		  ))
+
+(defwidget musicnotif []
+  (box :orientation "v" :space-evenly false
+       :spacing 5
+       :visible { arraylength(music) > 0 ? true : false}
+    (for player in music
+      (box :style "padding: 7px"
+           :class "base"
+           :orientation "h"
+           :space-evenly false
+           :spacing 5
+           :height 70
+        (image :path "${player.artPath}" :image-height 56 :halign "start" :valign "center")
+
+        (box :orientation "v"
+             :hexpand true
+             :vexpand true
+             :valign "center"
+             :space-evenly false
+             :spacing 3
+          (label :text "${player.Metadata.title}" :style "font-weight: bold" :halign "start" :wrap true :valign "end")
+
+          (label :halign "start"
+                 :wrap true
+                 :visible { player?.Metadata?.artist?.[0] != "null" && player?.Metadata?.artist?.[0] != ""}
+                 :text {replace(replace(jq(player?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ')}
+            )
+
+          (scale :value { (player.Position / player.Metadata.length) * 100 }
+                 :orientation "h"
+                 :valign "end"
+                 :min 0 :max 100
+                 :active false
+                 :class "notifprogress"
+                 :visible { player?.Position != "null" && player?.Metadata?.length != "null" }
+            )
+          )
+
+        (centerbox :orientation "h" :class "mediacontrol" :valign "center" :halign "end"
+          (button :onclick "midia prev ${player.player}" "玲")
+          (button :onclick "midia play-pause ${player.player}" {player.PlaybackStatus == "Playing" ? "" : player.PlaybackStatus == "Paused" ? "契" : "懶"})
+          (button :onclick "midia next ${player.player}" "怜"))
+        ))
+    ))
+
+(defwidget notifs []
+  (box :orientation "v"
+       :vexpand true
+       :spacing 5
+       :visible { arraylength(notifs) > 0 ? true : false}
+       :space-evenly false
+    (box :orientation "h"
+      (label :text "Notificações"
+             :halign "start")
+      (button :onclick "${EWW_CMD} update notifs='[]'"
+              :halign "end" 
+        " Limpar"))
+
+    (box :orientation "v" :spacing 5 :space-evenly false
+      (for entry in notifs
+        (box :orientation "v"
+             :style "padding: 7px"
+             :class "base"
+             :spacing 7
+             :space-evenly false
+             :height 70
+        (box :orientation "h"
+             :valign "start"
+             :spacing 7
+             :space-evenly false
+          (image :path {entry.app_icon}
+                 :image-height 56
+                 :halign "start"
+                 :valign "start"
+                 :visible { entry.app_icon != "" && entry?.hints?.wired-note != "screenshot"})
+
+          (box :orientation "v"
+               :space-evenly false
+               :hexpand true
+               :spacing 5
+            (box :orientation "h"
+                 :hexpand true
+                 :space-evenly false
+                 :spacing 5
+              (label :text {replace(entry.summary, '[  ͏ ]+', ' ')}
+                     :halign "start"
+                     :wrap true
+                     :hexpand true
+                     :style "font-weight: bold")
+
+              (label :text {entry.time}
+                     :valign "start")
+
+              (button :onclick `${EWW_CMD} update notifs="$( echo '${notifs}' | jq 'del(.[] | select( .id == ${entry.id} ) )' )"`
+                      :halign "end"
+                      :valign "start"
+                      :class "layer3"
+                      :style "min-height: 20px; min-width: 20px"
+                (label :halign "center"
+                       :valign "center"
+                       :style "color: ${foreground}"
+                       :text "x")))
+
+            (label :text {replace(entry.body, '[  ͏ ]+', ' ')}
+                   :wrap true
+                   :halign "start"
+                   ;; :justify "fill"
+                   :visible { entry.body != "" })
+
+            (scale :value {entry.hints.value}
+                   :orientation "h"
+                   :hexpand true
+                   :valign "end"
+                   :class "notifprogress"
+                   :min 0 :max 100
+                   :active false
+                   :visible { entry?.hints?.value != "null" })))
+
+          (image :path {entry.app_icon}
+                 :image-width 350
+                 :halign "center"
+                 :visible { entry.app_icon != "" && entry?.hints?.wired-note == "screenshot"})
+
+          (box :orientation "h"
+               :spacing 10
+               :width 350
+               :halign "center"
+               :visible { entry.app_icon != "" && entry?.hints?.wired-note == "screenshot"}
+            (button :onclick `xdg-open '${entry.app_icon}' &`
+                    :style "padding: 7px; background-color: ${color4}; color: ${background}; border-radius: 10px"
+              "Abrir"
+              )
+            (button :onclick `rm '${entry.app_icon}' && ${EWW_CMD} update notifs="$( echo '${notifs}' | jq 'del(.[] | select( .id == ${entry.id} ) )' )"`
+                    :style "padding: 7px; background-color: ${background}; color: ${color5}; border-radius: 10px"
+              "Apagar")
+            )
+          )))))
+
+(defwidget kdeconnect []
+  (box :orientation "v" :space-evenly false :spacing 5
+       :visible { arraylength(kdeconnect) > 0 ? true : false}
+    (for device in kdeconnect
+      (box :orientation "v"
+           :space-evenly false
+           :class "base"
+           :style "padding: 5px;"
+           :spacing 5
+
+
+        (box :orientation "v"
+             :space-evenly false
+          (box :orientation "h"
+               :space-evenly false
+               :valign "center"
+               :spacing 5
+            (button :style "padding: 5px; min-height: 1.5em"
+                    :halign "start"
+                    :valign "fill"
+                    :class "layer2"
+                    :hexpand true
+                    :onclick `${EWW_CMD} update kdeconnect="$(${EWW_CMD} get kdeconnect | jq -c --unbuffered '( .[] | select(.id == \"${device.id}\").expanded ) |= ${device.expanded ? "false" : "true"}')"`
+              (label :text {device.name}
+                     :halign "start"
+                     :hexpand true
+                     :style "font-weight: bold;"
+                     :valign "center"))
+
+            (box :orientation "h"
+                 :space-evenly false 
+                 :vexpand true
+                 :spacing 5
+                 :class "layer2"
+                 :style "padding: 5px; min-height: 1.5em"
+                 :halign "end"
+                 :valign "fill"
+              (icon :size 22
+                    :path {gtkicons['drive-removable-media-symbolic']}
+                    :dark true
+                    :visible {device?.sftp?.isMounted == true})
+
+              (icon :size 22
+                    :path {gtkicons[device.connectivity_report.icon]}
+                    :dark true
+                    :visible {device?.connectivity_report?.cellularNetworkType != "" && device?.connectivity_report?.cellularNetworkType != "null"})
+
+              (icon :size 22
+                    :path {gtkicons[device.battery.icon]}
+                    :dark true)
+
+              (label :text "${device.battery.charge}%"))
+
+            )
+
+          (revealer :transition "slidedown"
+                    :reveal {device.expanded}
+            ;; :duration "550ms"
+            (box :orientation "v"
+                 :space-evenly true
+                 :spacing 5
+                 :class "actions"
+              (button :onclick 'busctl --user call org.kde.kdeconnect.daemon /modules/kdeconnect/devices/${device.id}/findmyphone org.kde.kdeconnect.device.findmyphone ring'
+                "Tocar")
+              (button :onclick 'busctl --user call org.kde.kdeconnect.daemon /modules/kdeconnect/devices/${device.id}/sftp        org.kde.kdeconnect.device.sftp ${device.sftp.isMounted ? "unmount" : "mount"}'
+                      :visible {device?.sftp?.isMounted != "null"}
+                {device?.sftp?.isMounted == true ? "Desmontar" : "Montar"})
+
+              (for folder in {device.sftp.getDirectories}
+                (button :onclick `nautilus -w "${folder.path}" &`
+                        :visible {device.sftp.isMounted}
+                  "Navegar ${folder.name}"))
+              ))
+          )       
+
+	      (for entry in {device.mpris}
+          (box :style "padding: 3px"
+               :class "layer2"
+               :orientation "h"
+               :space-evenly false
+               :visible {arraylength(search(entry.properties.Identity, device.name)) > 0}
+               :spacing 5
+               :height 70
+            (image :path {gtkicons[entry.artPath] != "null" ? gtkicons[entry.artPath] : gtkicons["phone"]}
+                   :height 64
+                   :halign "start" :valign "center")
+
+            (box :orientation "v" 
+                 :hexpand true 
+                 :valign "center" 
+                 :spacing 3
+                 :space-evenly false
+              (label :text {entry.Metadata.title}
+                     :style "font-weight: bold"
+                     :halign "start" :valign "end"
+                     :wrap true )
+              (label :halign "start"
+                     :wrap true
+                     :visible {entry.Metadata.artist != "" && entry?.Metadata?.artist != "null" ? true : false}
+                     :text {replace(replace(jq(entry?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ')}
+                )
+              (scale :value { (entry.Position / entry.Metadata.length) * 100 }
+                     :orientation "h"
+                     :valign "end"
+                     :min 0 :max 100
+                     :visible { entry?.Metadata?.length != "null" && entry?.Position != "null" }
+                     :active false
+                     :class "notifprogress")
+              ;; (label :text {search(entry.properties.Identity, device.name)})
+              )
+
+            (centerbox :orientation "h" :class "mediacontrol" :valign "center" :halign "end"
+              (button :onclick "busctl --user call ${entry.bus} /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player Previous"
+                "玲")
+              (button :onclick "busctl --user call ${entry.bus} /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player PlayPause"
+                {entry.PlaybackStatus == "Playing" ? "" : entry.PlaybackStatus == "Paused" ? "契" : "懶"})
+              (button :onclick "busctl --user call ${entry.bus} /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player Next"
+		            "怜"))))
+
+
+(for entry in {device.notifications}
+  (box :orientation "h"
+       :style "padding: 7px"
+       :class "layer2"
+       :height 70
+       :valign "start"
+       :spacing 7
+       :space-evenly false
+    (image :path {entry.iconPath} :image-height 56 :halign "start" :valign "start"
+           :visible { "${entry.iconPath}" != "" })
+
+    (box :orientation "v"
+         :space-evenly false
+         :hexpand true
+
+      (box :orientation "h"
+           :space-evenly false
+           :spacing 5
+           :hexpand true
+        (label :text {replace((entry.appName + ' - ' + entry.title), '[  ͏ ]+', ' ')}
+               :halign "start" :hexpand true
+               :style "font-weight: bold" :wrap true)
+        (button :onclick "busctl --user call org.kde.kdeconnect.daemon /modules/kdeconnect/devices/${device.id}/notifications/${entry.id} org.kde.kdeconnect.device.notifications.notification dismiss"
+                :halign "end" :valign "start"
+                :class "layer4"
+                :style "min-height: 20px; min-width: 20px"
+          (label :halign "center" :valign "center"
+                 :style "color: ${foreground}; "
+                 :text "x")))
+      (label :text {replace(entry.text, '[  ͏ ]+', ' ')} :wrap true
+             :halign "start"
+             :visible {entry.text != "" ? true : false})))
+  )))
+))
+
+(defwidget calendar-win []
+  (scroll :vscroll true
+          :hscroll false
+          :vexpand true
+          :style "padding-bottom: 0px"
+          :class "calwindow"
+    (box :spacing 10
+         :orientation "v"
+         :space-evenly false
+         :style "margin-bottom: 8px"
+      (calendario)
+      (events)
+      (kdeconnect)
+      (musicnotif)
+
+      (notifs)
+      ))
+  )
+
+(defwindow calendar
+  :monitor 0
+  :geometry
+  (geometry :x "-10px"
+            :y "43px"
+            :width "480px"
+            :height "80%"
+            :anchor "top right")
+  :stacking "fg"
+
+  :focusable true
+  :exclusive true
+
+  ;; :windowtype "dialog"
+  :wm-ignome true
+  (calendar-win))
+
+(defwindow calendar-wayland
+  :monitor 0
+  :geometry
+  (geometry :x "10px"
+	          :y "10px"
+	          :width "480px"
+	          :height "80%"
+	          :anchor "top right")
+	:stacking "overlay"
+	:exclusive false
+	:focusable false
+	:namespace "eww_dashboard"
+	(calendar-win))

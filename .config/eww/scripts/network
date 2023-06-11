@@ -1,0 +1,10 @@
+#!/bin/env sh
+
+# echo $0
+# echo $PWD
+
+gdbus monitor --system --dest org.freedesktop.NetworkManager | while read line; do
+	# echo "pwd: $PWD"
+	"$(dirname -- "$0")/network.lua"
+	# eww-network.lua
+done

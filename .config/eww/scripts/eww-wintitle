@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "$XDG_SESSION_DESKTOP"
+
+dwm-msg --ignore-reply subscribe client_focus_change_event focused_title_change_event | jq --unbuffered -cr | while read line; do
+    new_win_id=$( echo $line | jq .client_focus_change_event.new_win_id )
+    if [ $new_win_id != 'null' ]; then
+	win_title=$( dwm-msg get_dwm_client $new_win_id | jq -cr .name )
+    else
+	win_title=$( echo $line | jq -cr '.focused_title_change_event.new_name' )
+    fi
+    [ $win_title = 'null' ] && echo "$XDG_SESSION_DESKTOP" || echo "$win_title"
+done

@@ -1,0 +1,16 @@
+#!/bin/sh
+layold=$( dwm-msg get_monitors | jq -r '.[].layout.symbol.old' )
+# echo $layold
+layout=$( dwm-msg get_monitors | jq -r '.[].layout.symbol.current' )
+# echo $layout
+dwm-msg --ignore-reply subscribe layout_change_event > /tmp/dwm-layout &
+
+while true; do
+    layout=$( tail /tmp/dwm-layout -n 10 | jq -r '.layout_change_event.new_symbol' )
+    if [ "$layout" != "$layold" ] && [ "$layout" != "" ]; then
+	echo "$layout"
+	layold=$layout
+    fi
+    sleep 1
+    break
+done

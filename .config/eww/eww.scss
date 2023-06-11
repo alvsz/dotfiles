@@ -1,0 +1,375 @@
+
+* {
+  all:unset;
+}
+
+@import '/home/mamba/.cache/wal/colors.scss';
+
+// .workspaces button {
+//     // font: 12pt Siji;
+//     // margin: 2px
+// }
+
+.workspaces button:hover {
+    color: $color2;
+}
+
+calendar {
+    &:selected {
+        background-color: $color9;
+        border-radius: 10px;
+        box-shadow: inset 0 -0.4em 0 0 darken($color9, 10%);
+        // box-shadow: inset 0 -0.4em 0 0 $color9, inset 0 0 0 1px $color9;
+	    // box-shadow: inset 0 -8px 0 0 rgba($color3, 0.5), inset 0 0 0 1px $color3;
+    }
+    &:indeterminate {
+	    color: rgba(205, 219, 249, 0.3);
+    }
+}
+
+.urge {
+    color: $color1;
+}
+.sele {
+    color: $color4;
+}
+.occu {
+    color: $color3;
+}
+
+.bribar trough highlight {
+    background-color: $color8;
+    color: #000000;
+    border-radius: 5px;
+}
+
+.volbar trough highlight {
+    background-color: $color4;
+    color: #000000;
+    border-radius: 5px;
+}
+
+.powermenu > overlay > label {
+    color: $background;
+    margin: 0px 0px 3px 0px;
+    font-weight: bold;
+    font-size: 9pt;
+}
+
+.powermenu {
+    button {
+        border-radius: 20px;
+        font: 2.1em Symbols Nerd Font;
+        min-height: 2.57em;
+        min-width: 2.57em;
+    }
+    button:hover {
+        -gtk-icon-shadow: 3px 3px darken($color3, 50%);
+        text-shadow: 3px 3px darken($color3, 50%);
+        box-shadow: 0 0px 5px 2px #060606;
+    }
+    .off {
+        background-color: lighten($background, 5%);
+        color: $color6;
+        text-shadow: 3px 3px $color1;
+        -gtk-icon-shadow: 3px 3px $color1;
+    }
+}
+
+
+.systembar {
+    scale trough {
+        background-color: #4e4e4e;
+        border-radius: 10px;
+        min-height: 13em;
+        min-width: 0.8em;
+        box-shadow: 0 3px 4px 2px #060606;
+    }
+    scale trough:hover {
+        background-color: #4a4a4a;
+    }
+    label {
+        font: 18pt Symbols Nerd Font;
+        text-shadow: 2px 2px #060606;
+    }
+}
+
+.mediacontrol {
+    button {
+        font: 11pt Symbols Nerd Font;
+        padding: 10px;
+        border-radius: 20px;
+        min-width: 2em;
+    }
+    button:hover {
+        // background-color: rgba(100, 100, 100, 0.2);
+        background-color: rgba($color7, 0.2);
+    }
+}
+
+.volumebar scale trough highlight {
+    background-color: $color11;
+    color: #000000;
+    border-radius: 10px;
+}
+
+.micbar scale trough highlight {
+    background-color: $color12;
+    color: #000000;
+    border-radius: 10px;
+}
+.backlightbar scale trough highlight {
+    background-color: $color13;
+    color: #000000;
+    border-radius: 10px;
+}
+.ssdbar scale trough highlight {
+    background-color: $color14;
+    color: #000000;
+    border-radius: 10px;
+}
+.hddbar scale trough highlight {
+    background-color: $color15;
+    color: #000000;
+    border-radius: 10px;
+}
+
+.poweroptions {
+    background-color: lighten($background, 5%);
+    border-radius: 10px;
+    font: 2.09em Symbols Nerd Font;
+
+    button {
+        border-radius: 10px;
+        min-height: 3.47em;
+        min-width: 3.47em;
+    }
+    button:hover {
+        background-color: lighten($background, 10%);
+    }
+}
+
+
+.openwindows {
+    box {
+        background-color: $background;
+        border-radius: 5px;
+        padding: 3px 6px 3px 6px;
+        border-width: 1px;
+        border-style: solid;
+    }
+
+    .focused { border-color: $color5; }
+    .urgent { border-color: $color1; }
+    .scratchpad { border-color: $color6; }
+    .floating { border-color: $foreground; }
+    .norm { border-color: $background; }
+}
+
+.notifprogress trough {
+    min-height: 0.5em;
+    padding: 3px;
+    background-color: rgba($color7, 0.2);
+    border-radius: 10px;
+    highlight {
+        background-color: $color2;
+        color: #000000;
+        border-radius: 10px;
+    }
+}
+
+
+.actions {
+    margin: 5px 0px 0px 0px;
+
+    button {
+        @extend .layer2;
+        padding: 5px;
+    }
+
+    button:hover {
+        @extend .layer3;
+    }
+}
+
+.base {
+    background-color: lighten($background, 4%);
+    border-radius: 10px;
+}
+.layer2 {
+    background-color: lighten($background, 8%);
+    border-radius: 10px;
+}
+.layer3 {
+    background-color: lighten($background, 12%);
+    border-radius: 10px;
+}
+.layer4 {
+    background-color: lighten($background, 16%);
+    border-radius: 10px;
+}
+
+.mediabox {
+    background: linear-gradient(rgba(lighten($background, 16%), 0.4), lighten($background, 4%));
+    color: $foreground;
+    padding: 5px;
+    border-radius: 10px 10px 0px 0px;
+    label {
+        text-shadow: 1px 1px 2px $background, 0 0 1em $color2, 0 0 0.2em $background;
+    }
+}
+
+.calwindow {
+    border-width: 2px;
+    border-style: solid;
+    border-color: lighten($background, 15%);
+    background-color: $background;
+    border-radius: 10px;
+    font: 11pt FiraCode Nerd Font;
+    color: $foreground;
+    padding: 8px;
+}
+
+.pwcalc {
+    background-color: $background;
+    padding: 8px;
+    font: 11pt FiraCode Nerd Font;
+    color: $foreground;
+
+    entry {
+        min-height: 4em;
+        padding: 0em 1em 0em 1em;
+        min-width: 15em;
+        @extend .base;
+        selection {
+            background-color: $foreground;
+            color: $background;
+        }
+    }
+
+    button {
+        min-height: 3em;
+        min-width: 10em;
+        @extend .layer2;
+        &:hover {
+            @extend .layer3;
+        }
+    }
+
+}
+
+.gnomish {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+
+    .bluetooth {
+        background-color: $color4;
+    }
+    .bluetooth:hover {
+        background: darken($color4, 15%);
+    }
+    .wifi {
+        background-color: $color3;
+    }
+    .wifi:hover {
+        background: darken($color3, 15%);
+    }
+
+    button {
+        border-radius: 25%/100%;
+        padding: 7px;
+        color: $background
+    }
+
+}
+
+.kdeprogress {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: lighten($background, 6%);
+    border-radius: 10px;
+            min-height: 1.5em;
+    trough {
+        border-radius: 10px;
+            min-height: 1.5em;
+        progress {
+            background-color: $color2;
+            border-radius: 5px;
+            min-height: 1.5em;
+        }
+    }
+}
+
+.verticalpower {
+    @extend .base;
+    .power {
+        padding: 10px;
+        background-color: $color3;
+        border-radius: 10px;
+
+        &:hover {
+        -gtk-icon-shadow: 3px 3px darken($color3, 50%);
+        }
+    }
+}
+.button3 {
+    @extend .layer3;
+    &:hover {
+        @extend .layer4;
+    }
+}
+
+.menuapps {
+    background-color: $color2;
+    box.linked {
+        background-color: $color3;
+        entry.combo {
+            background-color: $color4;
+        }
+        button.combo {
+            background-color: $color5;
+        }
+        window.popup {
+            background-color: $color6;
+        }
+    }
+    label {
+        background-color: $background;
+        color: $foreground;
+    }
+}
+
+.barwindow {
+    background-color: transparent;
+    padding: 3px 10px 0px 10px;
+    font: 11pt FiraCode Nerd Font;
+    color: $foreground;
+}
+
+.lockscreen {
+    background-color: $background;
+    // font: 10pt FiraCode Nerd Font;
+    color: $foreground;
+
+
+    .musicbar trough {
+        min-height: 0.5em;
+        background-color: lighten($background, 10%);
+        highlight {
+            background-color: $color2;
+        }
+    }
+    .controls {
+        margin: 0 10px 0 10px;
+
+        button {
+            font: 2.1em Symbols Nerd Font;
+            border-radius: 50%;
+            image { margin: 10px; }
+            &:hover { box-shadow: 0 0 5px 0 darken($background, 10%); }
+            /* offset-x | offset-y | blur-radius | spread-radius | color */
+        }
+        .active { -gtk-icon-shadow: 3px 3px darken($color2, 10%); }
+    }
+}

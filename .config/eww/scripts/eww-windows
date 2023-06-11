@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#tags=( $( dwm-msg get_tags | jq '.[].bit_mask' ) )
+#icon=( $( dwm-msg get_tags | jq '.[].name' ) )
+
+#ewwwindows="[  ]"
+
+dwm-msg --ignore-reply subscribe tag_change_event client_focus_change_event focused_title_change_event focused_state_change_event | jq -cr --unbuffered | while read line; do
+    if [[ $( jq '.client_focus_change_event.new_win_id' <<< $line ) != "null" ]]; then
+	new_win_id=$( echo $line | jq '.client_focus_change_event.new_win_id')
+	#echo $new_win_id
+    fi
+    
+    #echo teste
+    monitor0=$( dwm-msg get_monitors | jq -c '.[0]' )
+    #echo $monitor0
+    tags=$( jq '.tagset.current' <<< $monitor0 )
+    clients=( $( jq '.clients.all[]' <<< $monitor0 ) )
+    
+    #tags=$( dwm-msg get_monitors | jq '.[0].tagset.current' )
+    #clients=( $( dwm-msg get_monitors | jq '.[0].clients.all[]' ) )
+    
+    #echo $tags
+    
+    for client in ${clients[@]}; do
+	clientinfo=$( dwm-msg get_dwm_client $client | jq -r '"{\"name\": " + "\(.name | tojson)" + ", \"tags\": " + "\(.tags)" + ", \"window_id\": " + "\(.window_id)" + ", \"scratchkey\": " + "\(.scratchkey)" + ", \"states\": " + "\(.states)" + "}"' | jq -c )
+	if [[ $(( $( jq .tags <<< $clientinfo ) & $tags )) != 0 ]]; then
+	    if [[ $client == $new_win_id ]]; then
+		clientinfo=$( jq '. += {"focused": true}' <<< $clientinfo )
+	    else
+		clientinfo=$( jq '. += {"focused": false}' <<< $clientinfo )
+	    fi
+	    echo $clientinfo
+	fi
+    done | jq -cs
+done
+

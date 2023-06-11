@@ -1,0 +1,27 @@
+#!/bin/env bash
+
+if [ "$1" ]; then
+	dia=$1
+else
+	dia=$(date +%d)
+fi
+
+if [ "$2" ]; then
+	mes=$(($2 + 1))
+else
+	mes=$(date +%m)
+fi
+
+if [ "$3" ]; then
+	ano=$3
+else
+	ano=$(date +%Y)
+fi
+
+eww update mesano="$(date -d "${ano}-${mes}-${dia}" '+%B %Y')"
+
+eventos=$(khal list "${dia}/${mes}/${ano}" eod --format '{{ "name": "{title}", "starttime": "{start-time}", "endtime": "{end-time}" }}' | tail -n +2 | jq -cs 'sort_by(.starttime)')
+
+todo=$(todo --porcelain | jq -c '(.[] | select(.due)) |= (. as $task | .duetime |= ($task.due | strflocaltime("%H:%M")) | .duedate |= ($task.due | strftime("%d/%m") ) ) | del(.[] | select(.completed or ( .start > now ) )) | sort_by(.due) | reverse')
+
+echo "{\"events\": ${eventos}, \"todo\": ${todo}}"

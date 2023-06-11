@@ -1,0 +1,113 @@
+(defwidget playerprogress []
+      (scale :value { (music[0].Position / music[0].Metadata.length) * 100 }
+           :orientation "h"
+           :valign "end"
+           :min 0 :max 100
+           :visible { music?.[0]?.Metadata?.length != "null" && music?.[0]?.Position != "null" }
+           :active false
+           :class "musicbar"))
+
+(defwidget albumcover []
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 10
+    (image :path {music[0].artPath} :image-height 150)
+    (scroll :hscroll true
+            :vscroll false
+            :hexpand true
+      ;; :min-width 200
+      (box :orientation "v"
+           :halign "start"
+           :valign "center"
+           :space-evenly false
+           :spacing 5
+        (label :text {music[0].Metadata.title}
+               :halign "start"
+               :style "font-weight: bold;")
+        (label :text {replace(replace(jq(music?.[0]?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ')}
+               :halign "start")))
+    ))
+
+(defwidget mediacontrol []
+  (box :orientation "h"
+       :space-evenly true
+       :spacing 2
+       :halign "center"
+       :valign "center"
+       :class "controls"
+    (button :onclick "notify-send oi"
+            :class {music?.[0]?.Shuffle == true ? "active" : ""}
+      (icon :path {gtkicons[music?.[0]?.Shuffle == true ? "media-playlist-shuffle-symbolic" : "media-playlist-consecutive-symbolic"]}
+            :dark true
+            :size 25))
+
+    (button :onclick "notify-send oi"
+      (icon :path {gtkicons["media-skip-backward-symbolic"]}
+            :dark true
+            :size 25))
+
+    (button :onclick "notify-send oi"
+      (icon :path {gtkicons[
+                            music?.[0]?.PlaybackStatus == "Playing" ? "media-playback-pause-symbolic" :
+                            music?.[0]?.PlaybackStatus == "Paused" ? "media-playback-start-symbolic" :
+                            "media-playback-stop-symbolic"
+                            ]}
+            :dark true
+            :size 25))
+
+    (button :onclick "notify-send oi"
+      (icon :path {gtkicons["media-skip-forward-symbolic"]}
+            :dark true
+            :size 25))
+
+    (button :onclick "notify-send oi"
+            :class { ( music?.[0]?.LoopStatus == "Track" || music?.[0]?.LoopStatus == "Playlist" ) ? "active" : ""}
+      (icon :path {gtkicons[
+                            music?.[0]?.LoopStatus == "Track" ? "media-playlist-repeat-song-symbolic" :
+                            "media-playlist-repeat-symbolic"
+                            ]}
+            :dark true
+            :size 25)) 
+    ))
+
+(defwidget lockscreen []
+  (box :orientation "v"
+       :spacing 0
+       :space-evenly false
+       :valign "fill"
+       :class "lockscreen"
+       :style "padding: 0; border-radius: 0"
+    (playerprogress)
+
+    (centerbox :orientation "h"
+               :hexpand true
+               :valign "center"
+               :style "margin-right: 10px"
+      (albumcover)
+      (mediacontrol)
+      "teste"
+      )
+    ))
+
+(defwindow lockscreen
+  :monitor 0
+  :geometry
+  (geometry :x "0px"
+            :y "-10%"
+            :width "55%"
+            :height "150px"
+            :anchor "bottom center")
+  :stacking "fg"
+  :wm-ignore true
+  (lockscreen))
+
+(defwindow lockscreen-wayland
+  :monitor 0
+  :geometry
+  (geometry :x "0px"
+            :y "10%"
+            :width "55%"
+            :height "150px"
+            :anchor "bottom center")
+  :stacking "overlay"
+  (lockscreen))

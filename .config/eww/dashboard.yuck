@@ -1,0 +1,371 @@
+(defwidget wifipicker []
+  (revealer :reveal {wifi.expand}
+            :transition "slidedown"
+            :class "gnomish"
+    (scroll :hscroll false
+            :vscroll true
+            :height 153
+            :style "margin-top: 15px;"
+      (box :orientation "v"
+           :space-evenly false
+           :spacing 3
+
+        (for ap in {jq(wifi.AccessPoints, "sort_by(.active, .Strength) | reverse")}
+          (button :onclick "nmcli dev wifi connect '${ap.Ssid}' || scratchpad nmtui"
+                  :class "wifi"
+            (box :orientation "h"
+                 :space-evenly false
+                 :spacing 20
+                 :style "padding: 0em 3em 0em 3em"
+              (icon :path {gtkicons[ap.icon]} :size 30 :dark false)
+
+              (label :text {ap.Ssid}
+                     :halign "start"
+                     :wrap true
+                     :hexpand true)
+
+              (label :text "Conectado"
+                     :valign "center"
+                     :visible {ap.active}
+                     :style "font-size: 0.7em;")))
+          ))
+      )
+	  ))
+
+(defwidget btpicker []
+  (revealer :reveal {jq(bluetooth, `.[] | select( .value.bool != null ) | .value.bool`  )}
+            :transition "slidedown"
+            :class "gnomish"
+    (scroll :hscroll false
+            :vscroll true
+            :height { ( 15 + arraylength(jq(bluetooth, '[.[] | select( .value."org.bluez.Device1" )]'))*44 + (arraylength(jq(bluetooth, '[.[] | select( .value."org.bluez.Device1" )]')) - 1)*3 ) < 153 ? ( 15 + arraylength(jq(bluetooth, '[.[] | select( .value."org.bluez.Device1" )]'))*44 + (arraylength(jq(bluetooth, '[.[] | select( .value."org.bluez.Device1" )]')) - 1)*3 ) : 153 }
+            :style "margin-top: 1em;"
+      (box :orientation "v"
+           :space-evenly false
+           :spacing 3
+
+        (for ap in {jq(bluetooth, '[.[] | select( .value."org.bluez.Device1" )]')}
+          (button :onclick `notify-send "Bluetooth" "$(bluetoothctl ${ap.value['org.bluez.Device1'].Connected.data ? 'disconnect' : 'connect'} '${ap.value['org.bluez.Device1'].Address.data}')" &`
+                  :class "bluetooth"
+            (box :orientation "h"
+                 :space-evenly false
+                 :spacing 20
+                 :style "padding: 0em 3em 0em 3em"
+              (icon :path {gtkicons[ap.value['org.bluez.Device1'].Icon.data + "-symbolic"]} :dark false :size 30)
+
+              (label :text {ap.value["org.bluez.Device1"].Name.data}
+                     :halign "start"
+                     :wrap true
+                     :hexpand true)
+
+              (label :text "Conectado"
+                     :valign "center"
+                     :visible {ap.value["org.bluez.Device1"].Connected.data}
+                     :style "font-size: 0.7em;")))
+          )))
+	  ))
+
+(defwidget powermenu []
+  (box :orientation "v"
+       :space-evenly false
+       :spacing 0
+    (box :spacing 15
+         :orientation "h"
+         :class "powermenu"
+      (button :onclick "busctl set-property org.freedesktop.NetworkManager /org/freedesktop/NetworkManager org.freedesktop.NetworkManager WirelessEnabled b ${!wifi.Power}"
+			        :onrightclick `eww update wifi="$(printf '%s' '${wifi}' | jq '.expand |= ${!wifi.expand}')"`
+			        :timeout "100s"
+			        :class { wifi.Power ? "" : "off" }
+			        :style {wifi.Power ? "color: ${background}; background-color: ${color3};" : ""}
+			  (icon :dark {!wifi.Power}
+			        :size 60
+			        :path {gtkicons[replace(jq(wifi.AccessPoints, ".[] | select(.active) | .icon"), '^"|"$', '')]}))
+
+      (button :onclick "busctl set-property org.bluez ${jq(bluetooth, `.[] | select(.value."org.bluez.Adapter1") | .key`)} org.bluez.Adapter1 Powered b ${!jq(bluetooth, `.[] | select(.value."org.bluez.Adapter1") | .value."org.bluez.Adapter1".Powered.data`)}"
+			        :onrightclick `eww update bluetooth="$(printf '%s' '${bluetooth}' | jq '(.[] | select( .value.bool != null ).value.bool) |= ${!jq(bluetooth, `.[] | select( .value.bool != null ) | .value.bool`  )}')"`
+			        :timeout "100s"
+			        :class { jq(bluetooth, `.[] | select(.value."org.bluez.Adapter1") | .value."org.bluez.Adapter1".Powered.data`) ? "" : "off" }
+			        :style { jq(bluetooth, `.[] | select(.value."org.bluez.Adapter1") | .value."org.bluez.Adapter1".Powered.data`) ? "color: ${background}; background-color: ${color4};" : ""}
+			  {jq(bluetooth, `.[] | select(.value."org.bluez.Adapter1") | .value."org.bluez.Adapter1".Powered.data`) ? "" : ""})
+
+      (button :onclick "mouse touchpad"
+              :class { touchpad == 0 ? "off" : "" }
+	            :style {touchpad == 0 ? "" : "color: ${background}; background-color: ${color5};"}
+	      (icon :path {gtkicons['input-touchpad-' + (touchpad == 0 ? "off" : "on")]}
+	            :size 50
+	            :dark {touchpad == 0}))
+
+      (button :onclick {
+        redshiftstatus == "running" && redshift != 'Manhã' ? "pkill -USR1 redshift"
+        : gammastatus == "running" && gamma != 'Manhã' ? "pkill -USR1 gammastep"
+        : "" }
+
+              :class {
+        ( redshiftstatus == "running" && ( redshift == "Nenhum" || redshift == "Manhã" ) )
+        || ( gammastatus == "running" && ( gamma == "Nenhum" || gamma == "Manhã" ) )
+        ? "off"
+        : "" }
+
+	            :style {
+	      ( redshiftstatus == "running" && ( redshift == "Nenhum" || redshift == "Manhã" ) )
+	      || ( gammastatus == "running" && ( gamma == "Nenhum" || gamma == "Manhã" ) )
+	      ? ""
+	      : "color: ${background}; background-color: ${color6};"}
+	      "ﯧ") 
+
+      (button :onclick "${EWW_CMD} close dashboard && sleep 0.5s && screenshot &"
+	            :style "color: ${background}; background-color: ${color7};"
+	      ""))
+
+	  (wifipicker)
+
+	  (btpicker)
+
+	  ))
+
+(defwidget system []
+  (box :spacing 6
+       :orientation "h"
+       :valign "fill"
+    (box :spacing 10
+	       :orientation "h"
+	       :class "systembar"
+	       :space-evenly true
+	    (verticalmetric :class "volumebar"
+	                    :onchange "pamixer --set-volume {}"
+	                    :value {jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length')}
+	                    :text { (jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .mute' )) ? "婢": "墳" })
+
+	    (verticalmetric :class "micbar"
+	                    :onchange "pactl set-source-volume '${painfo.default_source_name}' {}%" 
+	                    :value {jq(pasources, '.[] | select(.name == "${painfo.default_source_name}") | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length')}
+	                    :text { (jq(pasources, '.[] | select(.name == "${painfo.default_source_name}") | .mute' )) ? "" : "" })
+
+	    (verticalmetric :class "backlightbar"
+	                    :value backlight
+	                    :onchange "xbacklight -set {}"
+	                    :text "")
+
+	    (verticalmetric :class "ssdbar"
+	                    :value {EWW_DISK["/"].used_perc}
+	                    :onchange "" :text "﬙")
+
+	    (verticalmetric :class "hddbar"
+	                    :value {EWW_DISK["/mnt/hdd"].used_perc}
+	                    :onchange ""
+	                    :text ""))
+
+    (overlay :visible { arraylength(music) > 0 ? true : false}
+		  (image :path "${music[0].artPath}"
+		         :image-width 227
+		         :valign "start"
+		         :halign "fill"
+		         :class "base")
+
+		  (box :orientation "v"
+		       :space-evenly false
+		       :halign "fill"
+		       :valign "end"
+		       :spacing 2
+		       :class "mediabox"
+		    (label :text {music[0].Metadata.title}
+		           :limit-width 20
+		           :style "font-weight: bold;"
+		           :halign "center")
+
+		    (label :text { replace(replace(jq(music?.[0]?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ') }
+		           :limit-width 20
+		           :halign "center"
+               :visible { music?.[0]?.Metadata?.artist?.[0] != "null" && music?.[0]?.Metadata?.artist?.[0] != "" ? true : false })
+
+		    (centerbox :orientation "h"
+		               :class "mediacontrol"
+				  (button :onclick "midia prev"
+				    "玲")
+				  (button :onclick "midia play-pause"
+				    { music[0].PlaybackStatus == "Playing" ? "" : music[0].PlaybackStatus == "Paused" ? "契" : "懶"})
+				  (button :onclick "midia next"
+				    "怜"))
+
+				(scale :value { (music?.[0]?.Position / music?.[0]?.Metadata?.length) * 100 }
+               :orientation "h"
+               :valign "end"
+               :halign "fill"
+               :min 0
+               :max 100
+               :active false
+               :class "notifprogress"
+               :visible { music?.[0]?.Position != "null" && music?.[0]?.Metadata?.length != "null" })))
+		))
+
+(defwidget stats []
+  (box :spacing 20
+       :space-evenly true
+       :height 120
+       :vexpand true
+       :valign "center"
+       :style "font: 19pt Symbols Nerd Font"
+    (overlay
+      (circular-progress :thickness 10
+                         :style "color: ${color3}"
+                         :start-at 50
+                         :value {EWW_BATTERY['BAT0'].capacity})
+
+      (baticon :level {EWW_BATTERY['BAT0'].capacity}
+               :charging { EWW_BATTERY['BAT0'].status == "Charging" }
+               :dark true
+               :size 40)
+
+      ;; (image :path  :tooltip {EWW_BATTERY['BAT0'].status} :image-width 40)
+      ;; (label :text "")
+      )
+
+    (overlay
+      (circular-progress :thickness 10
+                         :style "color: ${color5}"
+                         :start-at 75
+                         :value {EWW_RAM.used_mem_perc})
+      (label :text "﬙"))
+
+    (overlay
+      (circular-progress :thickness 10
+                         :style "color: ${color7}"
+                         :start-at 0
+                         :value {EWW_TEMPS['CORETEMP_PACKAGE_ID_0']})
+      (label :text ""))))
+
+(defwidget internet []
+  (overlay :vexpand true
+	  (graph :thickness 2 :time-range "60s" :line-style "round" :style "color: ${color6}" :value {EWW_NET["wlan0"].NET_DOWN} :dynamic true)
+	  (graph :thickness 2 :time-range "60s" :line-style "round" :style "color: ${color4}" :value {EWW_NET["wlan0"].NET_UP} :dynamic true)
+	  ))
+
+(defwidget poweroptions []
+  (box :orientation "h"
+       :space-evenly true
+       :spacing 10
+       :class "poweroptions"
+		(button :onclick "loginctl kill-session self" "﫼")
+		(button :onclick "loginctl lock-session" "")
+		(button :onclick "systemctl reboot" "ﰇ")
+		(button :onclick "systemctl poweroff"
+		        :style "color: ${color5}" "")
+		))
+
+(defwidget poweroptionsvertical []
+  (box :orientation "v"
+       :space-evenly true
+       :spacing 5
+       :class "verticalpower"
+       :style "padding: 10px"
+       :valign "center"
+       :halign "center"
+		(button :onclick "systemctl poweroff"
+		        :valign "center"
+		        :class "power"
+		        :style "background-color: ${color1}"
+      (icon :path {gtkicons['system-shutdown']}
+            :dark false
+            :size 25))
+
+    (button :onclick "systemctl reboot"
+		        :valign "center"
+		        :class "power"
+		        :style "background-color: ${color2}"
+      (icon :path {gtkicons['system-reboot']}
+            :dark false
+            :size 25))
+
+		(button :onclick "loginctl kill-session self"
+		        :valign "center"
+		        :class "power"
+		  :style "background-color: ${color3}"
+      (icon :path {gtkicons['system-log-out']}
+            :dark false
+            :size 25))
+
+		(button :onclick "loginctl lock-session"
+		        :valign "center"
+		        :class "power"
+		        :style "background-color: ${color4}"
+      (icon :path {gtkicons['system-lock-screen']}
+            :dark false
+            :size 25)))
+  )
+
+(defwidget fetch []
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 10
+    (poweroptionsvertical)
+    
+    (box :class "base"
+         :hexpand true
+      (label :text ' : ${name}@${host}
+ : ${wm}
+ : ${kernel}
+󰮯 : ${pacman} instalados
+ : ${flatpak}, ${flatpakactive} ativo${ flatpakactive != 1 ? "s" : "" }
+󰡨 : ${dockerall - 1}, ${dockeractive - 1} ativo${ dockeractive - 1 != 1 ? "s" : "" }
+󰅐 : ${uptime.uptime_days > 0 ? ( uptime.uptime_days + ( uptime.uptime_days > 1 ? " dias" : " dia" ) + ", " ) : ""}${uptime.uptime_hours + ( uptime.uptime_hours != 1 ? " horas" : " hora" )}, ${uptime.uptime_minutes + ( uptime.uptime_minutes != 1 ? "m" : " minuto" )}'
+        ;; :class "base"
+        :style "font-size: 1.1em"
+        :halign "center"
+        :valign "center"
+        :wrap true
+        ;; :hexpand true
+        ))
+
+   ))
+
+(defwidget dashboard []
+  (box :spacing 15
+	     :orientation "v"
+	     :space-evenly false
+	     :class "calwindow"
+	  (box :orientation "v"
+	       :space-evenly false
+	       :spacing 10
+	    (label :text "${strlength(data.hour_24) == 1 ? '0${data.hour_24}' : data.hour_24 }:${strlength(data.minute) == 1 ? '0${data.minute}' : data.minute }"
+	           :style "font-size: 41pt")
+	    (label :text "${semana}, ${data.day} de ${mes}"
+	           :style "font-size: 15pt"))
+
+	  (powermenu)
+	  (system)
+	  (stats)
+	  (fetch)
+	  ;; (internet)
+	  ;; (poweroptions)
+	  ))
+
+(defwindow dashboard
+  :monitor 0
+  :geometry
+  (geometry :x "10px"
+	          :y "43px"
+	          :width "480px"
+	          :height "80%"
+	          :anchor "top left")
+  :stacking "fg"
+
+  :exclusive false
+  :focusable true
+
+  ;; :windowtype "dialog"
+  :wm-ignome true
+  (dashboard))
+
+(defwindow dashboard-wayland
+  :monitor 0
+  :geometry
+  (geometry :x "10px"
+	          :y "10px"
+	          :width "480px"
+	          :height "80%"
+	          :anchor "top left")
+	:stacking "overlay"
+	:exclusive false
+	:focusable false
+	:namespace "eww_dashboard"
+	(dashboard))

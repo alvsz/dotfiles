@@ -1,0 +1,11 @@
+#!/bin/env sh
+
+# echo $0
+# echo $PWD
+
+# busctl call org.bluez / org.freedesktop.DBus.ObjectManager GetManagedObjects -j | jq '.data[] | to_entries | . += [{ key: "expand", value: false }]' -c --unbuffered
+
+gdbus monitor --system --dest org.bluez | while read line; do
+	busctl call org.bluez / org.freedesktop.DBus.ObjectManager GetManagedObjects -j |
+		jq '.data[] | to_entries | . += [{ key: "expand", value: {bool: false} }]' -c --unbuffered
+done

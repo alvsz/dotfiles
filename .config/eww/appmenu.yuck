@@ -1,0 +1,53 @@
+(defwidget appmenu []
+  (scroll :vscroll true
+          :hscroll true
+          :class "calwindow"
+    (box :orientation "v"
+         :space-evenly true
+         :spacing 10
+         :valign "start"
+      (box :orientation "h"
+           :space-evenly false
+           :spacing 5
+           :class "base"
+           :style "padding: 5px"
+        (icon :size 40
+              :path {gtkicons['system-search']}
+              :dark true
+              ;; :style "margin: 5px 0px 5px 5px"
+              :halign "start")
+        (input :onchange `./scripts/appmenu.lua search '{}'`
+               :onaccept `gtk-launch "${menuapps[0].desktop_file}" & ${EWW_CMD} close appmenu`
+               :class "base"
+               :hexpand true
+               :halign "fill"))
+
+      (for app in {jq(menuapps, "sort_by(.name)")}
+        (button :onclick `gtk-launch "${app.desktop_file}" & ${EWW_CMD} close appmenu`
+          (box :orientation "h"
+               :spacing 5
+               :space-evenly false
+               :class "base"
+               :style "padding: 5px"
+            (image :path {app.icon_path} :image-width 40)
+            (label :text {app.name})))
+        )))
+  )
+
+  (defwindow appmenu
+    :stacking "overlay"
+    :monitor 0
+    :focusable true
+    :exclusive false
+    ;; :namespace "eww"
+    ;; :windowtype "dialog"
+    ;; :wm-ignore true
+    :geometry
+    (geometry :x "0px"
+              :y "114px"
+              :width "40%"
+              :height "50%"
+              :anchor "top center")
+    (appmenu)
+
+    )

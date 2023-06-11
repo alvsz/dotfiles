@@ -1,0 +1,427 @@
+(defwidget activewindow []
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 5
+       :visible { arraylength(jq(dwm-ipc, ".[] | select(.is_selected == true) | .eww_windows")) > 0 }
+    (label :text { replace(jq(dwm-ipc, ".[] | select(.is_selected == true) | .eww_windows | .[] | select(.focused) | .name" ),'"', '') }
+           :limit-width 60)
+    (label :text ""
+           :visible { jq(dwm-ipc, ".[] | select(.is_selected == true) | .eww_windows | .[] | select(.focused) | .states.is_floating") } )))
+
+(defwidget workspace [onclick onrightclick onmiddleclick urgent selected occupied]
+		    (button :valign "center"
+			          :onclick onclick
+			          :onrightclick onrightclick
+			          :onmiddleclick onmiddleclick
+		            :style "font: 13pt siji"
+			          :class {urgent ? "urge" : selected ? "sele" : occupied ? "occu" : "norm" }
+
+			    (label :text {urgent ? "" : selected ? "" : occupied ? "" : "" })
+  ))
+
+(defwidget dwm []
+  (box :class "workspaces"
+       :orientation "h"
+       :halign "start"
+       :valign "fill"
+       :vexpand true
+       :spacing 5
+       :visible {wm == "dwm"}
+       :style "background-color: ${background}; border-radius: 5px; padding: 0px 5px 0px 5px;"
+       :space-evenly false
+
+	  (box :orientation "h" :space-evenly true :halign "start" :valign "fill" :spacing 10
+		  (for tag in {jq(dwm-ipc, ".[] | select(.is_selected == true) | .eww_tags")}
+		    (workspace :onclick "dwm-msg run_command view ${tag.bit_mask}"
+		               :onrightclick "dwm-msg run_command toggleview ${tag.bit_mask}"
+		               :onmiddleclick "dwm-msg run_command tag ${tag.bit_mask}"
+		               :urgent {tag.urgent == 1}
+		               :selected {tag.selected == 1}
+		               :occupied {tag.occupied == 1})))
+
+	  (button :halign "start"
+		        :onclick 'dwm-msg run_command setlayoutsafe ${jq(dwm-ipc, ".[] | select(.is_selected == true) | .layout.address.old")}'
+		        :onrightclick "dwm-msg run_command setlayoutsafe $( dwm-msg get_layouts | jq '.[2].address' )"
+		        :onmiddleclick "dwm-msg run_command setlayoutsafe $( dwm-msg get_layouts | jq '.[1].address' )"
+		  (label :text {replace(jq(dwm-ipc, ".[] | select(.is_selected == true) | .layout.symbol.current"), '"', '')} :style "font: 13pt siji" :yalign 0.5))
+
+		;; (activewindow)
+		))
+
+(defwidget dwl []
+  (box :class "workspaces"
+       :orientation "h"
+       :halign "start"
+       :valign "fill"
+       :vexpand true
+       :visible {wm == "dwl"}
+       :style "background-color: ${background}; border-radius: 5px; padding: 0px 5px 0px 5px;"
+       :space-evenly false
+
+    (for monitor in dwl-ipc
+      (box :spacing 8
+           :orientation "h"
+           :space-evenly false
+           :visible {monitor.active == 1}
+
+	      (box :orientation "h"
+	           :space-evenly true
+	           :halign "start"
+	           :valign "fill"
+	           :spacing 15 
+		      (for tag in {monitor.tags}
+		        (workspace :onclick ""
+		                   :onrightclick ""
+		                   :onmiddleclick ""
+		                   :urgent {tag.state == 2}
+		                   :selected {tag.state == 1}
+		                   :occupied {tag.clients > 0})))
+
+	      (button :halign "start"
+		            :onclick ''
+		            :onrightclick ""
+		            :onmiddleclick ""
+		      (label :text {monitor.layout.new.symbol}
+		             :style "font: 13pt siji"
+		             :yalign 0.5))
+
+        (box :space-evenly false
+             :spacing 5
+             :visible false
+					   :visible {monitor.title != ""}
+				  (icon :path {
+					  gtkicons?.[monitor?.appid] != "null" ? gtkicons[monitor?.appid] :
+					  gtkicons?.[monitor?.title] != "null" ? gtkicons[monitor?.title] :
+					  gtkicons["exec"] }
+					      :dark true
+					      :size 20)
+
+          (label :limit-width 60
+		             :text {monitor.title})
+		      ;; "====="
+		      ;; (label :text {monitor.appid})
+	        ))
+      )))
+
+(defwidget allwindows []
+  (eventbox :onscroll "if [[ {} == 'up' ]]; then dwm-msg run_command focusstack 1; elif [[ {} == 'down' ]]; then dwm-msg run_command focusstack -1; fi"
+            :visible {wm == "dwm"}
+		(box :orientation "h"
+		     :space-evenly false
+		     :spacing 5
+		     :class "openwindows"
+		  (for client in {jq(dwm-ipc, ".[] | select(.is_selected == true) | .eww_windows")}
+			  (button :onclick "dwm-msg run_command zoom ${client.window_id}"
+			          :onrightclick {client.focused ? `dwm-msg run_command tag '${ client.tags == jq(dwm-ipc, "[.[] | select(.is_selected == true) | .eww_tags[].bit_mask] | add") ? jq(dwm-ipc, ".[] | select(.is_selected == true) | .tagset.current") :
+			                                                  jq(dwm-ipc, "[.[] | select(.is_selected == true) | .eww_tags[].bit_mask] | add")}'` : ""}
+				        :onmiddleclick "dwm-msg run_command killclient ${client.window_id}"
+				  (box :orientation "h"
+				       :space-evenly false
+				       :width 200
+				       :spacing 3
+					     :class {
+					  client.states.is_urgent ? "urgent" :
+					  arraylength(jq(dwm-ipc, ".[] | select(.is_selected == true) | .eww_windows")) == 1 ? "norm" :
+					  !client.focused ? "norm" :
+					  client.scratchkey != 0 ? "scratchpad" :
+					  client.states.is_floating ? "floating" :
+					  "focused"
+					  }
+
+					  (icon :path {
+					    gtkicons?.[client.class] != "null" ? gtkicons[client.class] :
+					    gtkicons?.[client.instance] != "null" ? gtkicons[client.instance] :
+					    gtkicons?.[client.title] != "null" ? gtkicons[client.title] :
+					    gtkicons["exec"] }
+					        :dark true
+					        :size 20)
+					        
+					  (label :text {client.name}
+					         :valign "end"
+					         :limit-width { "${client.states.is_floating}" == "true" ? 18 : 20 }
+					                                                          :hexpand true
+					                                                          :halign "start")
+
+					  (label :text ""
+					         :visible { "${client.states.is_floating}" == "true" ? true : false }
+					                                                      :halign "start")
+
+					  (label :text "󰐃"
+					         :halign "start"
+					         :visible { client.tags == jq(dwm-ipc, "[.[0] | .eww_tags[].bit_mask] | add") })
+					  ))
+				)))
+	)
+
+(defwidget archdash []
+  (eventbox :halign "start"
+		        :valign "fill"
+		        :cursor "pointer"
+		        :onclick `${EWW_CMD} open dashboard${xorwayland == "wayland" ? "-wayland" : ""} --toggle`
+		        :style "background-color: ${background}; border-radius: 5px;"
+		(label :text ""
+		       :style "color: #1793d1; font: 12pt Symbols Nerd Font; margin: 0px 14px 0px 14px;")))
+
+(defwidget leftstuff []
+  (box :orientation "h"
+       :halign "start"
+       :valign "fill"
+       :hexpand true
+       :vexpand true
+       :space-evenly false
+       :spacing 10
+    (archdash)
+    (dwl)
+		(dwm)
+		(allwindows)
+		))
+
+(defwidget music []
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 4
+       :visible { arraylength(music) == 0 ? false : music[0].PlaybackStatus != "Stopped" ? true : false }
+	  (label :text "🎵")
+    (scroll :hscroll true
+            :vscroll false
+            :width 350
+      (button :onclick "midia play-pause"
+              :onrightclick "midia stop"
+	      (box :orientation "h"
+             :space-evenly false
+             :halign "center"
+             :style "background-color: ${background}; border-radius: 5px; padding: 3px;"
+             :spacing 4
+	        (label :text {replace(replace(jq(music?.[0]?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ')}
+	               :visible { music?.[0]?.Metadata?.artist?.[0] != "null" && music?.[0]?.Metadata?.artist?.[0] != "" ? true : false})
+	        (label :text "-"
+	               :visible { music?.[0]?.Metadata?.artist?.[0] != "null" && music?.[0]?.Metadata?.artist?.[0] != "" ? true : false})
+	        (label :text "${music[0].Metadata.title}")))
+	    )))
+
+(defwidget volumebar []
+  (eventbox :valign "center"
+            :onhover "${EWW_CMD} update volumehover=true"
+            :onhoverlost "${EWW_CMD} update volumehover=false"
+            :onclick "volume mute"
+            :tooltip "Volume: ${jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length | round')}%"
+	  (box :orientation "h"
+		     :space-evenly false
+		     :spacing 0
+		  (revealer :transition "slideright"
+			          :reveal volumehover
+			          :duration "550ms"
+			  (scale :value {jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length | round')}
+				       :class "volbar"
+				       :min 0
+				       :max 101
+				       :style "min-width: 50px"
+				       :onchange "pamixer --set-volume {}"))
+		  (button :onclick "volume mute" 
+		    (label :text { (jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .mute' )) ? "婢" : "墳"}
+		      ; {mute != "true" ? "墳" : "婢"}
+		      :style "font: 12pt Symbols Nerd Font; color: ${color4}"))
+		  )))
+
+(defwidget backlightbar []
+  (eventbox :valign "center"
+            :onhover "${EWW_CMD} update backlighthover=true"   
+            :onhoverlost "${EWW_CMD} update backlighthover=false"
+            :tooltip "Luminosidade: ${backlight}%" 
+	  (box :orientation "h"  
+		     :space-evenly "false"  
+		     :spacing 0
+		  (revealer :transition "slideright" 
+			          :reveal backlighthover
+			          :duration "550ms"
+			  (scale :class "bribar" 
+				       :value backlight 
+				       :onchange "xbacklight -set {}" 
+				       :orientation "h" 
+				       :flipped false
+				       :style "min-width: 50px"
+				       :max 101 
+				       :min 0))
+		  (label :text "" :style "font: 12pt Symbols Nerd Font; color: ${color8}")
+		  )))
+
+(defwidget tray []
+  (box :orientation "h"
+       :space-evenly false
+       :spacing 0
+    (revealer :reveal {trayexpand && arraylength(tray) > 0 }
+              :transition "slideleft"
+      (box :orientation "h"
+           :space-evenly false 
+           :spacing 5
+           :style 'margin: 0px 5px 0px 0px'
+        (for entry in tray
+          (button :onrightclick { entry.cmd + " &" }
+                  :onclick { entry.menu_cmd + " &" }
+                  :tooltip {entry.ToolTip}
+            (image :image-height 20
+                   :path {entry.IconPath})))
+        ))
+
+    (button :onclick `${EWW_CMD} update trayexpand=${ arraylength(tray) > 0 ? (trayexpand == false) : false}`
+      (label :style "font: 12pt siji; color: ${color3}"
+             :yalign 0.6
+             :text "")
+      )))
+
+(defwidget volume []
+  (eventbox :onclick "volume mute"
+            :onscroll "volume {}"
+    (box :orientation "h"
+         :spacing 5
+         :space-evenly false
+      (label :text { jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .mute' ) ? ""
+        : jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length') < 40 ? ""
+        : ""}
+             :style "font: 12pt siji; color: ${color4}")
+      (label :text {jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length | round') + "%"}
+             :visible { jq(pasinks, '.[] | select(.name == "${painfo.default_sink_name}") | .mute' ) == false })))
+  )
+
+(defwidget wifi []
+  (eventbox :valign "center"
+		        :onhover "${EWW_CMD} update wifihover=true"
+		        :onhoverlost "${EWW_CMD} update wifihover=false"
+		        :onclick "networkmanager_dmenu &"
+		(box :space-evenly false
+		     :orientation "h"
+		     :spacing 0
+		  (revealer :transition "slideright"
+				        :duration "550ms"
+				        :reveal wifihover
+				(eventbox :cursor "pointer"
+				  (label :text {replace((
+		                             jq(wifi.AccessPoints, ".[] | select(.active) | .Ssid")),
+		                            '^"|"$',
+		                            '')}
+				         :limit-width 10
+				         :visible {wifi?.ActiveConnection != "/"}
+				    )))
+			(icon :dark true
+			      :size 25
+			      :path {gtkicons[replace(jq(wifi.AccessPoints, ".[] | select(.active) | .icon"), '^"|"$', '')]})
+			)))
+
+(defwidget battery []
+  (box :orientation "h"
+       :spacing 5
+       :space-evenly false
+	    :tooltip {EWW_BATTERY['BAT0'].status}
+    (baticon :level {EWW_BATTERY['BAT0'].capacity}
+             :charging { EWW_BATTERY['BAT0'].status == "Charging" }
+             :dark true
+             :size 24)
+
+	  (label :text {EWW_BATTERY['BAT0'].capacity + "%"})))
+
+(defwidget notifcounter []
+  (box :orientation "h"
+       :visible {arraylength(notifs) > 0}
+       :space-evenly false
+       :spacing 5
+       :tooltip {arraylength(notifs) + (arraylength(notifs) == 1 ? " notificação pendente" : " notificações pendentes")}
+    (image :path {gtkicons["notifications-applet-symbolic"]})
+    (label :text {arraylength(notifs)})))
+
+(defwidget barpowermenu []
+  (eventbox :valign "center"
+            :onhover "${EWW_CMD} update powerhover=true"
+            :onhoverlost "${EWW_CMD} update powerhover=false"
+    (box :space-evenly false
+         :orientation "h"
+         :spacing 2
+      (revealer :halign "fill"
+                :valign "fill"
+                :transition "slideright"
+                :duration "550ms"
+                :reveal powerhover
+        (box :orientation "h"
+             :spacing 6
+             :style "margin: 0px 6px 0px 0px;"
+          (button :onclick "loginctl kill-session self"
+            (label :yalign 1 :style "font: 15px Symbols Nerd Font" :text "﫼"))
+
+          (button :onclick "loginctl lock-session"
+            (label :yalign 1 :style "font: 15px Symbols Nerd Font" :text ""))
+
+          (button :onclick "systemctl reboot"
+            (label :yalign 1 :style "font: 15px Symbols Nerd Font" :text "ﰇ"))
+
+          (button :onclick "systemctl poweroff"
+            (label :yalign 1 :style "font: 15px Symbols Nerd Font" :text ""))
+          ))
+      )))
+
+(defwidget sidestuff []
+  (box :style "margin: 0px 0px 0px 10px"
+       :orientation "h"
+       :space-evenly false
+       :halign "end"
+       :valign "fill"
+       :vexpand true
+       :style "background-color: ${background}; border-radius: 5px; padding: 0px 5px 0px 5px;"
+       :spacing 7
+
+    (tray)
+    (music)
+    (volume)
+    (wifi)
+    (battery)
+
+    (button :onclick "${EWW_CMD} open calendar${xorwayland == "wayland" ? "-wayland" : ""} --toggle"
+      (box :orientation "h"
+           :spacing 5
+           :space-evenly false
+        (notifcounter)
+        (label :text "${data.weekday} ${data.day}, ${strlength(data.hour_24) == 1 ? '0${data.hour_24}' : data.hour_24 }:${strlength(data.minute) == 1 ? '0${data.minute}' : data.minute }")))
+
+    (button :onclick "${EWW_CMD} open dashboard${xorwayland == "wayland" ? "-wayland" : ""} --toggle"
+	    (label :style "color: ${color6}; font: 14pt siji" :text "")))
+	)
+
+(defwidget bar []
+(box :orientation "h"
+	     :class "barwindow"
+	     :vexpand true
+	     :valign "fill"
+		(box :orientation "h"
+		     :space-evenly false
+		     :spacing 10
+		     :vexpand true
+		     :valign "fill"
+		  (leftstuff)
+		  (sidestuff)))
+  )
+
+(defwindow bar
+  :monitor 0
+  :exclusive true
+  :stacking "fg"
+  :focusable false
+	:reserve (struts :distance "33px"
+	:side "top")
+
+	:geometry (geometry :x "0%"
+	:y "0%"
+	:width "100%"
+	:height "33px"
+	:anchor "top center")
+	(bar))
+
+(defwindow bar-wayland
+  :monitor 0
+  :exclusive true
+  :stacking "bg"
+  :focusable false
+	:geometry (geometry :x "0%"
+	:y "0%"
+	:width "100%"
+	:height "33px"
+	:anchor "top center")
+	(bar))
+

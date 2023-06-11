@@ -1,0 +1,54 @@
+#!/bin/bash
+
+tags=( $( dwm-msg get_tags | jq '.[].bit_mask' ) )
+icon=( $( dwm-msg get_tags | jq '.[].name' ) )
+status={tags[@]}
+objetos={tags[@]}
+
+ewwtags="[  ]"
+for i in ${!tags[@]}; do
+    status[$i]='"norm"'
+    objetos[$i]="{ bit_mask: ${tags[$i]}, icon: ${icon[$i]}, status: \"norm\" }"
+    ewwtags=$( echo $ewwtags | jq ". += [${objetos[$i]}]" )
+done
+echo $ewwtags
+
+dwm-msg --ignore-reply subscribe tag_change_event | jq -cr --unbuffered | while read tagset; do
+    selected=$( echo $tagset | jq '.tag_change_event.new_state.selected' )  
+    sbinario=$( echo "obase=2;$selected" | bc )
+    snum_char=$( echo $( echo $sbinario | wc -c ) - 1 | bc)
+    snum_falta=$( echo "${#tags[@]} - $snum_char" | bc)
+
+    sbinario=$( for i in $( seq 1 $snum_falta ); do
+		    echo -n "0"
+		done; echo -n $sbinario )
+    
+    occupied=$( echo $tagset | jq '.tag_change_event.new_state.occupied' )
+    obinario=$( echo "obase=2;$occupied" | bc )
+    onum_char=$( echo $( echo $obinario | wc -c ) - 1 | bc)
+    onum_falta=$( echo "${#tags[@]} - $onum_char" | bc)
+
+    obinario=$( for i in $( seq 1 $onum_falta ); do
+		    echo -n "0"
+		done; echo -n $obinario )
+    
+    urgent=$( echo $tagset | jq '.tag_change_event.new_state.urgent' )
+    ubinario=$( echo "obase=2;$urgent" | bc )
+    unum_char=$( echo $( echo $ubinario | wc -c ) - 1 | bc)
+    unum_falta=$( echo "${#tags[@]} - $unum_char" | bc)
+
+    ubinario=$( for i in $( seq 1 $unum_falta ); do
+		    echo -n "0"
+		done; echo -n $ubinario )
+
+    for i in ${!tags[@]}; do
+	status[$i]='"norm"'
+	[[ ${obinario:$(( ${#tags[@]} - i - 1 )):1} -eq 1 ]] && status[$i]='"occu"'
+	[[ ${sbinario:$(( ${#tags[@]} - i - 1 )):1} -eq 1 ]] && status[$i]='"sele"'
+	[[ ${ubinario:$(( ${#tags[@]} - i - 1 )):1} -eq 1 ]] && status[$i]='"urge"'
+	objetos[$i]="{ bit_mask: ${tags[$i]}, icon: ${icon[$i]}, status: ${status[$i]} }"
+	ewwtags=$( echo $ewwtags | jq -c "(.[] | select(.bit_mask == ${tags[$i]})) |= ${objetos[$i]}" )
+    done
+
+    echo $ewwtags
+done

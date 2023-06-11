@@ -1,0 +1,75 @@
+(include "./vars.yuck")
+(include "./bar.yuck")
+(include "./dashboard.yuck")
+(include "./calendar.yuck")
+(include "./lockscreen.yuck")
+(include "./pwcalc.yuck")
+(include "./appmenu.yuck")
+(include "../../.cache/wal/colors.yuck")
+
+(defwidget metric [label value onchange ?tooltip ?vertical]
+	(box :orientation {vertical == true ? "v" : "h"}
+		   :class {vertical == true ? "system" : "metric"}
+		   :space-evenly false
+		   :spacing 10
+		   :tooltip tooltip
+		(scale :min 0
+		       :max 101
+		       :orientation {vertical ? "v" : "h"}
+		       :vexpand {vertical}
+		       :flipped {vertical}
+		       :active {onchange != ""}
+		       :value value
+		       :onchange onchange)
+		(label :text label)))
+
+(defwidget verticalmetric [class value onchange text]
+  (box :orientation "v" :space-evenly false :class class :spacing 10
+    (scale :min 0 :max 101 :orientation "v" :vexpand "true" :flipped true :active {onchange != ""} :value value :onchange onchange)
+    (label :text text)))
+
+(defwidget icon [path dark size ?halign ?valign ?visible ?style]
+  (image :path {replace(
+			                  path,
+			                  (dark ? "-light" : "-dark"),
+			                  (dark ? "-dark" : "-light")
+			                  )}
+         :halign {halign != "" ? halign : "center"}
+         :valign {valign != "" ? valign : "center"}
+         :visible {visible != "" ? visible : true}
+         :style {style != "" ? style : ""}
+         ;; :tooltip {tooltip}
+         :image-width size
+         :image-height size
+    ))
+
+(defwidget baticon [level charging dark size]
+  (icon :path {
+        charging ?
+        (
+         level == 100 ? gtkicons['battery-full-charging'] :
+         level >= 80 ? gtkicons['battery-full-charging'] :
+         level >= 60 ? gtkicons['battery-good-charging'] :
+         level >= 40 ? gtkicons['battery-low-charging'] :
+         level >= 20 ? gtkicons['battery-caution-charging'] :
+         level < 20 ? gtkicons['battery-empty-charging'] :
+         gtkicons['battery-missing']
+         ) :
+        (
+         level == 100 ? gtkicons['battery-full-charged'] :
+         level >= 80 ? gtkicons['battery-full'] :
+         level >= 60 ? gtkicons['battery-good'] :
+         level >= 40 ? gtkicons['battery-low'] :
+         level >= 20 ? gtkicons['battery-caution'] :
+         level < 20 ? gtkicons['battery-empty'] :
+         gtkicons['battery-missing']
+         ) }
+        :dark dark
+        :size size
+   ))
+
+;; (defwidget powericons [label image onclick class]
+;;   (box :orientation "v" :space-evenly true :class "gnomish"
+;;     (box :orientation "h" )
+;;
+;;    ))

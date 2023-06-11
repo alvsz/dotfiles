@@ -1,0 +1,64 @@
+(defvar wifihover false)
+(defvar backlighthover false)
+(defvar volumehover false)
+(defvar powerhover false)
+(defvar wifiexpand false)
+(defvar trayexpand false)
+
+(defvar notifs "[]")
+
+(defvar secret "")
+(defvar domain "")
+
+(defpoll uptime        :interval "1m" "jc uptime")
+(defpoll pacman        :interval "5m" `pacman -Q | wc -l`)
+(defpoll flatpak       :interval "5m" `flatpak list | wc -l`)
+(defpoll flatpakactive :interval "5m" `flatpak ps | wc -l`)
+(defpoll kernel        :interval "5m" `uname -r`)
+(defpoll name          :interval "5m" `whoami`)
+(defpoll host          :interval "5m" `uname -n`)
+(defpoll wm            :interval "5m" `echo $XDG_SESSION_DESKTOP`)
+(defpoll dockerall     :interval "5m" `docker container ls -a | wc -l`)
+(defpoll dockeractive  :interval "5m" `docker ps | wc -l`)
+
+(defpoll xorwayland      :interval  "5m"  `echo $XDG_SESSION_TYPE`)
+(defpoll redshiftstatus  :interval  "5m"  `systemctl --user status redshift | awk '/Active: /{print gensub(/\\((.*)\\)/, "\\\\1", "g", $3)}'`)
+(defpoll gammastatus     :interval  "5m"  `systemctl --user status gammastep | awk '/Active: /{print gensub(/\\((.*)\\)/, "\\\\1", "g", $3)}'`)
+
+(defpoll data       :interval "5m" "jc date")
+(defpoll semana     :interval "5m" "date '+%A'")
+(defpoll mes        :interval "5m" "date '+%B'")
+(defpoll mesano     :interval "9m" "date '+%B %Y'")
+
+(defpoll painfo     :interval "30s" "pactl --format=json info | jq -c --unbuffered")
+(defpoll pasources  :interval "30s" "pactl --format=json list sources | jq -c --unbuffered")
+(defpoll pasinks    :interval "30s" "pactl --format=json list sinks | jq -c --unbuffered")
+
+(defpoll backlight  :interval "90s" "xbacklight -get")
+(defpoll touchpad   :interval "90s" "mouse touchpad get")
+(defpoll dark       :interval "90s" "noite get")
+(defpoll gtkicons   :interval "10m" "getallicons.lua | jq -c --unbuffered")
+
+(deflisten dwm-ipc      "dwm-msg get_monitors | jq --unbuffered -c || echo '[]'; dwm-msg --ignore-reply subscribe tag_change_event layout_change_event client_focus_change_event monitor_focus_change_event focused_title_change_event focused_state_change_event | jq -c --unbuffered | while read line; do dwm-msg get_monitors | jq -c --unbuffered; done")
+(deflisten dwl-ipc      "dwl-msg status && dwl-msg follow")
+
+(deflisten music        "midia follow Metadata")
+
+(deflisten kdeconnect   "./scripts/kdeconnect")
+(deflisten wifi         "./scripts/network")
+(deflisten tray         "./scripts/host.py | jq -c --unbuffered")
+(deflisten bluetooth    "./scripts/bluetooth")
+(deflisten menuapps     `./scripts/appmenu.lua search`)
+
+(defpoll events
+  :interval "5m"
+  :initial '{"events":[], "todo":[]}'
+  "./scripts/eventos")
+
+(deflisten redshift
+  :run-while {redshiftstatus == "running"}
+  "journalctl --user -fu redshift | stdbuf -o0 grep -Po '(?<=Período\: ).*$'")
+
+(deflisten gamma
+  :run-while {gammastatus == "running"}
+  "journalctl --user -fu gammastep | stdbuf -o0 grep -Po '(?<=Período\: ).*$'")
