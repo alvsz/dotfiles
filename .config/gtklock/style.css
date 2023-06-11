@@ -1,0 +1,15 @@
+window {
+   background-image: url("/tmp/background.png");
+   background-size: cover;
+   background-repeat: no-repeat;
+   background-position: center;
+   background-color: black;
+}
+
+#window-box {
+	padding: 5em;
+	/* border: 1px solid black; */
+	border-radius: 1em;
+	box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 12px;
+	background-color: rgba(30, 30, 30, 0.6);
+}

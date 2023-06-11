@@ -1,0 +1,80 @@
+#!/bin/zsh
+#
+alias sudo='sudo '
+
+# Verbosity and settings that you pretty much just always are going to want.
+alias \
+	cp="cp -iv" \
+	mv="mv -iv" \
+	rm="rm -vI" \
+	mkdir="mkdir -pv" \
+	rsync="rsync -vh --progress" \
+	ffmpeg="ffmpeg -hide_banner"
+
+# Colorize commands when possible.
+alias \
+	ls="ls -hN --color=auto --group-directories-first" \
+	grep="grep --color=auto" \
+	diff="diff --color=auto" \
+	ccat="highlight --out-format=ansi"
+
+alias \
+	ka="killall" \
+	g="git" \
+	f="$EXPLORER" \
+	e="$EDITOR"
+
+alias ll='ls -lhAt --color=auto --group-directories-first'
+alias  l='ls -lht  --color=auto --group-directories-first'
+alias r2mod="io.github.Foldex.r2mod"
+
+alias luarocks="luarocks --tree ${XDG_DATA_HOME}/luarocks"
+
+alias nsxiv="nsxiv ${XEMBED+"-e $XEMBED"}"
+alias mpv="mpv ${XEMBED+"--wid=$XEMBED"}"
+alias zathura="zathura ${XEMBED+"-e $XEMBED"}"
+alias surf="surf ${XEMBED+"-e $XEMBED"}"
+
+converter265 () {
+	if [ $2 ]; then
+		dest="$2" 
+	else
+		dest="./x265/${1%.*}.mkv"
+		[ -d x265 ] || mkdir x265
+	fi
+
+  echo $dest
+  ffmpeg \
+		-vaapi_device /dev/dri/by-path/pci-0000:$(lspci | grep -i 'uhd graphics' | awk '{print $1}')-render \
+		-hwaccel vaapi \
+		-hwaccel_output_format vaapi \
+		-i "$1" \
+		-vf 'format=nv12|vaapi,hwupload' \
+		-threads 8 \
+		-vcodec hevc_vaapi \
+		-acodec copy \
+		-rc_mode CQP \
+		-profile:v main \
+		-v verbose "${dest}"
+}
+
+converter265todos () {
+   for myvid in *
+   do
+		converter265 $myvid
+   done
+}
+
+precmd() {
+   if [ "$?" != 0 ]; then
+   	 (paplay /usr/share/sounds/freedesktop/stereo/dialog-warning.oga &)
+   fi
+}
+
+stderr() { printf "%s\n" "$*" >&2; }
+
+rules() {
+	xprop | awk '
+	/^WM_CLASS/{sub(/.* =/, "instance:"); sub(/,/, "\nclass:"); print}
+	/^WM_NAME/{sub(/.* =/, "title:"); print}'
+}
