@@ -62,7 +62,7 @@
       (box :spacing 8
            :orientation "h"
            :space-evenly false
-           :visible {monitor.active == 1}
+           :visible {monitor.active != 0}
 
 	      (box :orientation "h"
 	           :space-evenly true
