@@ -84,7 +84,7 @@ def handle_num_tags(ipc, param):
 
 def handle_layout_id(ipc, param):
     global layouts
-    layouts.append(param)
+    layouts.append(dict(id=(len(layouts)), icon=param))
 
 
 def registry_handle_global(registry, id, interface, version):
@@ -202,12 +202,18 @@ if __name__ == '__main__':
     for i in range(num_tags):
         display.dispatch(block=False)
 
-    if argv[1] == "follow":
+    if argv[1] == "subscribe":
         print(status())
         follow()
 
-    elif argv[1] == "status":
+    elif argv[1] == "get_monitors":
         print(status())
+
+    elif argv[1] == "get_layouts":
+        print(json.dumps(layouts))
+
+    elif argv[1] == "get_tags":
+        print(num_tags)
 
     elif argv[1] == "run_command":
         run_command()

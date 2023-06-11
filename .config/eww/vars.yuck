@@ -40,7 +40,7 @@
 (defpoll gtkicons   :interval "10m" "getallicons.lua | jq -c --unbuffered")
 
 (deflisten dwm-ipc      "dwm-msg get_monitors | jq --unbuffered -c || echo '[]'; dwm-msg --ignore-reply subscribe tag_change_event layout_change_event client_focus_change_event monitor_focus_change_event focused_title_change_event focused_state_change_event | jq -c --unbuffered | while read line; do dwm-msg get_monitors | jq -c --unbuffered; done")
-(deflisten dwl-ipc      "dwl-msg status && dwl-msg follow")
+(deflisten dwl-ipc      "dwl-msg get_monitors && dwl-msg subscribe")
 
 (deflisten music        "midia follow Metadata")
 
