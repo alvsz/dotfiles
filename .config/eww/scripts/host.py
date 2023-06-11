@@ -1,18 +1,18 @@
 #!/bin/env python3
 
-import os
-import sys
-import json
-
 import gi
-
-gi.require_version('Gtk', '3.0')
+import json
+import sys
+import os
+from pathlib import Path
 
 from gi.repository import Gio
-from gi.repository import Gtk
 from gi.repository import GLib
+gi.require_version('Gtk', '3.0')
+gi.require_version('GdkPixbuf', '2.0')
+from gi.repository import Gtk
 from gi.repository import GdkPixbuf
-from pathlib import Path
+
 
 MENU_PATH = os.path.join(os.path.dirname(__file__), 'menu.lua')
 
@@ -32,20 +32,21 @@ NODE_INFO = Gio.DBusNodeInfo.new_for_xml("""
 
 items = {}
 
+
 def geticon(item):
     icon_theme = Gtk.IconTheme.get_default()
 
     icon = icon_theme.lookup_icon(item['Title'].lower(), 22, 0)
 
-    if icon != None:
+    if icon is not None:
         return icon.get_filename()
     else:
         icon = icon_theme.lookup_icon(item['IconName'].lower(), 22, 0)
-        if icon != None:
+        if icon is not None:
             return icon.get_filename()
         else:
             icon = icon_theme.lookup_icon(item['Id'].lower(), 22, 0)
-            if icon != None:
+            if icon is not None:
                 return icon.get_filename()
 
             elif 'IconPixmap' in item and len(item['IconPixmap']) > 0:
@@ -66,23 +67,26 @@ def geticon(item):
 
                 gbytes = GLib.Bytes.new(newdata)
 
-                iconpath = Path(os.getenv('XDG_DATA_HOME', ( os.getenv( 'HOME' ) + '/.local/share' ) ) + '/icons/hicolor/' + str(data[0]) + 'x' + str(data[1]) +'/apps/')
+                iconpath = Path(os.getenv('XDG_DATA_HOME', (os.getenv(
+                    'HOME') + '/.local/share')) + '/icons/hicolor/' + str(data[0]) + 'x' + str(data[1]) + '/apps/')
                 iconpath.mkdir(parents=True, exist_ok=True)
 
-                iconpath = ( iconpath.as_posix() + '/' + item['Id'] + '.png' )
+                iconpath = (iconpath.as_posix() + '/' + item['Id'] + '.png')
 
-                icon = GdkPixbuf.Pixbuf.new_from_bytes(gbytes, GdkPixbuf.Colorspace.RGB, True, 8, data[0], data[1], (4 * data [0]) )
-                icon.savev( iconpath , 'png' )
+                icon = GdkPixbuf.Pixbuf.new_from_bytes(
+                    gbytes, GdkPixbuf.Colorspace.RGB, True, 8, data[0], data[1], (4 * data[0]))
+                icon.savev(iconpath, 'png')
 
                 icon_theme = Gtk.IconTheme.get_default()
                 return icon_theme.lookup_icon(item['Id'], 22, 0).get_filename()
 
             else:
                 icon = icon_theme.lookup_icon(item['ToolTip'].lower(), 22, 0)
-                if icon != None:
+                if icon is not None:
                     return icon.get_filename()
                 else:
                     return icon_theme.lookup_icon("computer", 22, 0).get_filename()
+
 
 def render():
     # customize this function to your needs
@@ -105,6 +109,10 @@ def render():
 
             if os.path.isfile(item['IconName']):
                 item['IconPath'] = item['IconName']
+
+            elif os.path.isfile(item['IconThemePath']):
+                item['IconPath'] = item['IconThemePath']
+
             else:
                 item['IconPath'] = geticon(item)
 
@@ -114,7 +122,6 @@ def render():
             item['menu_cmd'] = f'{MENU_PATH} {address} {item["Menu"]}'
 
             labels.append(item)
-
 
         print(json.dumps(labels))
         sys.stdout.flush()
@@ -157,14 +164,17 @@ def on_call(
     if method == 'Get' and params[1] in props:
         invocation.return_value(GLib.Variant('(v)', [props[params[1]]]))
         conn.flush()
+
     if method == 'GetAll':
         invocation.return_value(GLib.Variant('(a{sv})', [props]))
         conn.flush()
+
     elif method == 'RegisterStatusNotifierItem':
         if params[0].startswith('/'):
             path = params[0]
         else:
             path = '/StatusNotifierItem'
+
         get_item_data(conn, sender, path)
         invocation.return_value(None)
         conn.flush()
