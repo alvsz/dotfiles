@@ -1,0 +1,62 @@
+#!/bin/env sh
+
+razerdevices=$(busctl --user call org.razer /org/razer razer.devices getDevices -j | jq '.data[][]' -r)
+
+case $1 in
+touchpad)
+	tid=$(xinput list | grep -Eo 'Touchpad.*id=[0-9]{1,2}' | cut -d = -f 2)
+	STATE=$(xinput list-props "$tid" | grep 'Device Enabled' | awk '{print $4}')
+	case $2 in
+	get)
+		printf "%s\n" "$STATE"
+		;;
+	*)
+
+		if [ "$STATE" -eq 1 ]; then
+			xinput disable "$tid"
+			icon="$(geticon.lua input-touchpad-off)"
+		else
+			xinput enable "$tid"
+			icon="$(geticon.lua input-touchpad-on)"
+		fi
+
+		if (pgrep eww && (
+			eww update touchpad="$(xinput list-props "$tid" | grep 'Device Enabled' | awk '{print $4}')"
+			! eww windows | grep -q '*dashboard' && eww get volumehover | grep -q "false"
+		)) || ! pgrep eww; then
+			notify-send -i "$icon" -u low " " -h "string:wired-tag:touchpad" -h "string:wired-note:osd" -t 3000
+		fi
+		;;
+	esac
+	;;
+dpi)
+	for entry in $razerdevices; do
+		if [ "$(busctl --user call org.razer /org/razer/device/"${entry}" razer.device.misc getDeviceType -j | jq '.data[]' -r)" = "mouse" ]; then
+			dpi="$(busctl --user call org.razer /org/razer/device/"${entry}" razer.device.dpi getDPI -j | jq '.data[][0]' -c)"
+
+			maxdpi="$(busctl --user call org.razer /org/razer/device/"${entry}" razer.device.dpi maxDPI -j | jq '.data[]')"
+
+			porcento="$(echo "($dpi * 100) / $maxdpi" | bc)"
+			icon="$(geticon.lua mouse-symbolic)"
+
+			case $2 in
+			up)
+				target="$(echo "(($porcento + 2) * $maxdpi) / 100" | bc)"
+				busctl --user call org.razer /org/razer/device/"${entry}" razer.device.dpi setDPI qq "${target}" "${target}"
+				notify-send -i "$icon" -u low "$target" -h "string:wired-tag:mouse" -h "string:wired-note:osd" -h int:value:$(((target * 100) / maxdpi)) -t 3000
+				;;
+			down)
+				target="$(echo "(($porcento - 2) * $maxdpi) / 100" | bc)"
+				busctl --user call org.razer /org/razer/device/"${entry}" razer.device.dpi setDPI qq "${target}" "${target}"
+				notify-send -i "$icon" -u low "$target" -h "string:wired-tag:mouse" -h "string:wired-note:osd" -h int:value:$(((target * 100) / maxdpi)) -t 3000
+				;;
+			esac
+		fi
+	done
+	# echo "oi"
+	;;
+*)
+	echo "erro brutal"
+	exit 1
+	;;
+esac

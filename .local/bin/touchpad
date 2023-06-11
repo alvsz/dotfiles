@@ -1,0 +1,14 @@
+#!/bin/env sh
+
+tid=$(xinput list | grep -Eo 'Touchpad.*id=[0-9]{1,2}' | cut -d = -f 2)
+STATE=$(xinput list-props "$tid" | grep 'Device Enabled' | awk '{print $4}')
+
+if [ "$STATE" -eq 1 ]; then
+	xinput disable "$tid"
+	icon="$XDG_DATA_HOME/icons/Colloid-teal-nord-dark/devices/24/input-touchpad-off.svg"
+else
+	xinput enable "$tid"
+	icon="$XDG_DATA_HOME/icons/Colloid-teal-nord-dark/devices/24/input-touchpad-on.svg"
+fi
+
+notify-send -i "$icon" -u low " " -h "string:wired-tag:touchpad" -h "string:wired-note:osd" -t 3000

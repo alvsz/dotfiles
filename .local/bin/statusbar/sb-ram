@@ -1,0 +1,7 @@
+#!/bin/sh
+# Description: Script to get ram usage
+
+source sb-status2d
+
+icon_ram=""
+printf "%s%s %s%s" "$s2d_color5" "$icon_ram" "$(free -mh --si | grep '^Mem.:' | awk '{print $7}')" "$s2d_reset" && exit 0

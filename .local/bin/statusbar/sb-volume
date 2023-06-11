@@ -1,0 +1,27 @@
+#!/bin/sh
+# Description: Script to get current volume
+
+source sb-status2d
+
+info="$(pamixer --get-mute)"
+percent="$(pamixer --get-volume)"
+
+if echo "$info" | grep -q 'true'; then
+    icon_volume=""
+elif [ "$percent" -lt 30 ]; then
+    icon_volume=""
+elif [ "$percent" -lt 60 ]; then
+    icon_volume=""
+else
+    icon_volume=""
+fi
+
+for i in $( seq 1 $( bluetoothctl devices | grep -c . ) ); do
+    mac=$( bluetoothctl devices | awk "FNR == $i" | awk '{print $2}' )
+    name=$( bluetoothctl devices | awk "FNR == $i" | awk '{$2=""}1' | awk '{$1=""}1' )
+    if bluetoothctl info $mac | grep -wq 'Connected: yes' && bluetoothctl info $mac | grep -wq 'Icon: audio-headset' && echo $info | grep -wq 'false'; then
+	icon_volume=""
+    fi    
+done
+
+printf "%s%s %s%%%s" "$s2d_color3" "$icon_volume" "$percent" "$s2d_reset" && exit 0

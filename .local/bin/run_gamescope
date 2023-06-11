@@ -1,0 +1,11 @@
+#!/bin/env bash
+
+igpu=8086:3ea0
+export INTEL_DEBUG=noccs
+export MESA_VK_DEVICE_SELECT="$igpu"
+
+if [ "$XDG_CURRENT_DESKTOP" != "gamescope" ]; then
+	gamescope="gamescope --prefer-vk-device=$igpu $1 -H 1080 -U --"
+fi
+
+${gamescope} env MANGOHUD=1 prime-run gamemoderun "${@:2:${#@}}"

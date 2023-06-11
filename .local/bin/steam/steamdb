@@ -1,0 +1,3 @@
+#! /bin/sh
+
+./steamgrid -onlymissingartwork --steamgriddb 7a9bc21b7d970aa9c2419b6a110522d4

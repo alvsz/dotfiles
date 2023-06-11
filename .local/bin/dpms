@@ -1,0 +1,29 @@
+#!/bin/env sh
+
+case "${XDG_SESSION_TYPE}" in
+"x11")
+	case "$1" in
+	on)
+		xset dpms force on
+		;;
+	off)
+		xset dpms force off
+		;;
+	esac
+	;;
+"wayland")
+	monitors=$(wlopm | awk '{print $1}')
+	case "$1" in
+	on)
+		for monitor in $monitors; do
+			wlopm --on "$monitor"
+		done
+		;;
+	off)
+		for monitor in $monitors; do
+			wlopm --off "$monitor"
+		done
+		;;
+	esac
+	;;
+esac

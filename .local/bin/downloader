@@ -1,0 +1,7 @@
+#!/bin/env sh
+
+cat $1 | while read line; do
+    echo $line
+    alacritty --class ScratchPad -t scratchpad -e yt-dlp -- $line -f $( yt-dlp -F "${line}" | grep x720 | awk '{print $1}' | head -n 1 )
+    #    alacritty -e dwm-msg -- subscribe layout_change_event
+done

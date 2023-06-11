@@ -1,0 +1,105 @@
+#!/bin/env sh
+
+icon_selec() {
+	headset=false
+
+	for device in $(bluetoothctl devices Connected | awk '{print $2}'); do
+		# echo $device
+		bluetoothctl info "$device" | grep -wq 'Icon: audio-headset' && headset=true
+		# echo $headset
+	done
+
+	if [ "$1" = out ]; then
+		volume=$(pamixer --get-volume)
+		mute=$(pamixer --get-mute)
+
+		if [ "$mute" = true ]; then
+			#[[ $headset = true ]] &&
+			icon="audio-volume-muted"
+		else
+			[ "$volume" -ge 30 ] && icon="audio-volume-medium"
+			[ "$volume" -gt 70 ] && icon="audio-volume-high"
+			[ "$volume" -lt 30 ] && icon="audio-volume-low"
+			[ "$headset" = true ] && icon="audio-headphones-symbolic"
+		fi
+	elif [ "$1" = in ]; then
+		volume=$(
+			pactl --format=json list sources | jq --arg source "${defaultsource}" '.[] | select(.name == $source) | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length'
+		)
+		mute=$(pactl --format=json list sources | jq --arg source "${defaultsource}" '.[] | select(.name == $source) | .mute | tostring' -r)
+
+		if [ "$mute" = true ]; then
+			#[[ $headset = true ]] &&
+			icon="microphone-sensitivity-muted"
+		else
+			[ "$volume" -ge 30 ] && icon="microphone-sensitivity-medium"
+			[ "$volume" -gt 70 ] && icon="microphone-sensitivity-high"
+			[ "$volume" -lt 30 ] && icon="microphone-sensitivity-low"
+			[ "$headset" = true ] && icon="audio-headset-symbolic"
+		fi
+	fi
+}
+
+volume_notif() {
+	icon_selec "$1"
+
+	[ "$mute" = true ] && summary="Mudo" || summary=${volume}%
+
+	if (pgrep eww && (
+		eww update pasinks="$(pactl --format=json list sinks | jq -c --unbuffered)"
+		eww update pasources="$(pactl --format=json list sources | jq -c --unbuffered)"
+		! eww windows | grep -q '*dashboard' && eww get volumehover | grep -q "false"
+	)) || ! pgrep eww; then
+		notify-send -i "$(geticon.lua "$icon")" -h int:value:"$volume" -h 'string:wired-tag:volume' -h 'string:wired-note:osd' -u low "${summary}" -t 3000
+	fi
+}
+
+case $1 in
+up)
+	pamixer -u
+	pamixer -i 4
+	volume_notif out
+	;;
+down)
+	pamixer -d 4
+	volume_notif out
+	;;
+mute)
+	pamixer -t
+	volume_notif out
+	;;
+set)
+	pamixer -u
+	pamixer --set-volume "$2"
+	volume_notif out
+	;;
+mic)
+	defaultsource=$(pactl --format=json info | jq '.default_source_name' -r)
+	volume=$(
+		pactl --format=json list sources | jq --arg source "${defaultsource}" '.[] | select(.name == $source) | .volume | to_entries | map(.value.value_percent[:-1] | tonumber?) | add/length'
+	)
+	# echo "$defaultsource"
+	# echo "$volume"
+	case $2 in
+	up)
+		pactl set-source-mute "${defaultsource}" false
+		if [ "$volume" -le 96 ]; then pactl set-source-volume "${defaultsource}" $((volume + 4))%; else
+			pactl set-source-volume "${defaultsource}" 100%
+		fi
+		;;
+	down)
+		if [ "$volume" -ge 4 ]; then pactl set-source-volume "${defaultsource}" $((volume - 4))%; else
+			pactl set-source-volume "${defaultsource}" 0%
+		fi
+		;;
+	mute)
+		pactl set-source-mute "${defaultsource}" toggle
+		;;
+	esac
+	volume_notif in
+	;;
+*)
+	echo "erro brutal steve magal"
+	exit 1
+	;;
+esac

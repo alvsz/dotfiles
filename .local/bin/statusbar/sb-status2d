@@ -1,0 +1,38 @@
+#!/bin/sh
+# Description: Metadata for status2d stuff
+
+# enable/disable status2d output in other scripts
+enable_status2d=true
+$enable_status2d || return 0
+
+# use Xresources colors
+enable_Xresources=true
+
+# status2d colors
+s2d_reset="^d^"
+s2d_color0="^c#2C323C^"
+s2d_color8="^c#3E4452^"
+s2d_color1="^c#E06C75^"
+s2d_color9="^c#E06C75^"
+s2d_color2="^c#98C379^"
+s2d_color10="^c#98C379^"
+s2d_color3="^c#E5C07B^"
+s2d_color11="^c#E5C07B^"
+s2d_color4="^c#61AFEF^"
+s2d_color12="^c#61AFEF^"
+s2d_color5="^c#C678DD^"
+s2d_color13="^c#C678DD^"
+s2d_color6="^c#56B6C2^"
+s2d_color14="^c#56B6C2^"
+s2d_color7="^c#5C6370^"
+s2d_color15="^c#ABB2BF^"
+
+# read Xresources colors (if enable)
+if [ "$enable_Xresources" = true ]; then
+    for i in {0..15}; do
+        colorX="$(xrdb -get color${i})"
+        # use Xresources color only if it was not empty
+        [ -n "$colorX" ] && eval "s2d_color${i}=^c${colorX}^"
+    done
+    unset colorX
+fi

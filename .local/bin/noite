@@ -1,0 +1,36 @@
+#!/bin/env sh
+
+set_dark() {
+	kvantummanager --set GraphiteNord-rimlessDark
+	gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+	gsettings set org.gnome.desktop.interface gtk-theme 'Graphite-purple-Dark'
+	gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord-dark'
+	eww update dark='dark'
+}
+set_light() {
+	kvantummanager --set GraphiteNord-rimless
+	gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+	gsettings set org.gnome.desktop.interface gtk-theme 'Graphite-purple-Light'
+	gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord'
+	eww update dark='light'
+}
+case $1 in
+toggle)
+	if gsettings get org.gnome.desktop.interface color-scheme | tr -d \' | cut -d - -f 2 | grep dark; then
+		set_light
+	elif gsettings get org.gnome.desktop.interface color-scheme | tr -d \' | cut -d - -f 2 | grep light; then
+		set_dark
+	else
+		set_dark
+	fi
+	;;
+dark)
+	set_dark
+	;;
+light)
+	set_light
+	;;
+get)
+	gsettings get org.gnome.desktop.interface color-scheme | tr -d \' | cut -d - -f 2
+	;;
+esac

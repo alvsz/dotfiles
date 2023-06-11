@@ -1,0 +1,23 @@
+#!/bin/sh
+# Description: Script to get wifi and ethernet status
+
+source sb-status2d
+
+sinal="$( nmcli -terse -fields IN-USE,SIGNAL dev wifi | grep '*' | cut -b 3- )"
+wname="$( nmcli -terse -fields IN-USE,SSID dev wifi | grep '*' | cut -b 3-10 )"
+
+if $(nmcli dev | grep 'wifi ' | grep -wq 'conectado'); then
+    if   [ "$sinal" -ge 75 ]; then
+	wicon=" $wname"
+    elif [ "$sinal" -ge 50 ]; then
+	wicon=" $wname"
+    elif [ "$sinal" -ge 20 ]; then
+	wicon=" $wname"
+    else
+	wicon=" $wname"
+    fi
+else
+    nmcli dev | grep 'ethernet' | grep -wq 'conectado' && wicon="  " || wicon="  offline"
+fi
+
+printf "%s%s" "$s2d_color2" "$wicon" "$eicon" "$s2d_reset"

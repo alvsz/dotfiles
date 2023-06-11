@@ -1,0 +1,110 @@
+#!/bin/env sh
+
+players=$(playerctl -l | grep -v 'kdeconnect')
+# players=$(playerctl -l)
+
+gdbus_call="busctl --user call org.mpris.MediaPlayer2"
+# gdbus_introspect="gdbus introspect --session --dest org.mpris.MediaPlayer2"
+# properties_get="--object-path /org/mpris/MediaPlayer2 --method org.freedesktop.DBus.Properties.Get org.mpris.MediaPlayer2.Player"
+media_control="/org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player"
+basepath="${XDG_CACHE_HOME}/midia"
+
+[ -d "$basepath" ] || mkdir "$basepath"
+
+get_metadata() {
+	# echo metadata
+	for entry in $players; do
+		# echo $players
+		# echo $entry
+		metadata=$(busctl --user call org.mpris.MediaPlayer2."${entry}" /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties GetAll s org.mpris.MediaPlayer2.Player -j |
+			jq '.data[] | to_entries | map({ (.key): (.value.data) }) | add | .Metadata |= ( to_entries | map({ (.key): (.value.data) }) | add)' -c --unbuffered |
+			sed -E 's,xesam:|mpris:,,g')
+
+		properties=$(busctl --user call org.mpris.MediaPlayer2."${entry}" /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties GetAll s org.mpris.MediaPlayer2 -j | jq '.data[] | to_entries | map({ (.key): (.value.data) }) | add')
+
+		# metadata=$( midia.lua $entry )
+		# echo $metadata
+		if [ "$(echo "$metadata" | jq '.Metadata.title')" != "null" ]; then
+
+			artUrl=$(echo "$metadata" | jq -r '.Metadata.artUrl')
+			album=$(echo "$metadata" | jq -r '.Metadata.album')
+			artist=$(echo "$metadata" | jq -r '.Metadata.albumArtist[0]')
+
+			if echo "$artUrl" | grep -q 'http'; then
+				artPath="$basepath/$(printf '%s' "${artist}-${album}.jpg" | sed 's,/,-,g')"
+				[ -e "${artPath}" ] || (curl "$artUrl" -o "${artPath}")
+
+			elif echo "$artUrl" | grep -q 'file://'; then
+				artPath=$(echo "$artUrl" | sed 's/file:\/\///')
+
+			elif [ "$(echo "$properties" | jq '.DesktopEntry')" != "null" ]; then
+				artPath="$(geticon.lua "$(echo "$properties" | jq -r '.DesktopEntry')")"
+
+			else
+				artPath="$(geticon.lua folder-music-symbolic)"
+			fi
+			# echo $artPath
+			# echo $artUrl
+
+			metadata=$(echo "$metadata" | jq --unbuffered -Sc --arg artPath "${artPath}" --arg entry "${entry}" --argjson properties "${properties}" '. += { artPath: $artPath, player: $entry, properties: $properties }')
+
+			echo "$metadata"
+		fi
+
+	done | jq -cs --unbuffered
+	# echo done
+}
+
+send_notification() {
+	notifymetadata=$(get_metadata | jq '.[] | select(.player | match("spotifyd.*"))')
+
+	# gdbus call --session --dest org.freedesktop.ScreenSaver --object-path /org/freedesktop/ScreenSaver --method org.freedesktop.ScreenSaver.SimulateUserActivity
+	# echo $notifymetadata | jq .status | grep -q 'Playing' && xset -dpms s off || xset +dpms s on
+
+	notify-send -h int:value:"$(echo "$notifymetadata" | jq '(.Position * 100) / .Metadata.length | round')" -h 'string:wired-tag:musica' -h "string:wired-note:osd" -t 3000 "$(echo "$notifymetadata" | jq -cr .Metadata.title)" -i "$(echo "$notifymetadata" | jq -cr '.artPath')"
+}
+
+follow() {
+	get_metadata
+	busctl --user -j monitor |
+		jq 'select(.type == "signal" and ( .path == "/org/mpris/MediaPlayer2" and ( .interface == "org.freedesktop.DBus.Properties" or .interface == "org.mpris.MediaPlayer2.Player" ) ) or ( .member == "NameOwnerChanged" and .payload.data[0] | select( type=="string" ) | match("mpris*") ) )' -c --unbuffered |
+		while read -r; do
+			# players=$(playerctl -l)
+			players=$(playerctl -l | grep -v 'kdeconnect')
+			get_metadata
+		done
+}
+
+case $1 in
+stop)
+	[ "$2" ] && player=$2 || player=$(echo "$players" | head -n 1)
+	$gdbus_call.$player $media_control Stop
+	;;
+play-pause)
+	[ "$2" ] && player=$2 || player=$(echo "$players" | head -n 1)
+	$gdbus_call.$player $media_control PlayPause
+	;;
+next)
+	[ "$2" ] && player=$2 || player=$(echo "$players" | head -n 1)
+	$gdbus_call.$player $media_control Next
+	;;
+previous | prev)
+	[ "$2" ] && player=$2 || player=$(echo "$players" | head -n 1)
+	$gdbus_call.$player $media_control Previous
+	;;
+metadata)
+	get_metadata
+	;;
+notify)
+	send_notification
+	;;
+follow)
+	echo '[]'
+	follow
+	[ "$3" ] && entry=$3
+	;;
+*)
+	echo "erro cruel"
+	exit 1
+	;;
+esac

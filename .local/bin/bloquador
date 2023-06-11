@@ -1,0 +1,28 @@
+#!/bin/env sh
+
+pre_lock() {
+	# polychromatic-cli -o none
+	wired --dnd on
+	# (sleep 8; eww open lockscreen) &
+}
+
+post_lock() {
+	wired --dnd off
+	# eww close lockscreen
+	[ "$(xbacklight -get)" -eq 0 ] && xbacklight -set 1
+	# polychromatic-cli -o spectrum
+}
+
+pre_lock
+
+# i3lock-fancy -n -f Inter
+if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+	slock
+else
+	grim - | corrupter - >"/tmp/background.png"
+	gtklock
+	# playerctl-module powerbar-module
+	# waylock
+fi
+
+post_lock

@@ -1,0 +1,26 @@
+#!/bin/env sh
+
+export STEAM_USE_MANGOAPP=1
+# export MANGOHUD_CONFIGFILE="$DG_CONFIG_HOME/MangoHud/MangoHud.conf"
+# export MANGOHUD_CONFIGFILE="$(mktemp "${XDG_RUNTIME_DIR}"/mangohud.XXXXXXXX)"
+# export INTEL_DEBUG=norbc
+export INTEL_DEBUG=noccs
+export MESA_VK_DEVICE_SELECT=8086:3ea0
+export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
+# export STEAM_GAMESCOPE_NIS_SUPPORTED=1
+export STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
+export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
+
+# mkdir -p "$(dirname "$MANGOHUD_CONFIGFILE")"
+# echo "no_display
+# toggle_hud=Prior
+# position=middle-left" >"$MANGOHUD_CONFIGFILE"
+
+# gamescope --prefer-vk-device=8086:3ea0 -h 720 -e -f -H 1080 -U -- sh -c "mangoapp & steam -gamepadui"
+gamescope --prefer-vk-device=8086:3ea0 -h 1080 -e -f -H 1080 -U -- steam -gamepadui
+
+# killall mangoapp
+
+# env INTEL_DEBUG=noccs MESA_VK_DEVICE_SELECT=8086:3ea0 __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia gamescope --prefer-vk-device=8086:3ea0 --generate-drm-mode fixed --xwayland-count 1 -h 540 -U -H 1080 -f -r 60 -e -- "$@"
+#-h 900 -H 1080 -U
+# __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia

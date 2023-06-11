@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source sb-status2d
+
+hddfree="$(df -h | grep '/mnt/hdd' | awk '{print $5}')"
+hddicon="  "
+
+ssdfree="$(df -h | grep p2 | awk 'FNR <= 1' | awk '{print $5}')"
+ssdicon=" "
+
+printf "%s%s" ["$s2d_color1" "$ssdicon" "$ssdfree" "$hddicon" "$hddfree" "$s2d_reset"

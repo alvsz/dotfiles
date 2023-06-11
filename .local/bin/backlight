@@ -1,0 +1,40 @@
+#!/bin/env sh
+
+icon="brightness-high"
+
+send_notification() {
+	backlight=$(xbacklight -get)
+	if (pgrep eww && (
+		eww update backlight="$backlight"
+		! eww windows | grep '*dashboard' && eww get backlighthover | grep -q "false"
+	)) || ! pgrep eww; then
+		notify-send -u low -i "$(geticon.lua "$icon")" -h int:value:"$backlight" -h "string:wired-tag:backlight" -h "string:wired-note:osd" "$backlight%" -t 3000
+	fi
+}
+
+# get_backlight() {
+# 	printf "%s" "scale=3; (l($(xbacklight -get))/l(10)) * 50" | bc -l
+# }
+
+case $1 in
+up)
+	xbacklight -inc 4
+	icon="brightness-high"
+	send_notification
+	;;
+down)
+	xbacklight -dec 4
+	icon="brightness-low"
+	send_notification
+	;;
+*)
+	echo "erro brutal, argumento inválido"
+	exit 1
+	;;
+# get)
+# 	get_backlight
+# 	;;
+# "")
+# 	send_notification
+# 	;;
+esac

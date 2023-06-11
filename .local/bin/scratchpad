@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+alacritty --class 'ScratchPad' -t 'scratchpad' -e "${@:-zsh}" & disown

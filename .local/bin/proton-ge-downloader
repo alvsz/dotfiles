@@ -1,0 +1,33 @@
+#!/bin/env sh
+
+latest=$(curl "https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases" | jq -c '.[0]')
+
+name=$(echo "$latest" | jq -r '.tag_name')
+url=$(echo "$latest" | jq -r '.assets[] | select( .name | match("tar") ) | .browser_download_url')
+file=$(echo "$latest" | jq -r '.assets[] | select( .name | match("tar") ) | .name')
+
+# name="GE-Proton7-53"
+# url="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton7-41/wine-lutris-GE-Proton7-41-x86_64.tar.xz"
+# file="GE-Proton7-53.tar.gz"
+
+printf "%s" "baixar $name em $PWD? [s/N] "
+read -r download
+
+if [ "$download" = "s" ] || [ "$download" = "S" ]; then
+	temp=".tmp"
+	mkdir -p "$temp"
+	# mkdir -p "$name"
+	echo "baixando $name..."
+	# type "$temp"
+	aria2c -o "$temp/$file" "$url"
+	# aria2c -o "$temp/$file" "https://github.com/altdesktop/playerctl/releases/download/v2.3.1/playerctl-2.3.1.tar.xz"
+	echo "download terminado, extraindo..."
+	tar xf "$temp/$file" -C "."
+	rm "$temp/$file"
+	rmdir "$temp"
+fi
+
+echo "finalizado"
+
+# jq --argjson latest "$latest" '$latest | .assets'
+# echo "$name"
