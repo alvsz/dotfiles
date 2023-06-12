@@ -89,6 +89,7 @@
              :spacing 5
              :visible false
 					   :visible {monitor.title != ""}
+					   :tooltip {monitor.appid}
 				  (icon :path {
 					  gtkicons?.[monitor?.appid] != "null" ? gtkicons[monitor?.appid] :
 					  gtkicons?.[monitor?.title] != "null" ? gtkicons[monitor?.title] :
