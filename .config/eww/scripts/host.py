@@ -1,17 +1,19 @@
 #!/bin/env python3
 
 import gi
+
+gi.require_version('Gtk', '3.0')
+gi.require_version('GdkPixbuf', '2.0')
+
+from gi.repository import GdkPixbuf
+from gi.repository import Gtk
+from gi.repository import Gio
+from gi.repository import GLib
+
 import json
 import sys
 import os
 from pathlib import Path
-
-from gi.repository import Gio
-from gi.repository import GLib
-gi.require_version('Gtk', '3.0')
-gi.require_version('GdkPixbuf', '2.0')
-from gi.repository import Gtk
-from gi.repository import GdkPixbuf
 
 
 MENU_PATH = os.path.join(os.path.dirname(__file__), 'menu.lua')
@@ -40,52 +42,57 @@ def geticon(item):
 
     if icon is not None:
         return icon.get_filename()
-    else:
+
+    elif 'IconName' in item:
         icon = icon_theme.lookup_icon(item['IconName'].lower(), 22, 0)
+
+    if icon is not None:
+        return icon.get_filename()
+
+    elif 'Id' in item:
+        icon = icon_theme.lookup_icon(item['Id'].lower(), 22, 0)
+
+    if icon is not None:
+        return icon.get_filename()
+
+    elif 'IconPixmap' in item and len(item['IconPixmap']) > 0:
+        data = item['IconPixmap'][-1]
+
+        alpha = data[2][0::4]
+        red = data[2][1::4]
+        green = data[2][2::4]
+        blue = data[2][3::4]
+
+        newdata = []
+
+        for i in range(len(alpha)):
+            newdata.append(red[i])
+            newdata.append(green[i])
+            newdata.append(blue[i])
+            newdata.append(alpha[i])
+
+        gbytes = GLib.Bytes.new(newdata)
+
+        iconpath = Path(os.getenv('XDG_DATA_HOME', (os.getenv(
+            'HOME') + '/.local/share')) + '/icons/hicolor/' + str(data[0]) + 'x' + str(data[1]) + '/apps/')
+        iconpath.mkdir(parents=True, exist_ok=True)
+
+        iconpath = (iconpath.as_posix() + '/' + item['Id'] + '.png')
+
+        icon = GdkPixbuf.Pixbuf.new_from_bytes(
+            gbytes, GdkPixbuf.Colorspace.RGB, True, 8, data[0], data[1], (4 * data[0]))
+        icon.savev(iconpath, 'png')
+
+        icon_theme = Gtk.IconTheme.get_default()
+        return icon_theme.lookup_icon(item['Id'], 22, 0).get_filename()
+
+    elif 'ToolTip' in item:
+        icon = icon_theme.lookup_icon(item['ToolTip'].lower(), 22, 0)
+
         if icon is not None:
             return icon.get_filename()
-        else:
-            icon = icon_theme.lookup_icon(item['Id'].lower(), 22, 0)
-            if icon is not None:
-                return icon.get_filename()
-
-            elif 'IconPixmap' in item and len(item['IconPixmap']) > 0:
-                data = item['IconPixmap'][-1]
-
-                alpha = data[2][0::4]
-                red = data[2][1::4]
-                green = data[2][2::4]
-                blue = data[2][3::4]
-
-                newdata = []
-
-                for i in range(len(alpha)):
-                    newdata.append(red[i])
-                    newdata.append(green[i])
-                    newdata.append(blue[i])
-                    newdata.append(alpha[i])
-
-                gbytes = GLib.Bytes.new(newdata)
-
-                iconpath = Path(os.getenv('XDG_DATA_HOME', (os.getenv(
-                    'HOME') + '/.local/share')) + '/icons/hicolor/' + str(data[0]) + 'x' + str(data[1]) + '/apps/')
-                iconpath.mkdir(parents=True, exist_ok=True)
-
-                iconpath = (iconpath.as_posix() + '/' + item['Id'] + '.png')
-
-                icon = GdkPixbuf.Pixbuf.new_from_bytes(
-                    gbytes, GdkPixbuf.Colorspace.RGB, True, 8, data[0], data[1], (4 * data[0]))
-                icon.savev(iconpath, 'png')
-
-                icon_theme = Gtk.IconTheme.get_default()
-                return icon_theme.lookup_icon(item['Id'], 22, 0).get_filename()
-
-            else:
-                icon = icon_theme.lookup_icon(item['ToolTip'].lower(), 22, 0)
-                if icon is not None:
-                    return icon.get_filename()
-                else:
-                    return icon_theme.lookup_icon("computer", 22, 0).get_filename()
+    else:
+        return icon_theme.lookup_icon("computer", 22, 0).get_filename()
 
 
 def render():
@@ -107,10 +114,10 @@ def render():
             else:
                 item['ToolTip'] = item['Title']
 
-            if os.path.isfile(item['IconName']):
+            if 'IconName' in item and os.path.isfile(item['IconName']):
                 item['IconPath'] = item['IconName']
 
-            elif os.path.isfile(item['IconThemePath']):
+            elif 'IconThemePath' in item and os.path.isfile(item['IconThemePath']):
                 item['IconPath'] = item['IconThemePath']
 
             else:
