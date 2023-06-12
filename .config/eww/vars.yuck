@@ -46,7 +46,7 @@
 
 (deflisten kdeconnect   "./scripts/kdeconnect")
 (deflisten wifi         "./scripts/network")
-(deflisten tray         "./scripts/host.py | jq -c --unbuffered")
+(deflisten tray         "./scripts/tray.py | jq -c --unbuffered")
 (deflisten bluetooth    "./scripts/bluetooth")
 (deflisten menuapps     `./scripts/appmenu.lua search`)
 
