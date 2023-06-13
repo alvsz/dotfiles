@@ -86,9 +86,7 @@ local jgmenu = function(csv)
 
     f:close()
 
-    id = string.gsub(id, '^%s+', '')
-    id = string.gsub(id, '%s+$', '')
-    id = string.gsub(id, '[\n\r]+', ' ')
+    id = id:gsub('^%s+', ''):gsub('%s+$', ''):gsub('[\n\r]+', ' ')
 
     return id
 end
