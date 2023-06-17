@@ -50,7 +50,7 @@ volume_notif() {
 		eww update pasources="$(pactl --format=json list sources | jq -c --unbuffered)"
 		! eww windows | grep -q '*dashboard' && eww get volumehover | grep -q "false"
 	)) || ! pgrep eww; then
-		notify-send -i "$(geticon.lua "$icon")" -h int:value:"$volume" -h 'string:wired-tag:volume' -h 'string:wired-note:osd' -u low "${summary}" -t 3000
+		notify-send -i "$(geticon.lua "$icon")" -h int:value:"$volume" -h 'string:wired-tag:volume' -h 'string:wired-note:osd' -u low "${summary}" -t 3000 -r 777
 	fi
 }
 

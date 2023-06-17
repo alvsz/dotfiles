@@ -8,7 +8,7 @@ send_notification() {
 		eww update backlight="$backlight"
 		! eww windows | grep '*dashboard' && eww get backlighthover | grep -q "false"
 	)) || ! pgrep eww; then
-		notify-send -u low -i "$(geticon.lua "$icon")" -h int:value:"$backlight" -h "string:wired-tag:backlight" -h "string:wired-note:osd" "$backlight%" -t 3000
+		notify-send -u low -i "$(geticon.lua "$icon")" -h int:value:"$backlight" -h "string:wired-tag:backlight" -h "string:wired-note:osd" "$backlight%" -t 3000 -r 666
 	fi
 }
 
