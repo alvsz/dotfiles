@@ -17,12 +17,8 @@ pre_lock
 
 # i3lock-fancy -n -f Inter
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-	slock
+	pgrep slock || (slock && post_lock)
 else
 	grim - | corrupter - >"/tmp/background.png"
-	gtklock
-	# playerctl-module powerbar-module
-	# waylock
+	pgrep gtklock || (gtklock && post_lock)
 fi
-
-post_lock
