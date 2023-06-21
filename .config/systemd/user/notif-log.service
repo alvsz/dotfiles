@@ -1,0 +1,11 @@
+[Unit]
+Description=notification logger
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=0
+ExecStart=/bin/env sh -lc notif-log.lua
+
+[Install]
+WantedBy=default.target
