@@ -29,7 +29,7 @@
   :wm-ignore false
   (pwcalculator
     :class "pwcalc"
-    :cmd "pwcalculator.lua '${secret}' '${domain}' | xclip -selection c; ${EWW_CMD} close pwcalc; ${EWW_CMD} update domain=''; ${EWW_CMD} update secret='';"))
+    :cmd "pwcalculator.lua '${secret}' '${domain}' | xclip -selection c && ${EWW_CMD} close pwcalc & ${EWW_CMD} update domain='' & ${EWW_CMD} update secret=''"))
 
 (defwindow pwcalc-wayland
   :monitor 0
@@ -38,4 +38,4 @@
   :namespace "eww_pwcalc"
   (pwcalculator
     :class "pwcalc"
-    :cmd "pwcalculator.lua '${secret}' '${domain}' | wl-copy -p; ${EWW_CMD} close pwcalc-wayland; ${EWW_CMD} update domain=''; ${EWW_CMD} update secret=''"))
+    :cmd "pwcalculator.lua '${secret}' '${domain}' | wl-copy -p && ${EWW_CMD} close pwcalc-wayland & ${EWW_CMD} update domain='' & ${EWW_CMD} update secret=''"))

@@ -52,16 +52,18 @@ bus:add_filter(function(a, msg)
         local msgbody = strip(msg:get_body())
         if msgbody == nil then return end
 
-        local notif = {}
-        notif["app_name"] = msgbody[1]
-        notif["replaces_id"] = msgbody[2]
-        notif["app_icon"] = msgbody[3]
-        notif["summary"] = msgbody[4]
-        notif["body"] = msgbody[5]
-        notif["actions"] = msgbody[6]
-        notif["hints"] = msgbody[7]
-        notif["expire_timeout"] = msgbody[8]
-        notif["time"] = os.date("%H:%M")
+        local notif = {
+            ["app_name"] = msgbody[1],
+            ["replaces_id"] = msgbody[2],
+            ["app_icon"] = msgbody[3],
+            ["summary"] = msgbody[4],
+            ["body"] = msgbody[5],
+            ["actions"] = msgbody[6],
+            ["hints"] = msgbody[7],
+            ["expire_timeout"] = msgbody[8],
+            ["visible"] = true,
+            ["time"] = os.date("%H:%M")
+        }
         -- print(inspect(notif))
         -- print(cjson.encode(notif))
 

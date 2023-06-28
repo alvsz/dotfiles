@@ -1,0 +1,20 @@
+
+
+
+
+
+
+(defwindow bar-vertical
+  :monitor 0
+  :exclusive true
+  :stacking "bg"
+  :focusable false
+	:geometry (geometry :x "0%"
+	:y "0%"
+	:width "45px"
+	:height "100%"
+	:anchor "center left")
+	(button :onclick "notify-send oi"
+	        :style "background-color: ${background}; border-radius: 5px; padding: 0px 5px 0px 5px; margin: 5px 0px 5px 5px")
+	;; (bar)
+	)

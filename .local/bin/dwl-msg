@@ -37,9 +37,11 @@ class Output(object):
         self.title = ""
 
     def handle_active(self, ipc, param):
+        self.ipc_output = ipc
         self.active = param
 
     def handle_tag(self, ipc, index, state, clients, focused):
+        self.ipc_output = ipc
         tag = dict(state=state,
                    clients=clients,
                    index=index,
@@ -52,16 +54,20 @@ class Output(object):
             self.tags[index] = tag
 
     def handle_layout(self, ipc, index):
+        self.ipc_output = ipc
         self.layout["old"]["index"] = self.layout["new"]["index"]
         self.layout["new"]["index"] = index
 
     def handle_title(self, ipc, title):
+        self.ipc_output = ipc
         self.title = title
 
     def handle_appid(self, ipc, appid):
+        self.ipc_output = ipc
         self.appid = appid
 
     def handle_layout_symbol(self, ipc, symbol):
+        self.ipc_output = ipc
         self.layout["old"]["symbol"] = self.layout["new"]["symbol"]
         self.layout["new"]["symbol"] = symbol
 
@@ -147,16 +153,21 @@ def run_command():
 
         if mon:
             if argv[3] == "set_tags":
-                selmon.set_tags(32, 1)
+                # print(selmon)
+                # print(selmon.set_tags)
+                print(selmon.set_tags(32, 1))
+                # print(ZdwlIpcOutputV2Proxy.set_tags(selmon, 2, 32))
+                # selmon.set_tags("teste", 2)
 
             elif argv[3] == "set_client_tags":
+                # print(selmon.set_client_tags(2, 1))
                 print("set_client_tags")
 
             elif argv[3] == "set_layout":
                 set_layout(selmon)
 
         else:
-            error_quit(f"{argv[4]} não é um id de monitor válido")
+            error_quit(f"{argv[2]} não é um id de monitor válido")
     else:
         error_quit("numero de argumentos invalido")
 

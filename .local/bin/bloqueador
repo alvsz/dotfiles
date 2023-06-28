@@ -19,6 +19,6 @@ pre_lock
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
 	pgrep slock || (slock && post_lock)
 else
-	grim - | corrupter - >"/tmp/background.png"
-	pgrep gtklock || (gtklock && post_lock)
+	grim - | corrupter - >"${XDG_RUNTIME_DIR}/background.png"
+	pgrep gtklock || (gtklock --no-round-image --art-size 100 -b "${XDG_RUNTIME_DIR}/background.png" && post_lock)
 fi

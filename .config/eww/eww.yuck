@@ -1,5 +1,6 @@
 (include "./vars.yuck")
 (include "./bar.yuck")
+;; (include "./bar-vertical.yuck")
 (include "./dashboard.yuck")
 (include "./calendar.yuck")
 (include "./lockscreen.yuck")

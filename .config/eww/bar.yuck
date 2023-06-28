@@ -98,6 +98,7 @@
 					      :size 20)
 
           (label :limit-width 60
+                 :wrap false
 		             :text {monitor.title})
 		      ;; "====="
 		      ;; (label :text {monitor.appid})
@@ -174,8 +175,7 @@
     (archdash)
     (dwl)
 		(dwm)
-		(allwindows)
-		))
+		(allwindows)))
 
 (defwidget music []
   (box :orientation "h"
@@ -322,12 +322,12 @@
 
 (defwidget notifcounter []
   (box :orientation "h"
-       :visible {arraylength(notifs) > 0}
+       :visible { arraylength(jq(notifs, '[.[] | select(.visible)]')) > 0 }
        :space-evenly false
        :spacing 5
-       :tooltip {arraylength(notifs) + (arraylength(notifs) == 1 ? " notificação pendente" : " notificações pendentes")}
-    (image :path {gtkicons["notifications-applet-symbolic"]})
-    (label :text {arraylength(notifs)})))
+       ;; :tooltip { arraylength(notifs) + (arraylength(notifs) == 1 ? " notificação pendente" : " notificações pendentes") }
+    (image :path { gtkicons["notifications-applet-symbolic"] } )
+    (label :text { arraylength(jq(notifs, '[.[] | select(.visible)]')) } )))
 
 (defwidget barpowermenu []
   (eventbox :valign "center"
@@ -358,6 +358,15 @@
           ))
       )))
 
+(defwidget data []
+  (button :onclick "${EWW_CMD} open calendar${xorwayland == "wayland" ? "-wayland" : ""} --toggle"
+    (box :orientation "h"
+         :spacing 5
+         :space-evenly false
+      (notifcounter)
+      (label :text "${data.weekday} ${data.day}, ${strlength(data.hour_24) == 1 ? '0${data.hour_24}' : data.hour_24 }:${strlength(data.minute) == 1 ? '0${data.minute}' : data.minute }")))
+  )
+
 (defwidget sidestuff []
   (box :style "margin: 0px 0px 0px 10px"
        :orientation "h"
@@ -373,16 +382,12 @@
     (volume)
     (wifi)
     (battery)
+    (data)
 
-    (button :onclick "${EWW_CMD} open calendar${xorwayland == "wayland" ? "-wayland" : ""} --toggle"
-      (box :orientation "h"
-           :spacing 5
-           :space-evenly false
-        (notifcounter)
-        (label :text "${data.weekday} ${data.day}, ${strlength(data.hour_24) == 1 ? '0${data.hour_24}' : data.hour_24 }:${strlength(data.minute) == 1 ? '0${data.minute}' : data.minute }")))
 
     (button :onclick "${EWW_CMD} open dashboard${xorwayland == "wayland" ? "-wayland" : ""} --toggle"
-	    (label :style "color: ${color6}; font: 14pt siji" :text "")))
+	    (label :style "color: ${color6}; font: 14pt siji" :text ""))
+	  )
 	)
 
 (defwidget bar []

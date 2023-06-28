@@ -176,12 +176,12 @@
   (box :orientation "v"
        :vexpand true
        :spacing 5
-       :visible { arraylength(notifs) > 0 ? true : false}
+       :visible { arraylength(jq(notifs, '[.[] | select(.visible)]')) > 0 }
        :space-evenly false
     (box :orientation "h"
       (label :text "Notificações"
              :halign "start")
-      (button :onclick "${EWW_CMD} update notifs='[]'"
+      (button :onclick `${EWW_CMD} update notifs="$( echo '${notifs}' | jq '.[].visible |= false' )"`
               :halign "end" 
         " Limpar"))
 
@@ -192,58 +192,59 @@
              :class "base"
              :spacing 7
              :space-evenly false
+             :visible {entry?.visible == true}
              :height 70
-        (box :orientation "h"
-             :valign "start"
-             :spacing 7
-             :space-evenly false
-          (image :path {entry.app_icon}
-                 :image-height 56
-                 :halign "start"
-                 :valign "start"
-                 :visible { entry.app_icon != "" && entry?.hints?.wired-note != "screenshot"})
-
-          (box :orientation "v"
+          (box :orientation "h"
+               :valign "start"
+               :spacing 7
                :space-evenly false
-               :hexpand true
-               :spacing 5
-            (box :orientation "h"
-                 :hexpand true
-                 :space-evenly false
-                 :spacing 5
-              (label :text {replace(entry.summary, '[  ͏ ]+', ' ')}
-                     :halign "start"
-                     :wrap true
-                     :hexpand true
-                     :style "font-weight: bold")
-
-              (label :text {entry.time}
-                     :valign "start")
-
-              (button :onclick `${EWW_CMD} update notifs="$( echo '${notifs}' | jq 'del(.[] | select( .id == ${entry.id} ) )' )"`
-                      :halign "end"
-                      :valign "start"
-                      :class "layer3"
-                      :style "min-height: 20px; min-width: 20px"
-                (label :halign "center"
-                       :valign "center"
-                       :style "color: ${foreground}"
-                       :text "x")))
-
-            (label :text {replace(entry.body, '[  ͏ ]+', ' ')}
-                   :wrap true
+            (image :path {entry.app_icon}
+                   :image-height 56
                    :halign "start"
-                   ;; :justify "fill"
-                   :visible { entry.body != "" })
+                   :valign "start"
+                   :visible { entry.app_icon != "" && entry?.hints?.wired-note != "screenshot"})
 
-            (scale :value {entry.hints.value}
-                   :orientation "h"
+            (box :orientation "v"
+                 :space-evenly false
+                 :hexpand true
+                 :spacing 5
+              (box :orientation "h"
                    :hexpand true
-                   :valign "end"
-                   :class "notifprogress"
-                   :min 0 :max 100
-                   :active false
-                   :visible { entry?.hints?.value != "null" })))
+                   :space-evenly false
+                   :spacing 5
+                (label :text {replace(entry.summary, '[  ͏ ]+', ' ')}
+                       :halign "start"
+                       :wrap true
+                       :hexpand true
+                       :style "font-weight: bold")
+
+                (label :text {entry.time}
+                       :valign "start")
+
+                (button :onclick `${EWW_CMD} update notifs="$( echo '${notifs}' | jq '.[] |= ( select( .id == ${entry.id} ).visible |= false )' )"`
+                        :halign "end"
+                        :valign "start"
+                        :class "layer3"
+                        :style "min-height: 20px; min-width: 20px"
+                  (label :halign "center"
+                         :valign "center"
+                         :style "color: ${foreground}"
+                         :text "x")))
+
+              (label :text {replace(entry.body, '[  ͏ ]+', ' ')}
+                     :wrap true
+                     :halign "start"
+                ;; :justify "fill"
+                :visible { entry.body != "" })
+
+              (scale :value {entry.hints.value}
+                     :orientation "h"
+                     :hexpand true
+                     :valign "end"
+                     :class "notifprogress"
+                     :min 0 :max 100
+                     :active false
+                     :visible { entry?.hints?.value != "null" })))
 
           (image :path {entry.app_icon}
                  :image-width 350
@@ -261,9 +262,9 @@
               )
             (button :onclick `rm '${entry.app_icon}' && ${EWW_CMD} update notifs="$( echo '${notifs}' | jq 'del(.[] | select( .id == ${entry.id} ) )' )"`
                     :style "padding: 7px; background-color: ${background}; color: ${color5}; border-radius: 10px"
-              "Apagar")
-            )
-          )))))
+              "Apagar")))
+        )))
+  )
 
 (defwidget kdeconnect []
   (box :orientation "v" :space-evenly false :spacing 5

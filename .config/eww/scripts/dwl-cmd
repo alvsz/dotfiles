@@ -1,0 +1,141 @@
+#!/bin/env lua5.4
+
+local wau = require("wau")
+
+local cjson = require("cjson")
+cjson.encode_empty_table_as_object(false)
+local inspect = cjson.encode
+
+--
+-- local function sleep(time)
+--     local clock = os.clock
+--     local t0 = clock()
+--     while clock() - t0 <= time do end
+-- end
+
+wau:require("wau.protocol.dwl-ipc-unstable-v2")
+
+local outputs = {}
+local properties = {}
+
+local Output = setmetatable({
+    properties = {
+        active = 0,
+        tags = {},
+        layout = {new = {index = 0, symbol = ""}, old = {}},
+        appid = "",
+        title = ""
+    },
+    configure = function(self)
+        self.ipc_output:add_listener({
+            ["active"] = function(_, param)
+                self.properties.active = param
+            end,
+            ["tag"] = function(_, index, state, clients, focused)
+                self.properties.tags[index + 1] = {
+                    state = state,
+                    clients = clients,
+                    focused = focused,
+                    bit_mask = 1 << index
+                }
+            end,
+            ["layout"] = function(_, index)
+                self.properties.layout.old.index =
+                    self.properties.layout.new.index
+                self.properties.layout.new.index = index
+            end,
+            ["title"] = function(_, title)
+                self.properties.title = title
+            end,
+            ["appid"] = function(_, appid)
+                self.properties.appid = appid
+            end,
+            ["layout_symbol"] = function(_, symbol)
+                self.properties.layout.old.symbol =
+                    self.properties.layout.new.symbol
+                self.properties.layout.new.symbol = symbol
+            end
+        })
+    end,
+    release = function(self) self.ipc_output:release() end
+}, {
+    __call = function(self, wl_output, ipc_output)
+        self.wl_output = wl_output
+        self.ipc_output = ipc_output
+        return self
+    end
+})
+
+local ipc_manager
+local num_tags
+local layouts = {}
+
+local display = wau.wl_display.connect(nil)
+local registry = display:get_registry()
+
+registry:add_listener{
+    ["global"] = function(self, name, interface, version)
+        if interface == "zdwl_ipc_manager_v2" then
+            ipc_manager = self:bind(name, wau.zdwl_ipc_manager_v2, version)
+        elseif interface == "wl_output" and ipc_manager ~= nil then
+            local output = self:bind(name, wau.wl_output, version)
+
+            local ipc_output = ipc_manager:get_output(output)
+            -- print(ipc_output)
+            -- ipc_output:set_tags(32, 1)
+            local object = Output(output, ipc_output)
+            object:configure()
+
+            outputs[tostring(name)] = object
+            properties[tostring(name)] = object.properties
+
+        end
+    end,
+    ["global_remove"] = function(_, name, interface, version)
+        if interface == "wl_output" then
+            print(name, interface, version)
+            outputs[tostring(name)]:release()
+            outputs[tostring(name)] = nil
+        end
+    end
+}
+
+display:roundtrip()
+assert(ipc_manager, "Failed to bind ipc manager")
+
+print(inspect(properties))
+-- ipc_manager:add_listener{
+--     ["tags"] = function(_, param) num_tags = param end,
+--     ["layout"] = function(_, param) table.insert(layouts, param) end
+-- }
+
+display:roundtrip()
+print(inspect(properties))
+
+print(outputs["34"].ipc_output:set_tags(32, 1):set_tags(32, 1):set_tags(32, 1))
+
+-- for _ = 1, num_tags do display:roundtrip() end
+
+-- print(inspect(properties))
+
+-- if #arg > 0 then
+--     if outputs[arg[1]] ~= nil then
+--         local selmon = outputs[arg[1]]
+--         local ipc_output = ipc_manager:get_output(selmon.wl_output)
+--         print(ipc_output, selmon.ipc_output)
+--
+--         if arg[2] == "set_tags" then
+--             print("setou tags")
+--
+--             ipc_output:set_tags(64, 1)
+--             selmon.ipc_output:set_tags(16, 32)
+--         elseif arg[2] == "set_layout" then
+--             print("setou layout")
+--
+--             ipc_output:set_layout(tonumber(arg[3]))
+--         end
+--     else
+--         print(("não foi encontrado monitor de id %s"):format(arg[1]))
+--         os.exit(1)
+--     end
+-- end

@@ -305,6 +305,7 @@
  : ${wm}
  : ${kernel}
 󰮯 : ${pacman} instalados
+󰚰 : ${lastupdated} dia${ lastupdated != 1 ? "s" : "" }
  : ${flatpak}, ${flatpakactive} ativo${ flatpakactive != 1 ? "s" : "" }
 󰡨 : ${dockerall - 1}, ${dockeractive - 1} ativo${ dockeractive - 1 != 1 ? "s" : "" }
 󰅐 : ${uptime.uptime_days > 0 ? ( uptime.uptime_days + ( uptime.uptime_days > 1 ? " dias" : " dia" ) + ", " ) : ""}${uptime.uptime_hours + ( uptime.uptime_hours != 1 ? " horas" : " hora" )}, ${uptime.uptime_minutes + ( uptime.uptime_minutes != 1 ? "m" : " minuto" )}'

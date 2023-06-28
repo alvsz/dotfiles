@@ -12,6 +12,7 @@
 
 (defpoll uptime        :interval "1m" "jc uptime")
 (defpoll pacman        :interval "5m" `pacman -Q | wc -l`)
+(defpoll lastupdated   :interval "9m" `echo "$((($(date +%s)-$(date +%s --date "$(grep -i "running 'pacman -syu" /var/log/pacman.log | tail -n 1 | cut -c 2- | cut -d'T' -f1 -)"))/(3600*24)))"`)
 (defpoll flatpak       :interval "5m" `flatpak list | wc -l`)
 (defpoll flatpakactive :interval "5m" `flatpak ps | wc -l`)
 (defpoll kernel        :interval "5m" `uname -r`)
