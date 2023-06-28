@@ -27,6 +27,7 @@ alias \
 alias ll='ls -lhAt --color=auto --group-directories-first'
 alias  l='ls -lht  --color=auto --group-directories-first'
 alias r2mod="io.github.Foldex.r2mod"
+alias scrape="curl -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:113.0) Gecko/20100101 Firefox/113.0'"
 
 alias luarocks="luarocks --tree ${XDG_DATA_HOME}/luarocks"
 

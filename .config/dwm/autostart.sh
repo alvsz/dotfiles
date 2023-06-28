@@ -4,7 +4,7 @@ pgrep polkit-gnome-au || /usr/lib/polkit-gnome/polkit-gnome-authentication-agent
 
 #pgrep xss-lock || xss-lock -- xlock -username "Usuário: " -password "Senha: " -info "Digite a senha para desbloquar; clique no ícone para bloquear." -validate "Validando senha..." -invalid "Senha inválida." -startCmd "polychromatic-cli -o none; openrgb -p off" -endCmd "polychromatic-cli -o spectrum; openrgb -p normal" &
 
-pgrep xss-lock || xss-lock -- bloquador &
+pgrep xss-lock || xss-lock -- bloqueador &
 
 # pgrep light-locker || light-locker no-lock-on-lid &
 
