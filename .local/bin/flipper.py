@@ -45,6 +45,12 @@ imageUrl = ""
 foundSvg = False
 svgUrl = ""
 
+fontForgeScript = """Open($1,1)
+SetFontNames($3,$3,$3)
+SetTTFName(0x409,3,$3)
+Generate($2)
+"""
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:113.0) Gecko/20100101 Firefox/113.0'
 }
@@ -111,8 +117,15 @@ def processSvg(filename, url):
             svg = svg.replace(font, '')
             svg = svg.replace('"' + name + '"', '"' + tname + '"')
 
-            subprocess.run(['fontforge', '-script', 'ffconvert.pe', f'tmp/fonts/{name}.woff',
-                           f'{fonts_dir}/{name}.ttf', tname])
+            p = subprocess.Popen(
+                ['fontforge', '-script', 'ffconvert.pe', f'tmp/fonts/{name}.woff',
+                 f'{fonts_dir}/{name}.ttf', tname],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                encoding='utf-8',
+            )
+            p.communicate(fontForgeScript)
+            # subprocess.run()
 
             font_files.append(f'{fonts_dir}/{name}.ttf')
             os.remove(f'tmp/fonts/{name}.woff')
