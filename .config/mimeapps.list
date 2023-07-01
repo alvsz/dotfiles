@@ -1,5 +1,5 @@
 [Added Associations]
-text/plain=neovide.desktop;
+text/plain=neovide.desktop;nvim.desktop;
 x-scheme-handler/sms=org.gnome.Shell.Extensions.GSConnect.desktop;
 x-scheme-handler/tel=org.gnome.Shell.Extensions.GSConnect.desktop;
 text/markdown=neovide.desktop;
@@ -53,6 +53,8 @@ application/zip=org.gnome.Nautilus.desktop;
 text/calendar=org.gnome.Calendar.desktop;
 application/x-zerosize=neovide.desktop;
 text/x-patch=nvim.desktop;
+image/webp=imv-dir.desktop;
+application/x-compressed-tar=org.gnome.Nautilus.desktop;
 
 [Default Applications]
 image/jpeg=imv-dir.desktop
@@ -90,7 +92,7 @@ application/json=nvim.desktop
 application/x-ms-dos-executable=protontricks-launch.desktop
 application/x-wine-extension-ini=neovide.desktop
 application/x-shellscript=neovide.desktop
-text/plain=neovide.desktop
+text/plain=nvim.desktop
 text/html=neovide.desktop
 text/x-lua=neovide.desktop
 text/markdown=neovide.desktop
@@ -102,3 +104,5 @@ x-scheme-handler/http=firefox.desktop
 text/calendar=org.gnome.Calendar.desktop
 application/x-zerosize=neovide.desktop
 text/x-patch=nvim.desktop
+image/webp=imv-dir.desktop
+application/x-compressed-tar=org.gnome.Nautilus.desktop
