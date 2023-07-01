@@ -9,6 +9,7 @@ import requests
 import sys
 import subprocess
 import uuid
+import fontforge
 
 
 if sys.argv[1] == "--help" or sys.argv[1] == "-h":
@@ -44,12 +45,6 @@ imageUrl = ""
 
 foundSvg = False
 svgUrl = ""
-
-fontForgeScript = """Open($1,1)
-SetFontNames($3,$3,$3)
-SetTTFName(0x409,3,$3)
-Generate($2)
-"""
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:113.0) Gecko/20100101 Firefox/113.0'
@@ -102,33 +97,33 @@ def processSvg(filename, url):
 
         for font in fonts:
             name = re.search(r'font-family: "(.*?)"', font).group(1)
-            data = re.search(
-                r'src: url\(data:font/woff;base64,(.*?)\);', font).group(1)
-            payload = base64.b64decode(data.encode('utf-8'))
 
-            with open(f'tmp/fonts/{name}.woff', 'wb') as outf:
-                outf.write(payload)
+            woff = re.search(
+                r'src: url\(data:font/woff;base64,(.*?)\);', font)
 
-            # Generate a random name to bypass caching
-            tname = str(uuid.uuid4())
+            if woff is not None:
+                data = woff.group(1)
 
-            # print('Extracting font {}'.format(tname))
+                payload = base64.b64decode(data.encode('utf-8'))
 
-            svg = svg.replace(font, '')
-            svg = svg.replace('"' + name + '"', '"' + tname + '"')
+                with open(f'tmp/fonts/{name}.woff', 'wb') as outf:
+                    outf.write(payload)
 
-            p = subprocess.Popen(
-                ['fontforge', '-script', '-', f'tmp/fonts/{name}.woff',
-                 f'{fonts_dir}/{name}.ttf', tname],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                encoding='utf-8',
-            )
-            p.communicate(fontForgeScript)
-            # subprocess.run()
+                tname = str(uuid.uuid4())
 
-            font_files.append(f'{fonts_dir}/{name}.ttf')
-            os.remove(f'tmp/fonts/{name}.woff')
+                svg = svg.replace(font, '')
+                svg = svg.replace('"' + name + '"', '"' + tname + '"')
+
+                font = fontforge.open(f'tmp/fonts/{name}.woff')
+                font.selection.all()
+                font.correctReferences()
+                font.fontname = font.fullname = font.familyname = tname
+                font.appendSFNTName(0x409, 3, tname)
+                font.generate(f'{fonts_dir}/{name}.ttf')
+                font.close()
+
+                font_files.append(f'{fonts_dir}/{name}.ttf')
+                os.remove(f'tmp/fonts/{name}.woff')
 
         with open('tmp/svgfile.svg', 'w') as f:
             print(svg, file=f)
