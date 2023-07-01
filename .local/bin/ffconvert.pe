@@ -1,0 +1,4 @@
+Open($1,1)
+SetFontNames($3,$3,$3)
+SetTTFName(0x409,3,$3)
+Generate($2)
