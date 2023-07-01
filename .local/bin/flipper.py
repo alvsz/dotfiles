@@ -118,7 +118,7 @@ def processSvg(filename, url):
             svg = svg.replace('"' + name + '"', '"' + tname + '"')
 
             p = subprocess.Popen(
-                ['fontforge', '-script', 'ffconvert.pe', f'tmp/fonts/{name}.woff',
+                ['fontforge', '-script', '-', f'tmp/fonts/{name}.woff',
                  f'{fonts_dir}/{name}.ttf', tname],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
