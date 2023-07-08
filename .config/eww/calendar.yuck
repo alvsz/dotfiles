@@ -70,7 +70,7 @@
 		      				     :wrap true
 		      				     :halign "start"
 		      				     :valign "center"
-		      		         :visible { entry.starttime != "null" && entry.endtime != "null" ? true : false } )))
+		      		         :visible { entry.starttime != "null" && entry.endtime != "null" && entry.starttime != "" && entry.endtime != "" } )))
 		        ))
 
     	  (box :space-evenly false
@@ -433,6 +433,42 @@
          :style "margin-bottom: 8px"
       (calendario)
       (events)
+
+      ;; {jq(flatpakps, ".")}
+      (for app in flatpakps
+        (box :orientation "v"
+             :space-evenly false
+             :visible {strlength(app) > 0}
+             :class "base"
+
+          (icon :path {
+            gtkicons?.[replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")] != "null" ?
+            gtkicons?.[replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")] :
+            gtkicons?.[replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")] != "null" ?
+            gtkicons?.[replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")] :
+            gtkicons?.[replace(jq('"${replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")}"', ". |= ascii_downcase"), '^"|"$', '')] != "null" ?
+            gtkicons?.[replace(jq('"${replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")}"', ". |= ascii_downcase"), '^"|"$', '')] :
+            gtkicons["computer"]
+            }
+                :dark true
+                :size 20)
+
+          (label :text {replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}
+                 :halign "center"
+                 :style "background-color: ${foreground}; color: ${background}")
+
+          ;; {app}
+          (label :text {replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")}
+                 :style "background-color: ${color2}; color: ${background}"
+                 :halign "center")
+          
+          
+          )
+          ;; {search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0]}
+          ;; {replace(search(flatpaklist,   )?.[0], "\\t.*$", "")}
+      ;; {strlength(flatpakps) > 0 ? arraylength(search(flatpakps, "\\n")) + 1 : 0}
+        )
+
       (kdeconnect)
       (musicnotif)
 
