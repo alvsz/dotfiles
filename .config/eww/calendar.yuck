@@ -421,19 +421,10 @@
   )))
 ))
 
-(defwidget calendar-win []
-  (scroll :vscroll true
-          :hscroll false
-          :vexpand true
-          :style "padding-bottom: 0px"
-          :class "calwindow"
-    (box :spacing 10
-         :orientation "v"
-         :space-evenly false
-         :style "margin-bottom: 8px"
-      (calendario)
-      (events)
-
+(defwidget background-apps []
+  (box :orientation "v"
+       :spacing 10
+       :space-evenly false
       ;; {jq(flatpakps, ".")}
       (for app in flatpakps
         (box :orientation "v"
@@ -468,7 +459,22 @@
           ;; {replace(search(flatpaklist,   )?.[0], "\\t.*$", "")}
       ;; {strlength(flatpakps) > 0 ? arraylength(search(flatpakps, "\\n")) + 1 : 0}
         )
+    )
+  )
 
+(defwidget calendar-win []
+  (scroll :vscroll true
+          :hscroll false
+          :vexpand true
+          :style "padding-bottom: 0px"
+          :class "calwindow"
+    (box :spacing 10
+         :orientation "v"
+         :space-evenly false
+         :style "margin-bottom: 8px"
+      (calendario)
+      (events)
+      ;; (background-apps)
       (kdeconnect)
       (musicnotif)
 
