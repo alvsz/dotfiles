@@ -11,7 +11,14 @@ local paths = {}
 
 for _, j in pairs(icons) do
     local info = icon_theme:lookup_icon(string.lower(j), 64, 0)
-    if info then paths[j] = Gtk.IconInfo.get_filename(info) end
+    if info then
+        paths[j] = Gtk.IconInfo.get_filename(info)
+    else
+        info = icon_theme:lookup_icon(string.lower(j), 64, 0)
+        if info then paths[j] = Gtk.IconInfo.get_filename(info) end
+    end
+
 end
 
+-- print(paths)
 print(cjson.encode(paths))
