@@ -260,7 +260,7 @@
                     :style "padding: 7px; background-color: ${color4}; color: ${background}; border-radius: 10px"
               "Abrir"
               )
-            (button :onclick `rm '${entry.app_icon}' && ${EWW_CMD} update notifs="$( echo '${notifs}' | jq 'del(.[] | select( .id == ${entry.id} ) )' )"`
+            (button :onclick `rm '${entry.app_icon}' && ${EWW_CMD} update notifs="$( echo '${notifs}' | jq '.[] |= ( select( .id == ${entry.id} ).visible |= false )' )"`
                     :style "padding: 7px; background-color: ${background}; color: ${color5}; border-radius: 10px"
               "Apagar")))
         )))

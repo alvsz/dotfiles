@@ -249,26 +249,26 @@
 (defwidget tray []
   (box :orientation "h"
        :space-evenly false
-       :spacing 0
-    (revealer :reveal {trayexpand && arraylength(tray) > 0 }
-              :transition "slideleft"
-      (box :orientation "h"
-           :space-evenly false 
-           :spacing 5
-           :style 'margin: 0px 5px 0px 0px'
+       :spacing 5
+    ;; (revealer :reveal {trayexpand && arraylength(tray) > 0 }
+    ;;           :transition "slideleft"
+    ;;   (box :orientation "h"
+    ;;        :space-evenly false 
+    ;;        :spacing 5
+    ;;        :style 'margin: 0px 5px 0px 0px'
         (for entry in tray
           (button :onrightclick { entry.cmd + " &" }
                   :onclick { entry.menu_cmd + " &" }
                   :tooltip {entry.ToolTip}
             (image :image-height 20
                    :path {entry.IconPath})))
-        ))
-
-    (button :onclick `${EWW_CMD} update trayexpand=${ arraylength(tray) > 0 ? (trayexpand == false) : false}`
-      (label :style "font: 12pt siji; color: ${color3}"
-             :yalign 0.6
-             :text "")
-      )))
+    ;;     ))
+    ;;
+    ;; (button :onclick `${EWW_CMD} update trayexpand=${ arraylength(tray) > 0 ? (trayexpand == false) : false}`
+    ;;   (label :style "font: 12pt siji; color: ${color3}"
+    ;;          :yalign 0.6
+    ;;          :text ""))
+    ))
 
 (defwidget volume []
   (eventbox :onclick "volume mute"

@@ -57,12 +57,17 @@ def is_page(url):
     if "Policy" in url and "common" in url:
         foundSvg = True
         foundImage = True
+        print("achou imagem")
+        print(url)
 
         imageUrl = re.sub(r"(?<=/common/).*(?=\?Policy)",
                           "pages/html5substrates/page0001_4.jpg", url)
 
         svgUrl = re.sub(r"(?<=/common/).*(?=\?Policy)",
                         "pages/vector/0001.svg", url)
+    else:
+        print("request não é imagem")
+        print(url)
 
 
 def processImage(name, url):
@@ -157,14 +162,17 @@ def merge(bgName, textName, pageId):
         os.remove(bgPdfPath)
 
 
-def run(playwright):
+def run(p):
     global headers, foundSvg, foundImage
 
-    browser = p.chromium.launch(headless=False)
-    context = browser.new_context(extra_http_headers=headers)
+    browser = p.firefox.launch(headless=False)
+    # browser = p.chromium.launch(headless=False)
+    # context = browser.new_context(extra_http_headers=headers)
 
-    page = context.new_page()
-    page.on("response", lambda response: is_page(
+    # page = context.new_page()
+    page = browser.new_page()
+
+    page.on("request", lambda response: is_page(
         response.url))
 
     page.goto(f"https://online.flippingbook.com/view/{book_id}/")
