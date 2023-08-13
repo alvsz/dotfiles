@@ -45,7 +45,7 @@ if active then
     })
 
     local alldevices = xpath.selectNodes(lom.parse(kdeconnect:Introspect()),
-        '/node/node/@name')
+                                         '/node/node/@name')
 
     -- print(inspect(alldevices))
 
@@ -73,6 +73,7 @@ if active then
                 }):GetAll('org.kde.kdeconnect.device.battery')
 
                 local level, charge
+
                 if batteryinfo.charge < 20 then
                     level = "-empty"
                 elseif batteryinfo.charge >= 20 and batteryinfo.charge < 40 then
@@ -99,7 +100,7 @@ if active then
             end
 
             if table.contains(info.supportedPlugins,
-                    "kdeconnect_connectivity_report") then
+                              "kdeconnect_connectivity_report") then
                 connectivityinfo = proxy.Proxy:new({
                     bus = proxy.Bus.SESSION,
                     name = "org.kde.kdeconnect.daemon",
@@ -149,7 +150,7 @@ if active then
 
                         local metadata =
                             cjson.encode(props2.Metadata):gsub("mpris:", "")
-                            :gsub("xesam:", "")
+                                :gsub("xesam:", "")
 
                         props2.Metadata = cjson.decode(metadata)
 
@@ -175,8 +176,8 @@ if active then
                 })
 
                 local allnotifs = xpath.selectNodes(lom.parse(
-                        notifications:Introspect()),
-                    '/node/node/@name')
+                                                        notifications:Introspect()),
+                                                    '/node/node/@name')
                 -- print(inspect(allnotifs))
 
                 for _, value2 in pairs(allnotifs) do
@@ -187,7 +188,7 @@ if active then
                         path = "/modules/kdeconnect/devices/" .. value ..
                             "/notifications/" .. value2
                     }):GetAll(
-                        'org.kde.kdeconnect.device.notifications.notification')
+                                          'org.kde.kdeconnect.device.notifications.notification')
 
                     notifinfo["id"] = value2
 
@@ -231,7 +232,7 @@ if active then
                 -- print(cjson.encode(sftp.tempdirs))
 
                 for i, j in pairs(tempdirs) do
-                    table.insert(sftp.getDirectories, { name = j, path = i })
+                    table.insert(sftp.getDirectories, {name = j, path = i})
                     -- print(i, j)
                 end
             end
@@ -247,9 +248,9 @@ if active then
             -- info["expanded"] = false
             info["supportedPlugins"] = nil
             info["expanded"] = capture("eww get kdeconnect | jq '.[" ..
-                    tostring(#devicearray) ..
-                    "].expanded' -c --unbuffered") ==
-                "true"
+                                           tostring(#devicearray) ..
+                                           "].expanded' -c --unbuffered") ==
+                                   "true"
             -- info["expanded"] = cjson.decode(capture(
             --                                     "eww get kdeconnect | jq -c --unbuffered"))[#devicearray]
             --                        .expanded

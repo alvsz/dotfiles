@@ -20,8 +20,11 @@ fi
 
 eww update mesano="$(date -d "${ano}-${mes}-${dia}" '+%B %Y')"
 
-eventos=$(khal list "${dia}/${mes}/${ano}" eod --format '{{ "name": "{title}", "starttime": "{start-time}", "endtime": "{end-time}" }}' | tail -n +2 | jq -cs 'sort_by(.starttime)')
+eventos=$(khal list "${dia}/${mes}/${ano}" eod --format '{{ "name": "{title}", "start": "{start-long}", "end": "{end-long}", "location": "{location}", "calendar": "{calendar}" }}' | tail -n +2 | jq -cs)
+# .[].start |= (strptime("%d/%m/%Y %H:%M")|mktime) | .[].end |= (strptime("%d/%m/%Y %H:%M")|mktime)
 
-todo=$(todo --porcelain | jq -c '(.[] | select(.due)) |= (. as $task | .duetime |= ($task.due | strflocaltime("%H:%M")) | .duedate |= ($task.due | strftime("%d/%m") ) ) | del(.[] | select(.completed or ( .start > now ) )) | sort_by(.due) | reverse')
+todo=$(todo --porcelain | jq -c)
 
-echo "{\"events\": ${eventos}, \"todo\": ${todo}}"
+date="$(date -d "${ano}-${mes}-${dia}" '+%s')"
+
+echo "{ \"events\": ${eventos}, \"todo\": ${todo}, \"date\": ${date} }"
