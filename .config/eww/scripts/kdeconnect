@@ -1,9 +1,0 @@
-#!/bin/env sh
-
-# echo $0
-# echo $PWD
-
-gdbus monitor --session --dest org.kde.kdeconnect.daemon | while read line; do
-	"$(dirname -- "$0")/kdeconnect.lua"
-	# eww-kdeconnect.lua
-done
