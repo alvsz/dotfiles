@@ -44,7 +44,7 @@
            :space-evenly false
            :spacing 3
 
-        (for ap in {jq(bluetooth, '[.[] | select( .value."org.bluez.Device1" )]')}
+        (for ap in {jq( bluetooth, 'map(select( .value."org.bluez.Device1" ))' )}
           (button :onclick `notify-send "Bluetooth" "$(bluetoothctl ${ap.value['org.bluez.Device1'].Connected.data ? 'disconnect' : 'connect'} '${ap.value['org.bluez.Device1'].Address.data}')" &`
                   :class "bluetooth"
             (box :orientation "h"
@@ -327,9 +327,9 @@
 	  (box :orientation "v"
 	       :space-evenly false
 	       :spacing 10
-	    (label :text "${strlength(data.hour_24) == 1 ? '0${data.hour_24}' : data.hour_24 }:${strlength(data.minute) == 1 ? '0${data.minute}' : data.minute }"
+	    (label :text {formattime(EWW_TIME, "%R")}
 	           :style "font-size: 41pt")
-	    (label :text "${semana}, ${data.day} de ${mes}"
+	    (label :text "${semana}, ${formattime(EWW_TIME, "%d")} de ${mes}"
 	           :style "font-size: 15pt"))
 
 	  (powermenu)

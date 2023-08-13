@@ -364,7 +364,7 @@
          :spacing 5
          :space-evenly false
       (notifcounter)
-      (label :text "${data.weekday} ${data.day}, ${strlength(data.hour_24) == 1 ? '0${data.hour_24}' : data.hour_24 }:${strlength(data.minute) == 1 ? '0${data.minute}' : data.minute }")))
+      (label :text "${data.weekday} ${formattime(EWW_TIME, "%d, %R")}")))
   )
 
 (defwidget sidestuff []

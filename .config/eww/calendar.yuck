@@ -4,7 +4,7 @@
          :style "padding: 0.8em"
          :space-evenly false
          :spacing 5
-      (label :text {mesano}
+      (label :text mesano 
              :style "font-size: 15pt; font-weight: bold;"
              :halign "center")
 
@@ -66,11 +66,23 @@
 		      			 	     :valign "center"
 		      			 	     :halign "start"
 		      		         :wrap true)
-		      	    (label :text "${entry.starttime} - ${entry.endtime}"
+		      	    (label :text {
+		      	      replace((entry.start + " - " + entry.end), `${formattime(events.date, "%d/%m/%Y")}( )?`, "")
+		      	      ;; jq("10/05/2005", 'strptime("%d/%m/%Y")')
+		      	      ;; matches(entry.start, "[0-9]+ ") ?
+		      	      ;; "tem hora"
+		      	      ;; jq( entry, '.start | strptime("%d/%m/%Y %H:%M")' )
+		      	      ;; : ""
+		      	      ;; replace(
+		      	      ;;                     (formattime(entry.start, "%d/%m, %R") + " - " + formattime(entry.end, "%d/%m, %R")),
+		      	      ;;                     formattime(events.date, "%d/%m, "),
+		      	      ;;                     ""
+		      	      ;;                     )
+		      	      } 
 		      				     :wrap true
 		      				     :halign "start"
 		      				     :valign "center"
-		      		         :visible { entry.starttime != "null" && entry.endtime != "null" && entry.starttime != "" && entry.endtime != "" } )))
+		      		         :visible { entry.start != formattime(events.date, "%d/%m/%Y") && entry.end != formattime(events.date, "%d/%m/%Y") } )))
 		        ))
 
     	  (box :space-evenly false
@@ -82,7 +94,7 @@
 	               :style "font-weight: bold"
 	    			     :halign "start")
 
-	        (for entry in {events.todo}
+	        (for entry in {jq(events.todo, "sort_by(.due)")}
 		 		    (box :orientation "h"
 		 		         :space-evenly false
 		 		         :spacing 10
@@ -105,10 +117,7 @@
 		      			;;        :halign "start")
 
 		      			(label :text {entry.list + (entry.due == "null" ? "" :
-		      			                             ( " - " +
-		      			                                 (entry.duetime == "00:00" ? "" : entry.duetime)
-		      			                                 + entry.duedate )
-		      			                             )}
+		      			                             ( " - " + replace(formattime(entry.due, "%d/%m, %R"), ", 00:00", "") ) ) }
 		      			       :valign "center"
 		      			       :halign "start"
 		      			       :wrap true))
@@ -335,7 +344,7 @@
                 {device?.sftp?.isMounted == true ? "Desmontar" : "Montar"})
 
               (for folder in {device.sftp.getDirectories}
-                (button :onclick `nautilus -w "${folder.path}" &`
+                (button :onclick `xdg-open "${folder.path}" &`
                         :visible {device.sftp.isMounted}
                   "Navegar ${folder.name}"))
               ))
@@ -423,44 +432,34 @@
 
 (defwidget background-apps []
   (box :orientation "v"
-       :spacing 10
+       :spacing 5
        :space-evenly false
-      ;; {jq(flatpakps, ".")}
-      (for app in flatpakps
-        (box :orientation "v"
-             :space-evenly false
-             :visible {strlength(app) > 0}
-             :class "base"
+    (for app in flatpakps
+      (box :orientation "h"
+           :space-evenly false
+           :visible {strlength(app) > 0}
+           :class "base"
+           :spacing 10
+           :style "padding: 5px;"
+           ;; :css `button:hover { background-color: #ffffff }; padding: 5px`
 
-          (icon :path {
-            gtkicons?.[replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")] != "null" ?
-            gtkicons?.[replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")] :
-            gtkicons?.[replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")] != "null" ?
-            gtkicons?.[replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")] :
-            gtkicons?.[replace(jq('"${replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")}"', ". |= ascii_downcase"), '^"|"$', '')] != "null" ?
-            gtkicons?.[replace(jq('"${replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")}"', ". |= ascii_downcase"), '^"|"$', '')] :
-            gtkicons["computer"]
-            }
-                :dark true
-                :size 20)
+        (icon :path {app["icon"]}
+              :dark true
+              :halign "start"
+              :size 32)
 
-          (label :text {replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}
-                 :halign "center"
-                 :style "background-color: ${foreground}; color: ${background}")
+        (label :text {app["name"]}
+               :halign "start"
+               :hexpand true)
 
-          ;; {app}
-          (label :text {replace(search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0], "\\t.*", "")}
-                 :style "background-color: ${color2}; color: ${background}"
-                 :halign "center")
-          
-          
-          )
-          ;; {search(flatpaklist, ".*${replace(replace(app, "^[^\\t]*\\t[^\\t]*\\t", ""), "\\t.*$", "")}.*")?.[0]}
-          ;; {replace(search(flatpaklist,   )?.[0], "\\t.*$", "")}
-      ;; {strlength(flatpakps) > 0 ? arraylength(search(flatpakps, "\\n")) + 1 : 0}
-        )
-    )
-  )
+        (button :onclick `flatpak kill ${app["app_id"]}`
+                :halign "end" :valign "center"
+                :class "layer4"
+                :style "min-height: 20px; min-width: 20px"
+          (label :halign "center" :valign "center"
+                 :style "color: ${foreground}; "
+                 :text "x")))
+      )))
 
 (defwidget calendar-win []
   (scroll :vscroll true
@@ -474,13 +473,12 @@
          :style "margin-bottom: 8px"
       (calendario)
       (events)
-      ;; (background-apps)
+      (background-apps)
       (kdeconnect)
       (musicnotif)
 
       (notifs)
-      ))
-  )
+      )))
 
 (defwindow calendar
   :monitor 0
