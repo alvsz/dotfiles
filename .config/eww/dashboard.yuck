@@ -123,6 +123,51 @@
 
 	  ))
 
+(defwidget dashboard_music []
+  (overlay :visible { arraylength(music) > 0 ? true : false}
+		(image :path "${music[0].artPath}"
+		       :image-width 227
+		       :valign "start"
+		       :halign "fill"
+		       :vexpand true
+		       :class "base")
+
+		(box :orientation "v"
+		     :space-evenly false
+		     :halign "fill"
+		     :valign "end"
+		     :spacing 2
+		     :class "mediabox"
+		  (label :text {music[0].Metadata.title}
+		         :limit-width 20
+		         :style "font-weight: bold;"
+		         :halign "center")
+
+		  (label :text { replace(replace(jq(music?.[0]?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ') }
+		         :limit-width 20
+		         :halign "center"
+             :visible { music?.[0]?.Metadata?.artist?.[0] != "null" && music?.[0]?.Metadata?.artist?.[0] != "" ? true : false })
+
+		  (centerbox :orientation "h"
+		             :class "mediacontrol"
+				(button :onclick "midia prev"
+				  "玲")
+				(button :onclick "midia play-pause"
+				  { music[0].PlaybackStatus == "Playing" ? "" : music[0].PlaybackStatus == "Paused" ? "契" : "懶"})
+				(button :onclick "midia next"
+				  "怜"))
+
+			(scale :value { ( (music?.[0].Position + ( music?.[0].PlaybackStatus == "Playing" ? ((EWW_TIME - music?.[0].time) * music?.[0].Rate * 1000000 ) : 0 ) ) / music?.[0]?.Metadata?.length) * 100 }
+             :orientation "h"
+             :valign "end"
+             :halign "fill"
+             :min 0
+             :max 100
+             :active false
+             :class "notifprogress"
+             :visible { music?.[0]?.Position != "null" && music?.[0]?.Metadata?.length != "null" }))
+    ))
+
 (defwidget system []
   (box :spacing 6
        :orientation "h"
@@ -154,49 +199,7 @@
 	                    :value {EWW_DISK["/mnt/hdd"].used_perc}
 	                    :onchange ""
 	                    :text ""))
-
-    (overlay :visible { arraylength(music) > 0 ? true : false}
-		  (image :path "${music[0].artPath}"
-		         :image-width 227
-		         :valign "start"
-		         :halign "fill"
-		         :class "base")
-
-		  (box :orientation "v"
-		       :space-evenly false
-		       :halign "fill"
-		       :valign "end"
-		       :spacing 2
-		       :class "mediabox"
-		    (label :text {music[0].Metadata.title}
-		           :limit-width 20
-		           :style "font-weight: bold;"
-		           :halign "center")
-
-		    (label :text { replace(replace(jq(music?.[0]?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ') }
-		           :limit-width 20
-		           :halign "center"
-               :visible { music?.[0]?.Metadata?.artist?.[0] != "null" && music?.[0]?.Metadata?.artist?.[0] != "" ? true : false })
-
-		    (centerbox :orientation "h"
-		               :class "mediacontrol"
-				  (button :onclick "midia prev"
-				    "玲")
-				  (button :onclick "midia play-pause"
-				    { music[0].PlaybackStatus == "Playing" ? "" : music[0].PlaybackStatus == "Paused" ? "契" : "懶"})
-				  (button :onclick "midia next"
-				    "怜"))
-
-				(scale :value { (music?.[0]?.Position / music?.[0]?.Metadata?.length) * 100 }
-               :orientation "h"
-               :valign "end"
-               :halign "fill"
-               :min 0
-               :max 100
-               :active false
-               :class "notifprogress"
-               :visible { music?.[0]?.Position != "null" && music?.[0]?.Metadata?.length != "null" })))
-		))
+	  (dashboard_music)))
 
 (defwidget stats []
   (box :spacing 20

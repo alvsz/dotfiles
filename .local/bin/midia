@@ -46,7 +46,7 @@ get_metadata() {
 			# echo $artPath
 			# echo $artUrl
 
-			metadata=$(echo "$metadata" | jq --unbuffered -Sc --arg artPath "${artPath}" --arg entry "${entry}" --argjson properties "${properties}" '. += { artPath: $artPath, player: $entry, properties: $properties }')
+			metadata=$(echo "$metadata" | jq --unbuffered -Sc --arg artPath "${artPath}" --arg entry "${entry}" --arg time "$(date +%s)" --argjson properties "${properties}" '. += { artPath: $artPath, player: $entry, time: $time, properties: $properties }')
 
 			echo "$metadata"
 		fi

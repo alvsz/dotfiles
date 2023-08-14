@@ -2,7 +2,8 @@
 
 local proxy = require("dbus_proxy")
 local cjson = require("cjson")
-cjson.encode_empty_table_as_object = false
+-- cjson.encode_empty_table_as_object = false
+
 local xpath = require("luaxpath")
 local lom = require("lxp.lom")
 
@@ -158,6 +159,7 @@ local function main()
 
                             props2.properties = props
                             props2.bus = value2
+                            props2.time = os.time()
 
                             props2.artPath =
                                 (props.Identity:gsub(" - .*", ""):lower())
@@ -267,6 +269,7 @@ local function main()
             end
         end
 
+        setmetatable(devicearray, cjson.empty_array_mt)
         print(cjson.encode(devicearray))
     else
         print("[]")

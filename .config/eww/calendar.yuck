@@ -66,19 +66,7 @@
 		      			 	     :valign "center"
 		      			 	     :halign "start"
 		      		         :wrap true)
-		      	    (label :text {
-		      	      replace((entry.start + " - " + entry.end), `${formattime(events.date, "%d/%m/%Y")}( )?`, "")
-		      	      ;; jq("10/05/2005", 'strptime("%d/%m/%Y")')
-		      	      ;; matches(entry.start, "[0-9]+ ") ?
-		      	      ;; "tem hora"
-		      	      ;; jq( entry, '.start | strptime("%d/%m/%Y %H:%M")' )
-		      	      ;; : ""
-		      	      ;; replace(
-		      	      ;;                     (formattime(entry.start, "%d/%m, %R") + " - " + formattime(entry.end, "%d/%m, %R")),
-		      	      ;;                     formattime(events.date, "%d/%m, "),
-		      	      ;;                     ""
-		      	      ;;                     )
-		      	      } 
+		      	    (label :text {replace((entry.start + " - " + entry.end), `${formattime(events.date, "%d/%m/%Y")}( )?`, "")} 
 		      				     :wrap true
 		      				     :halign "start"
 		      				     :valign "center"
@@ -106,7 +94,7 @@
 							     :space-evenly false
 							     :hexpand true
 		      			   :valign "center"
-		      		:halign "start"
+		      		     :halign "start"
 		            (label :text {entry.summary}
 		      			       :valign "center"
 		      			       :halign "start"
@@ -164,7 +152,7 @@
                  :text {replace(replace(jq(player?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ')}
             )
 
-          (scale :value { (player.Position / player.Metadata.length) * 100 }
+          (scale :value { ( (player.Position + ( player.PlaybackStatus == "Playing" ? ((EWW_TIME - player.time) * player.Rate * 1000000 ) : 0 ) ) / player.Metadata.length) * 100 }
                  :orientation "h"
                  :valign "end"
                  :min 0 :max 100
@@ -376,7 +364,7 @@
                      :visible {entry.Metadata.artist != "" && entry?.Metadata?.artist != "null" ? true : false}
                      :text {replace(replace(jq(entry?.Metadata?.artist, ".[]"), '^"|"$', ''), '""', ', ')}
                 )
-              (scale :value { (entry.Position / entry.Metadata.length) * 100 }
+              (scale :value { ( (entry.Position + ( entry.PlaybackStatus == "Playing" ? ((EWW_TIME - entry.time) * entry.Rate * 1000000 ) : 0 ) ) / entry.Metadata.length) * 100 }
                      :orientation "h"
                      :valign "end"
                      :min 0 :max 100
@@ -434,6 +422,7 @@
   (box :orientation "v"
        :spacing 5
        :space-evenly false
+       :visible { arraylength(flatpakps) > 0 }
     (for app in flatpakps
       (box :orientation "h"
            :space-evenly false
@@ -454,7 +443,7 @@
 
         (button :onclick `flatpak kill ${app["app_id"]}`
                 :halign "end" :valign "center"
-                :class "layer4"
+                :class "button3"
                 :style "min-height: 20px; min-width: 20px"
           (label :halign "center" :valign "center"
                  :style "color: ${foreground}; "
