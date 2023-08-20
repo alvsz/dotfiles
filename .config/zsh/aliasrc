@@ -22,7 +22,8 @@ alias \
 	ka="killall" \
 	g="git" \
 	f="$EXPLORER" \
-	e="$EDITOR"
+	e="$EDITOR" \
+	\#="sudo"
 
 alias ll='ls -lhAt --color=auto --group-directories-first'
 alias  l='ls -lht  --color=auto --group-directories-first'

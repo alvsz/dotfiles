@@ -13,12 +13,21 @@ post_lock() {
 	# polychromatic-cli -o spectrum
 }
 
-if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-	pre_lock
+lock() {
+	if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+		pre_lock
+		pgrep slock || slock
+		post_lock
 
-	pgrep slock || (slock && post_lock)
-else
-	grim - | corrupter - >"${XDG_RUNTIME_DIR}/background.png"
+	else
+		pgrep gtklock || (
+			dpms on
+			grim - | corrupter - >"${XDG_RUNTIME_DIR}/background.png"
+			gtklock -d --no-round-image --art-size 100 -b "${XDG_RUNTIME_DIR}/background.png"
+			sleep 5
+			dpms off
+		)
+	fi
+}
 
-	pgrep gtklock || gtklock --no-round-image --art-size 100 -b "${XDG_RUNTIME_DIR}/background.png"
-fi
+lock

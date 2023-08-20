@@ -5,7 +5,7 @@ export INTEL_DEBUG=noccs
 export MESA_VK_DEVICE_SELECT="$igpu"
 
 if [ "$XDG_CURRENT_DESKTOP" != "gamescope" ]; then
-	gamescope="gamescope --prefer-vk-device=$igpu $1 -H 1080 -U --"
+	gamescope="gamescope --prefer-vk-device=$igpu $1 -H 1080 -F fsr --"
 fi
 
 shift
