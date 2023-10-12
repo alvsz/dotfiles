@@ -67,7 +67,8 @@ bus:add_filter(function(a, msg)
         -- print(inspect(notif))
         -- print(cjson.encode(notif))
 
-        if notif["hints"]["wired-note"] ~= "osd" then
+        if notif["hints"]["wired-note"] ~= "osd" and notif["app_name"] ~=
+            "Devify" then
             local notifs = cjson.decode(capture("eww get notifs", true))
 
             if type(notif["hints"]["image-data"]) == "table" or

@@ -170,6 +170,8 @@ local function main()
                 end
 
                 local notifarray = {}
+                setmetatable(notifarray, cjson.empty_array_mt)
+
                 if table.contains(info.supportedPlugins,
                                   "kdeconnect_notifications") then
                     notifications = proxy.Proxy:new({

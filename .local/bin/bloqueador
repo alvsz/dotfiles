@@ -26,6 +26,8 @@ lock() {
 			gtklock -d --no-round-image --art-size 100 -b "${XDG_RUNTIME_DIR}/background.png"
 			sleep 5
 			dpms off
+			idle.lua
+			dpms on
 		)
 	fi
 }

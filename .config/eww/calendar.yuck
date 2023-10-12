@@ -1,7 +1,7 @@
-(defwidget notification [summary body time command icon icon_size layer]
+(defwidget notification [summary body time command icon icon_size layer screenshot player]
   (box :orientation "h"
        :style "padding: 7px"
-       :class { "layer" + layer }
+       :class { layer == 0 ? "base" : ( "layer" + ( layer + 1 ) ) }
        :height 70
        :valign "start"
        :spacing 7
@@ -22,7 +22,7 @@
                :style "font-weight: bold" :wrap true)
         (button :onclick "command"
                 :halign "end" :valign "start"
-                :class { "layer" + (layer+1) }
+                :class "layer3"
                 :style "min-height: 20px; min-width: 20px"
           (label :halign "center" :valign "center"
                  :style "color: ${foreground}; "
@@ -419,6 +419,18 @@
 
 
 (for entry in {device.notifications}
+  ;; (label :text {entry.appName})
+  ;; (notifications :summary {replace((entry.appName + ' - ' + entry.title), '[  ͏ ]+', ' ')}
+  ;;                :body {replace(entry.text, '[  ͏ ]+', ' ')}
+  ;;                :time "10:00"
+  ;;                :command "busctl --user call org.kde.kdeconnect.daemon /modules/kdeconnect/devices/${device.id}/notifications/${entry.id} org.kde.kdeconnect.device.notifications.notification dismiss"
+  ;;                :icon {entry.iconPath}
+  ;;                :icon_size 56
+  ;;                :layer 1
+  ;;                :screenshot false
+  ;;                :player false
+  ;;   )
+  ;; [summary body time command icon icon_size layer]
   (box :orientation "h"
        :style "padding: 7px"
        :class "layer2"
