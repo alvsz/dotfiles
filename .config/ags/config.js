@@ -1,5 +1,4 @@
 // importing 
-// import Hyprland from 'resource:///com/github/Aylur/ags/service/hyprland.js';
 import Notifications from 'resource:///com/github/Aylur/ags/service/notifications.js';
 import Mpris from 'resource:///com/github/Aylur/ags/service/mpris.js';
 import Audio from 'resource:///com/github/Aylur/ags/service/audio.js';
@@ -7,7 +6,22 @@ import Battery from 'resource:///com/github/Aylur/ags/service/battery.js';
 import SystemTray from 'resource:///com/github/Aylur/ags/service/systemtray.js';
 import App from 'resource:///com/github/Aylur/ags/app.js';
 import Widget from 'resource:///com/github/Aylur/ags/widget.js';
+import Variable from 'resource:///com/github/Aylur/ags/variable.js';
 import { exec, execAsync } from 'resource:///com/github/Aylur/ags/utils.js';
+import GLib from 'gi://GLib'
+
+const cacheHome = GLib.getenv('XDG_CACHE_HOME')
+
+
+const [ok, colorsJson] = GLib.file_get_contents(`${cacheHome}/wal/colors.json`)
+let colors = Array()
+
+if (ok) {
+  colors = JSON.parse(colorsJson);
+}
+
+print(colors.alpha)
+
 
 // widgets can be only assigned as a child in one container
 // so to make a reuseable widget, just make it a function
@@ -32,6 +46,71 @@ import { exec, execAsync } from 'resource:///com/github/Aylur/ags/utils.js';
 //     ['label', Hyprland.active.client, 'title'],
 //   ],
 // });
+
+
+const dwlIpc = Variable(execAsync(['dwl-msg', 'status']), {
+  listen: [['dwl-msg', 'follow'], out => JSON.parse(out)],
+});
+
+
+
+const Workspace = ({ onPrimaryClick, onSecondaryClick, onMiddleClick, urgent, selected, occupied } = {}) => Widget.Button({
+  child: Widget.Label(
+    urgent && "" || selected && "" || occupied && "" || ""
+  ),
+  // child: Widget.Label(""),
+  onPrimaryClick: onPrimaryClick,
+  onSecondaryClick: onSecondaryClick,
+  onMiddleClick: onMiddleClick,
+  style: "font: 13pt siji",
+  valign: "center",
+  className: "workspace"
+
+})
+
+const Workspaces = () => Widget.Box({
+  vertical: false,
+  spacing: 5,
+  className: "workspaces",
+  homogeneous: true,
+  style: "background-color: #b00b69; border-radius: 5px; padding: 0px 5px 0px 5px; color: #cccccc",
+  children: []
+  // children: [Workspace({ urgent: true, selected: true, occupied: true }), Workspace({ urgent: false, selected: false, occupied: true })]
+  // binds: [
+  //   ["children", dwlIpc, "value", value => {
+  //     let Tags = []
+  //     for (const mon of value) {
+  //       if (!mon.active) {
+  //         break
+  //       }
+  //       else {
+  //         for (const tag of mon.tags) {
+  //           Tags.push(Workspace({ urgent: (tag.state == 2), selected: (tag.state == 1), occupied: (tag.clients > 0) }))
+  //         }
+  //       }
+  //     }
+  //     return Tags
+  //   }]
+  // ]
+})
+
+const dwlTags = Workspaces()
+
+dwlIpc.connect('changed', function({ value }) {
+  let Tags = []
+  for (const mon of value) {
+    if (!mon.active) {
+      break
+    }
+    else {
+      for (const tag of mon.tags) {
+        let test = Workspace({ urgent: (tag.state == 2), selected: (tag.state == 1), occupied: (tag.clients > 0) })
+        Tags.push(test)
+      }
+    }
+  }
+  dwlTags.children = Tags
+})
 
 const Clock = () => Widget.Label({
   className: 'clock',
@@ -154,9 +233,12 @@ const SysTray = () => Widget.Box({
 
 // layout of the bar
 const Left = () => Widget.Box({
+  spacing: 10,
   children: [
+    // Dwl(),
+    dwlTags,
     SysTray(),
-    SysTray(),
+    // SysTray(),
     // Workspaces(),
     // ClientTitle(),
   ],
@@ -179,8 +261,8 @@ const Right = () => Widget.Box({
   ],
 });
 
-const Bar = ({ monitor } = {}) => Widget.Window({
-  name: `bar-${monitor}`, // name has to be unique
+const Bar = ({ name, monitor } = {}) => Widget.Window({
+  name: `${name}`, // name has to be unique
   className: 'bar',
   monitor,
   anchor: ['top', 'left', 'right'],
@@ -192,11 +274,26 @@ const Bar = ({ monitor } = {}) => Widget.Window({
   }),
 })
 
+const cssPath = `${ags.App.configDir}/style.css`
+const scssPath = `${ags.App.configDir}/style.scss`
+
+ags.Utils.subprocess([
+  'inotifywait',
+  '--recursive',
+  '--event', 'create,modify',
+  '-m', scssPath,
+], () => {
+  console.log('scss reloaded');
+  ags.Utils.exec(`sassc ${ags.App.configDir}/scss/main.scss ${ags.App.configDir}/style.css`);
+  ags.App.resetCss();
+  ags.App.applyCss(cssPath);
+});
+
 // exporting the config so ags can manage the windows
 export default {
-  style: App.configDir + '/style.css',
+  style: cssPath,
   windows: [
-    Bar(),
+    Bar({ name: "bar-main" }),
 
     // you can call it, for each monitor
     // Bar({ monitor: 0 }),
