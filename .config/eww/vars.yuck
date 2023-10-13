@@ -48,7 +48,8 @@
 
 (deflisten kdeconnect   "gdbus monitor --session --dest org.kde.kdeconnect.daemon | ./scripts/kdeconnect.lua")
 (deflisten wifi         `gdbus monitor --system --dest org.freedesktop.NetworkManager | ./scripts/network.lua`)
-(deflisten tray         "./scripts/tray.py | jq -c --unbuffered")
+;; (deflisten tray         "./scripts/tray.py | jq -c --unbuffered")
+(defvar tray            "[]")
 (deflisten bluetooth    "./scripts/bluetooth")
 (deflisten menuapps     `./scripts/appmenu.lua search`)
 
