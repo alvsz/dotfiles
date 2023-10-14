@@ -1,0 +1,31 @@
+* {
+  all:unset;
+}
+
+@import '/home/mamba/.cache/wal/colors.scss';
+
+.barwindow {
+    background-color: transparent;
+    // padding: 3px 10px 0px 10px;
+    font: 11pt FiraCode Nerd Font;
+    color: $foreground;
+    // min-height: 30px;
+}
+
+.module {
+    min-height: 25px;
+    background-color: $background;
+    border-radius: 5px;
+    // padding: 3px;
+    // margin: 10px;
+}
+
+.urgent {
+    color: $color1;
+}
+.selected {
+    color: $color4;
+}
+.occupied {
+    color: $color3;
+}
