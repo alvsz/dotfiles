@@ -87,7 +87,6 @@
 
         (box :space-evenly false
              :spacing 5
-             :visible false
 					   :visible {monitor.title != ""}
 					   :tooltip {monitor.appid}
 				  (icon :path {
