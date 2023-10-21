@@ -1,29 +1,54 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
-import Separator from "./misc/Separator.js";
+import Gtk from "gi://Gtk";
+// import Separator from "./misc/Separator.js";
 import PopupWindow from "./misc/PopupWindow.js";
-import { launchApp } from "./utils.js";
 import icons from "./icons.js";
+
 // import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 // import GLib from "gi://GLib";
 
+// import test from "./misc/Applications.js";
+//
+// globalThis.test = test;
+
+globalThis.apps = Applications;
+
 const WINDOW_NAME = "applauncher";
 
-const AppItem = (app) =>
-  Widget.Button({
+const AppItem = (app) => {
+  const icon = app.app.get_icon();
+  let iconName = null;
+
+  let iconWidget = (iconName) =>
+    Widget.Icon({
+      className: "appIcon",
+      icon: iconName,
+      halign: "center",
+      // size: 48,
+    });
+
+  if (app.iconName == "") {
+    if (icon && icon.get_file) {
+      iconName = icon.get_file().get_path();
+    } else {
+      iconName = "nwergojnervojneorj";
+    }
+  } else {
+    iconName = app.iconName;
+  }
+
+  return Widget.Button({
     className: "app",
     onClicked: () => {
       App.closeWindow(WINDOW_NAME);
-      launchApp(app);
+      app.launch();
     },
     child: Widget.Box({
       spacing: 5,
       children: [
-        Widget.Icon({
-          icon: app.iconName,
-          size: 48,
-        }),
+        iconWidget(iconName),
         Widget.Box({
           vertical: true,
           children: [
@@ -47,24 +72,27 @@ const AppItem = (app) =>
       ],
     }),
   });
+};
+
+// globalThis.appItem = appItem;
 
 const Applauncher = () => {
   const list = Widget.Box({ vertical: true });
 
   const placeholder = Widget.Label({
-    label: " Couldn't find a match",
+    label: " Sem resultados",
     className: "placeholder",
   });
 
   const entry = Widget.Entry({
     hexpand: true,
     text: "-",
-    placeholderText: "Search",
+    placeholderText: "Pesquisar",
     onAccept: ({ text }) => {
       const list = Applications.query(text);
       if (list[0]) {
         App.toggleWindow(WINDOW_NAME);
-        launchApp(list[0]);
+        list[0].launch();
       }
     },
     onChange: ({ text }) => {
@@ -89,6 +117,7 @@ const Applauncher = () => {
     children: [
       Widget.Box({
         className: "header",
+        spacing: 5,
         children: [Widget.Icon(icons.apps.search), entry],
       }),
       Widget.Scrollable({

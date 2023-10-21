@@ -95,16 +95,31 @@ menuitem {
 
 .appLauncher {
   min-width: 40em;
-  min-height: 40em;
-  // border: 0.1em solid purple;
-  background-color: transparentize(lighten($background, 3%), 0.5);
+  min-height: 30em;
+  border-radius: 0.5em;
+  background-color: transparentize(lighten($background, 3%), 0.1);
 
   .header {
-    // background-color: $background;
+    border-radius: 0.5em;
+    background-color: $background;
     padding: 1em;
+    background-color: transparentize(lighten($background, 3%), 0.1);
+
+    entry {
+      all: unset;
+      padding: 0.5em;
+      border: 0.1em solid lighten($background, 6%);
+      transition: 0.1s;
+      border-radius: 0.5em;
+
+      &:focus,
+      &:selected {
+        border: 0.1em solid $color12;
+        background-color: lighten($background, 10%);
+      }
+    }
 
     image {
-      // margin: 1em;
       background-color: $color12;
       border-radius: 0.5em;
       padding: 1em;
@@ -121,38 +136,34 @@ menuitem {
     background-color: transparent;
     border: 0.1em solid lighten($background, 6%);
     transition: 0.1s;
+    padding: 0.4em;
 
-    &:hover {
+    &:hover,
+    &:selected,
+    &:focus {
       border: 0.1em solid $color12;
       background-color: lighten($background, 10%);
+    }
+
+    .title {
+      font-weight: bold;
+    }
+
+    // .description {
+    //   font-size: 0.9em;
+    // }
+
+    .appIcon {
+      font-size: 3em;
     }
   }
 
   scrollbar {
-    // all: unset;
-    // color: purple;
-    // background-color: $color2;
-    min-height: 3em;
-    padding: 1em;
-
-    &:hover {
-      background-color: purple;
-    }
-
     contents {
-      // background-color: yellow;
-      color: blue;
-      padding: 1em;
+      background-color: transparentize($background, 0.5);
 
       slider {
-        color: green;
-        background-color: $color3;
-        padding: 1em;
-        // border: 0.1em solid purple;
-        border-radius: 1em;
-        &:hover {
-          background-color: $color5;
-        }
+        min-height: 3em;
       }
     }
   }
