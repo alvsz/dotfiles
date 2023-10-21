@@ -4,12 +4,12 @@
 
 @import "/home/mamba/.cache/wal/colors.scss";
 
-.barwindow {
-  // all: unset;
-  background-color: transparent;
-  font: 11pt FiraCode Nerd Font;
-  color: $foreground;
-}
+// .barwindow {
+//   // all: unset;
+//   background-color: transparent;
+//   font: 11pt FiraCode Nerd Font;
+//   color: $foreground;
+// }
 
 .module {
   // min-height: 1em;
@@ -91,4 +91,48 @@ menuitem {
 }
 .layoutIcon {
   @extend .normal;
+}
+
+// .popupPadding {
+//   // all: unset;
+//   // background-color: transparent;
+//   // color: transparent;
+//   border: 0.1em solid greenyellow;
+//   min-width: 100px;
+//   min-height: 100px;
+// }
+
+// .shader {
+//   all: unset;
+//   // background-color: transparent;
+//   padding: 2em;
+//   border: 0.1em solid turquoise;
+// }
+
+.appLauncher {
+  background-color: $background;
+  min-width: 30em;
+  min-height: 50em;
+  border: 0.1em solid purple;
+
+  .header {
+    padding: 1em;
+
+    image {
+      // margin: 1em;
+      background-color: $color3;
+      border-radius: 0.5em;
+      padding: 1em;
+    }
+  }
+
+  scrollbar {
+    all: unset;
+  }
+}
+
+window {
+  background-color: transparent;
+  font: 11pt FiraCode Nerd Font;
+  color: $foreground;
 }
