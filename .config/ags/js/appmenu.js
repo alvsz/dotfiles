@@ -1,0 +1,117 @@
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
+import Separator from "./misc/Separator.js";
+import PopupWindow from "./misc/PopupWindow.js";
+import { launchApp } from "./utils.js";
+import icons from "./icons.js";
+// import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
+// import GLib from "gi://GLib";
+
+const WINDOW_NAME = "applauncher";
+
+const AppItem = (app) =>
+  Widget.Button({
+    className: "app",
+    onClicked: () => {
+      App.closeWindow(WINDOW_NAME);
+      launchApp(app);
+    },
+    child: Widget.Box({
+      children: [
+        Widget.Icon({
+          icon: app.iconName,
+          size: 48,
+        }),
+        Widget.Box({
+          vertical: true,
+          children: [
+            Widget.Label({
+              className: "title",
+              label: app.name,
+              xalign: 0,
+              valign: "center",
+              ellipsize: 3,
+            }),
+            Widget.Label({
+              className: "description",
+              label: app.description || "",
+              wrap: true,
+              xalign: 0,
+              justification: "left",
+              valign: "center",
+            }),
+          ],
+        }),
+      ],
+    }),
+  });
+
+const Applauncher = () => {
+  const list = Widget.Box({ vertical: true });
+
+  const placeholder = Widget.Label({
+    label: " Couldn't find a match",
+    className: "placeholder",
+  });
+
+  const entry = Widget.Entry({
+    hexpand: true,
+    text: "-",
+    placeholderText: "Search",
+    onAccept: ({ text }) => {
+      const list = Applications.query(text);
+      if (list[0]) {
+        App.toggleWindow(WINDOW_NAME);
+        launchApp(list[0]);
+      }
+    },
+    onChange: ({ text }) => {
+      list.children = Applications.query(text)
+        .map((app) => [Separator(), AppItem(app)])
+        .flat();
+      list.add(Separator());
+      list.show_all();
+
+      placeholder.visible = list.children.length === 1;
+    },
+  });
+
+  return Widget.Box({
+    className: "appLauncher",
+    properties: [["list", list]],
+    vertical: true,
+    children: [
+      Widget.Box({
+        className: "header",
+        children: [Widget.Icon(icons.apps.search), entry],
+      }),
+      Widget.Scrollable({
+        hscroll: "never",
+        vexpand: true,
+        child: Widget.Box({
+          vertical: true,
+          children: [list, placeholder],
+        }),
+      }),
+    ],
+    connections: [
+      [
+        App,
+        (_, name, visible) => {
+          if (name !== WINDOW_NAME) return;
+
+          entry.set_text("");
+          if (visible) entry.grab_focus();
+        },
+      ],
+    ],
+  });
+};
+
+export default () =>
+  PopupWindow({
+    name: WINDOW_NAME,
+    // expand: false,
+    content: Applauncher(),
+  });
