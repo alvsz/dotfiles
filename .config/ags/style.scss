@@ -1,31 +1,94 @@
-* {
-  all:unset;
-}
+// * {
+//     all:unset;
+// }
 
-@import '/home/mamba/.cache/wal/colors.scss';
+@import "/home/mamba/.cache/wal/colors.scss";
 
 .barwindow {
-    background-color: transparent;
-    // padding: 3px 10px 0px 10px;
-    font: 11pt FiraCode Nerd Font;
-    color: $foreground;
-    // min-height: 30px;
+  // all: unset;
+  background-color: transparent;
+  font: 11pt FiraCode Nerd Font;
+  color: $foreground;
 }
 
 .module {
-    min-height: 25px;
-    background-color: $background;
-    border-radius: 5px;
-    // padding: 3px;
-    // margin: 10px;
+  // min-height: 1em;
+  background-color: $background;
+  border-radius: 0.5em;
+  padding: 0.1em 0.4em 0.1em 0.4em;
+  button {
+    border-radius: 0.4em;
+    min-height: 0em;
+    min-width: 0em;
+    margin: 0;
+    // padding: 0;
+
+    // background: transparent;
+  }
+}
+
+.clientIcon,
+.wifiIcon,
+.audioIcon,
+.bluetoothIcon,
+.batteryIcon {
+  font-size: 1.5em;
+  // background-color: green;
+}
+
+menu {
+  background-color: lighten($background, 3%);
+  font: 11pt FiraCode Nerd Font;
+  color: $foreground;
+  padding: 0.2em;
+  border-radius: 0.7em;
+
+  arrow {
+    color: $foreground;
+    background-color: transparent;
+  }
+}
+
+menuitem {
+  min-width: 7em;
+  margin: 0.1em;
+  border-radius: 0.4em;
+  border: 0.1em solid lighten($background, 5%);
+  transition: 0.1s;
+
+  &:hover {
+    border: 0.1em solid $color12;
+    background-color: lighten($background, 10%);
+  }
+}
+
+.sysTray {
+  font-size: 1.2em;
+}
+
+.tag {
+  transition: 0.1s;
+  padding: 0.4em 0.6em 0.4em 0.6em;
 }
 
 .urgent {
-    color: $color1;
+  @extend .tag;
+  color: $color1;
 }
 .selected {
-    color: $color4;
+  @extend .tag;
+  color: $color4;
 }
 .occupied {
-    color: $color3;
+  @extend .tag;
+  color: $color3;
+}
+.normal {
+  @extend .tag;
+  &:hover {
+    color: $color2;
+  }
+}
+.layoutIcon {
+  @extend .normal;
 }
