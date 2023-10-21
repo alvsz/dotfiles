@@ -4,7 +4,7 @@ import Lockscreen from "./misc/Lockscreen.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 // import { Widget } from '../imports.js';
 import Layer from "gi://GtkLayerShell";
-import { iconFile } from "./misc/User.js";
+import { iconFile, realName } from "./misc/User.js";
 
 const Avatar = (props) =>
   Widget.Icon({
@@ -31,6 +31,7 @@ export default ({ monitor } = {}) =>
     child: Widget.Box({
       style: "min-width: 3000px; min-height: 2000px;",
       className: "shader",
+
       child: Widget.Box({
         className: "content",
         vertical: true,
@@ -38,11 +39,15 @@ export default ({ monitor } = {}) =>
         vexpand: true,
         halign: "center",
         valign: "center",
+
         children: [
           Avatar({
             halign: "center",
             valign: "center",
           }),
+
+          Widget.Label(realName),
+
           Widget.Box({
             children: [
               Widget.Entry({

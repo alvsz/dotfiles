@@ -6,6 +6,11 @@ import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
+
+import * as user from "./misc/User.js";
+
+globalThis.user = user;
+
 import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 
 import * as vars from "./vars.js";
@@ -29,10 +34,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-        ? "selected"
-        : occupied
-          ? "occupied"
-          : "normal",
+      ? "selected"
+      : occupied
+      ? "occupied"
+      : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -74,11 +79,8 @@ const clientTitle = (monitorId) =>
         (self) => {
           const mon = dwlIpc.value[monitorId];
           const limitWidth = 45;
-          const title = mon.title != ""
-            ? mon.title
-            : mon.appid != ""
-              ? mon.appid
-              : "";
+          const title =
+            mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -179,7 +181,11 @@ const Left = (monitorId) =>
     vexpand: true,
     homogeneous: false,
     style: "margin: 3px 0px 0px 10px; min-height: 30px",
-    children: [archDash(), dwl(monitorId)],
+    children: [
+      archDash(),
+      dwl(monitorId),
+      // Widget.Label(realName.recursiveUnpack().toString()),
+    ],
   });
 
 const Media = () =>
@@ -196,8 +202,9 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")
-                } - ${mpris.trackTitle}`;
+              self.label = `${mpris.trackArtists.join(", ")} - ${
+                mpris.trackTitle
+              }`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -260,7 +267,7 @@ const SysTray = (monitorId) =>
               onPrimaryClick: (_, event) => item.activate(event),
               onSecondaryClick: (_, event) => item.openMenu(event),
               binds: [["tooltipText", item, "tooltipMarkup"]],
-            })
+            }),
           );
         },
       ],

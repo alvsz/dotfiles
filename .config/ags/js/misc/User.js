@@ -19,7 +19,7 @@ const call = (prop) =>
     null,
   );
 
-export const realName = call("RealName");
-export const iconFile = call("IconFile");
+export const realName = call("RealName").recursiveUnpack().toString();
+export const iconFile = call("IconFile").recursiveUnpack().toString();
 
 // export default info;
