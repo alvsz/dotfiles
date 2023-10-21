@@ -149,10 +149,6 @@ menuitem {
       font-weight: bold;
     }
 
-    // .description {
-    //   font-size: 0.9em;
-    // }
-
     .appIcon {
       font-size: 3em;
     }
@@ -161,6 +157,7 @@ menuitem {
   scrollbar {
     contents {
       background-color: transparentize($background, 0.5);
+      border-radius: 0.3em;
 
       slider {
         min-height: 3em;

@@ -26,7 +26,6 @@ const AppItem = (app) => {
       className: "appIcon",
       icon: iconName,
       halign: "center",
-      // size: 48,
     });
 
   if (app.iconName == "") {
