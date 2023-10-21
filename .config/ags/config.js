@@ -7,11 +7,16 @@
 import Bar from "./js/bar.js";
 import AppMenu from "./js/appmenu.js";
 import * as utils from "./js/utils.js";
-import * as vars from "./js/vars.js";
+import Lockscreen from "./js/lockscreen.js";
+// import * as vars from "./js/vars.js";
 
 utils.scssWatcher();
 
 export default {
   style: utils.cssPath,
-  windows: [utils.forMonitors(Bar), AppMenu()].flat(2),
+  windows: [
+    utils.forMonitors(Bar),
+    utils.forMonitors(Lockscreen),
+    AppMenu(),
+  ].flat(2),
 };
