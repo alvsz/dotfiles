@@ -1,19 +1,8 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
-import Gtk from "gi://Gtk";
-// import Separator from "./misc/Separator.js";
 import PopupWindow from "./misc/PopupWindow.js";
 import icons from "./icons.js";
-
-// import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
-// import GLib from "gi://GLib";
-
-// import test from "./misc/Applications.js";
-//
-// globalThis.test = test;
-
-globalThis.apps = Applications;
 
 const WINDOW_NAME = "applauncher";
 
@@ -40,16 +29,21 @@ const AppItem = (app) => {
 
   return Widget.Button({
     className: "app",
+
     onClicked: () => {
       App.closeWindow(WINDOW_NAME);
       app.launch();
     },
+
     child: Widget.Box({
       spacing: 5,
+
       children: [
         iconWidget(iconName),
+
         Widget.Box({
           vertical: true,
+
           children: [
             Widget.Label({
               className: "title",
@@ -58,6 +52,7 @@ const AppItem = (app) => {
               valign: "center",
               ellipsize: 3,
             }),
+
             Widget.Label({
               className: "description",
               label: app.description || "",
@@ -73,8 +68,6 @@ const AppItem = (app) => {
   });
 };
 
-// globalThis.appItem = appItem;
-
 const Applauncher = () => {
   const list = Widget.Box({ vertical: true });
 
@@ -89,6 +82,7 @@ const Applauncher = () => {
     placeholderText: "Pesquisar",
     onAccept: ({ text }) => {
       const list = Applications.query(text);
+
       if (list[0]) {
         App.toggleWindow(WINDOW_NAME);
         list[0].launch();
@@ -102,6 +96,7 @@ const Applauncher = () => {
           AppItem(app),
         ])
         .flat();
+
       // list.add(Separator());
       list.show_all();
 
@@ -113,16 +108,19 @@ const Applauncher = () => {
     className: "appLauncher",
     properties: [["list", list]],
     vertical: true,
+
     children: [
       Widget.Box({
         className: "header",
         spacing: 5,
         children: [Widget.Icon(icons.apps.search), entry],
       }),
+
       Widget.Scrollable({
         hscroll: "never",
         className: "scroll",
         vexpand: true,
+
         child: Widget.Box({
           vertical: true,
           children: [list, placeholder],
@@ -133,7 +131,7 @@ const Applauncher = () => {
       [
         App,
         (_, name, visible) => {
-          if (name !== WINDOW_NAME) return;
+          if (name != WINDOW_NAME) return;
 
           entry.set_text("");
           if (visible) entry.grab_focus();
