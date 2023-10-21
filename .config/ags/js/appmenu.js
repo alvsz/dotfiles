@@ -18,6 +18,7 @@ const AppItem = (app) =>
       launchApp(app);
     },
     child: Widget.Box({
+      spacing: 5,
       children: [
         Widget.Icon({
           icon: app.iconName,
@@ -68,12 +69,16 @@ const Applauncher = () => {
     },
     onChange: ({ text }) => {
       list.children = Applications.query(text)
-        .map((app) => [Separator(), AppItem(app)])
+        .map((app) => [
+          // Separator(),
+          //
+          AppItem(app),
+        ])
         .flat();
-      list.add(Separator());
+      // list.add(Separator());
       list.show_all();
 
-      placeholder.visible = list.children.length === 1;
+      placeholder.visible = list.children.length == 0;
     },
   });
 
@@ -88,6 +93,7 @@ const Applauncher = () => {
       }),
       Widget.Scrollable({
         hscroll: "never",
+        className: "scroll",
         vexpand: true,
         child: Widget.Box({
           vertical: true,

@@ -3,19 +3,8 @@ import App from "resource:///com/github/Aylur/ags/app.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
 const Padding = (windowName) =>
-    // Widget.Button({
-    //     className: "popupPadding",
-    //     onPrimaryClick: () => App.toggleWindow(windowName),
-    //     // style:
-    //     //     "min-height: 100px; min-width: 100px; background-color: transparent;",
-    //     hexpand: true,
-    //     vexpand: true,
-    //     // connections: [["button-press-event", () => App.toggleWindow(windowName)]],
-    // });
     Widget.EventBox({
         className: "popupPadding",
-        style:
-            "min-height: 100px; min-width: 100px; background-color: transparent;",
         hexpand: true,
         vexpand: true,
         connections: [["button-press-event", () => App.toggleWindow(windowName)]],
@@ -90,6 +79,6 @@ export default ({ layout = "center", expand = true, name, content, ...rest }) =>
         child: layouts[layout](name, content, expand),
         popup: true,
         visible: false,
-        // focusable: true,
+        focusable: true,
         ...rest,
     });

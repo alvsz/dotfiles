@@ -53,7 +53,7 @@ menuitem {
   min-width: 7em;
   margin: 0.1em;
   border-radius: 0.4em;
-  border: 0.1em solid lighten($background, 5%);
+  border: 0.1em solid lighten($background, 6%);
   transition: 0.1s;
 
   &:hover {
@@ -93,41 +93,68 @@ menuitem {
   @extend .normal;
 }
 
-// .popupPadding {
-//   // all: unset;
-//   // background-color: transparent;
-//   // color: transparent;
-//   border: 0.1em solid greenyellow;
-//   min-width: 100px;
-//   min-height: 100px;
-// }
-
-// .shader {
-//   all: unset;
-//   // background-color: transparent;
-//   padding: 2em;
-//   border: 0.1em solid turquoise;
-// }
-
 .appLauncher {
-  background-color: $background;
-  min-width: 30em;
-  min-height: 50em;
-  border: 0.1em solid purple;
+  min-width: 40em;
+  min-height: 40em;
+  // border: 0.1em solid purple;
+  background-color: transparentize(lighten($background, 3%), 0.5);
 
   .header {
+    // background-color: $background;
     padding: 1em;
 
     image {
       // margin: 1em;
-      background-color: $color3;
+      background-color: $color12;
       border-radius: 0.5em;
       padding: 1em;
     }
   }
 
+  .scroll {
+    padding: 0.5em;
+  }
+
+  .app {
+    margin: 0.1em;
+    border-radius: 0.4em;
+    background-color: transparent;
+    border: 0.1em solid lighten($background, 6%);
+    transition: 0.1s;
+
+    &:hover {
+      border: 0.1em solid $color12;
+      background-color: lighten($background, 10%);
+    }
+  }
+
   scrollbar {
-    all: unset;
+    // all: unset;
+    // color: purple;
+    // background-color: $color2;
+    min-height: 3em;
+    padding: 1em;
+
+    &:hover {
+      background-color: purple;
+    }
+
+    contents {
+      // background-color: yellow;
+      color: blue;
+      padding: 1em;
+
+      slider {
+        color: green;
+        background-color: $color3;
+        padding: 1em;
+        // border: 0.1em solid purple;
+        border-radius: 1em;
+        &:hover {
+          background-color: $color5;
+        }
+      }
+    }
   }
 }
 
