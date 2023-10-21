@@ -186,6 +186,7 @@ def run(p):
     bookLength = re.search(r'(?<=/)\d+(?=/$)', last[0]).group()
 
     while not foundSvg and not foundImage:
+        print("tentando novamente")
         # print(foundImage, foundSvg)
         pass
 
