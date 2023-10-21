@@ -46,93 +46,93 @@
 
 @define-color accent_color #dc8add;
 @define-color accent_bg_color #9141ac;
-/* @define-color accent_fg_color #ffffff; */
+@define-color accent_fg_color #ffffff;
 @define-color destructive_color #ff7b63;
 @define-color destructive_bg_color #c01c28;
-/* @define-color destructive_fg_color #ffffff; */
+@define-color destructive_fg_color #ffffff;
 @define-color success_color #8ff0a4;
 @define-color success_bg_color #26a269;
-/* @define-color success_fg_color #ffffff; */
+@define-color success_fg_color #ffffff;
 @define-color warning_color #f8e45c;
 @define-color warning_bg_color #cd9309;
-/* @define-color warning_fg_color rgba(0, 0, 0, 0.8); */
+@define-color warning_fg_color rgba(0, 0, 0, 0.8);
 @define-color error_color #ff7b63;
 @define-color error_bg_color #c01c28;
-/* @define-color error_fg_color #ffffff; */
+@define-color error_fg_color #ffffff;
 
-/* button.titlebutton { */
-/* /* GTK3 */ */
-/*   color: transparent; */
-/*   min-width: 15px; */
-/*   min-height: 15px; */
-/* } */
-/* button.titlebutton:backdrop { */
-/*   opacity: 0.5; */
-/* } */
-/**/
-/* windowcontrols > button { */
-/* /* GTK4 */ */
-/*   color: transparent; */
-/*   min-width: 15px; */
-/*   min-height: 15px; */
-/*   border-radius: 100%; */
-/*   padding: 0; */
-/*   margin: 0 5px; */
-/* } */
-/* windowcontrols > button > image { */
-/*   padding: 0; */
-/* } */
-/**/
-/* button.titlebutton.close, */
-/* windowcontrols > button.close, */
-/* button.titlebutton.close:hover:backdrop, */
-/* windowcontrols > button.close:hover:backdrop { */
-/*   background-color: #cc241d; */
-/* } */
-/**/
-/* button.titlebutton.close:hover, */
-/* windowcontrols > button.close:hover { */
-/*   background-color: #fb4934; */
-/* } */
-/**/
-/* button.titlebutton.maximize, */
-/* windowcontrols > button.maximize, */
-/* button.titlebutton.maximize:hover:backdrop, */
-/* windowcontrols > button.maximize:hover:backdrop { */
-/*   background-color: #98971a; */
-/* } */
-/**/
-/* button.titlebutton.maximize:hover, */
-/* windowcontrols > button.maximize:hover { */
-/*   background-color: #b8bb26; */
-/* } */
-/**/
-/* button.titlebutton.minimize, */
-/* windowcontrols > button.minimize, */
-/* button.titlebutton.minimize:hover:backdrop, */
-/* windowcontrols > button.minimize:hover:backdrop { */
-/*   background-color: #d79921; */
-/* } */
-/**/
-/* button.titlebutton.minimize:hover, */
-/* windowcontrols > button.minimize:hover { */
-/*   background-color: #fabd2f; */
-/* } */
-/**/
-/* button.titlebutton.close:backdrop, */
-/* button.titlebutton.maximize:backdrop, */
-/* button.titlebutton.minimize:backdrop, */
-/* windowcontrols > button.close:backdrop, */
-/* windowcontrols > button.maximize:backdrop, */
-/* windowcontrols > button.minimize:backdrop { */
-/*   background-color: #665c54; */
-/* } */
-/**/
-/* window { */
-/*     padding: 0; */
-/*     box-shadow: none; */
-/* } */
-/**/
-/* decoration { */
-/*     padding: 0; */
-/* } */
+button.titlebutton {
+  /* GTK3 */
+  color: transparent;
+  min-width: 15px;
+  min-height: 15px;
+}
+button.titlebutton:backdrop {
+  opacity: 0.5;
+}
+
+windowcontrols > button {
+  /* GTK4 */
+  color: transparent;
+  min-width: 15px;
+  min-height: 15px;
+  border-radius: 100%;
+  padding: 0;
+  margin: 0 5px;
+}
+windowcontrols > button > image {
+  padding: 0;
+}
+
+button.titlebutton.close,
+windowcontrols > button.close,
+button.titlebutton.close:hover:backdrop,
+windowcontrols > button.close:hover:backdrop {
+  background-color: #cc241d;
+}
+
+button.titlebutton.close:hover,
+windowcontrols > button.close:hover {
+  background-color: #fb4934;
+}
+
+button.titlebutton.maximize,
+windowcontrols > button.maximize,
+button.titlebutton.maximize:hover:backdrop,
+windowcontrols > button.maximize:hover:backdrop {
+  background-color: #98971a;
+}
+
+button.titlebutton.maximize:hover,
+windowcontrols > button.maximize:hover {
+  background-color: #b8bb26;
+}
+
+button.titlebutton.minimize,
+windowcontrols > button.minimize,
+button.titlebutton.minimize:hover:backdrop,
+windowcontrols > button.minimize:hover:backdrop {
+  background-color: #d79921;
+}
+
+button.titlebutton.minimize:hover,
+windowcontrols > button.minimize:hover {
+  background-color: #fabd2f;
+}
+
+button.titlebutton.close:backdrop,
+button.titlebutton.maximize:backdrop,
+button.titlebutton.minimize:backdrop,
+windowcontrols > button.close:backdrop,
+windowcontrols > button.maximize:backdrop,
+windowcontrols > button.minimize:backdrop {
+  background-color: #665c54;
+}
+
+window {
+  padding: 0;
+  box-shadow: none;
+}
+
+decoration {
+  padding: 0;
+}
