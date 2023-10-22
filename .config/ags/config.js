@@ -10,6 +10,8 @@ import * as utils from "./js/utils.js";
 import Lockscreen from "./js/lockscreen.js";
 // import * as vars from "./js/vars.js";
 
+globalThis.utils = utils;
+
 utils.scssWatcher();
 
 export default {

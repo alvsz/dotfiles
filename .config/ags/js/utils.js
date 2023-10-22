@@ -33,14 +33,11 @@ export const jsWatcher = () => {
   );
 };
 
-export const launchApp = (app) => {
-  Utils.execAsync(["sh", "-c", `${app.executable} &`]);
-  app.frequency += 1;
-};
-
 export const forMonitors = (widget) => {
   return vars.dwlIpc.value.map((mon) => {
     const id = vars.dwlIpc.value.indexOf(mon);
     return widget({ monitor: id });
   });
 };
+
+// export const

@@ -6,6 +6,7 @@ import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
+import { revealOnClick, revealOnHover } from "./misc/Revealer.js";
 
 import * as user from "./misc/User.js";
 
@@ -34,10 +35,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-      ? "selected"
-      : occupied
-      ? "occupied"
-      : "normal",
+        ? "selected"
+        : occupied
+          ? "occupied"
+          : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -79,8 +80,11 @@ const clientTitle = (monitorId) =>
         (self) => {
           const mon = dwlIpc.value[monitorId];
           const limitWidth = 45;
-          const title =
-            mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
+          const title = mon.title != ""
+            ? mon.title
+            : mon.appid != ""
+              ? mon.appid
+              : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -202,9 +206,8 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")} - ${
-                mpris.trackTitle
-              }`;
+              self.label = `${mpris.trackArtists.join(", ")
+                } - ${mpris.trackTitle}`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -250,7 +253,7 @@ const Center = () =>
     ],
   });
 
-const SysTray = (monitorId) =>
+const SysTray = () =>
   Widget.Box({
     className: "sysTray",
     valign: "center",
@@ -267,108 +270,107 @@ const SysTray = (monitorId) =>
               onPrimaryClick: (_, event) => item.activate(event),
               onSecondaryClick: (_, event) => item.openMenu(event),
               binds: [["tooltipText", item, "tooltipMarkup"]],
-            }),
+            })
           );
         },
       ],
-      [
-        dwlIpc,
-        (self) => {
-          self.visible = dwlIpc.value[monitorId].active;
-        },
-      ],
+      // [
+      //   dwlIpc,
+      //   (self) => {
+      //     self.visible = dwlIpc.value[monitorId].active;
+      //   },
+      // ],
     ],
   });
 
 const wifiIcon = () =>
-  Widget.Icon({
-    className: "wifiIcon",
+  //
+  Widget.Label("wifi");
+// Widget.Icon({
+//   connections: [
+//     [
+//       Network,
+//       (self) => {
+//         self.icon = Network.wifi?.iconName || "";
+//         // if (Network.connectivity == "unknown") {
+//         //   self.icon = "network-wireless-no-route";
+//         // } else if (Network.connectivity == "none") {
+//         //   self.icon = "network-wireless-offline";
+//         // } else if (
+//         //   Network.connectivity == "portal" ||
+//         //   Network.connectivity == "limited"
+//         // ) {
+//         //   self.icon = "network-wireless-acquiring";
+//         // } else {
+//         //   self.icon = Network.wifi?.iconName || "";
+//         // }
+//         // self.icon = Network.wifi?.iconName || "";
+//       },
+//     ],
+//   ],
+// });
+
+const wiredIcon = () =>
+  //
+  Widget.Label("wired");
+// Widget.Icon({
+//   connections: [
+//     [
+//       Network,
+//       (self) => {
+//         self.icon = Network.wired?.iconName || "";
+//         // if (Network.connectivity == "unknown") {
+//         //   self.icon = "network-wired-no-route";
+//         // } else if (Network.connectivity == "none") {
+//         //   self.icon = "network-wired-offline";
+//         // } else if (
+//         //   Network.connectivity == "portal" ||
+//         //   Network.connectivity == "limited"
+//         // ) {
+//         //   self.icon = "network-wired-acquiring";
+//         // } else {
+//         //   self.icon = Network.wired?.iconName || "";
+//         // }
+//         // self.shown = Network.primary;
+//       },
+//     ],
+//   ],
+// });
+
+const networkIndicator = () =>
+  //
+  Widget.Label({
     connections: [
       [
-        Network,
+        2000,
         (self) => {
-          if (Network.connectivity == "unknown") {
-            self.icon = "network-wireless-no-route-symbolic";
-          } else if (Network.connectivity == "none") {
-            self.icon = "network-wireless-offline-symbolic";
-          } else if (
-            Network.connectivity == "portal" ||
-            Network.connectivity == "limited"
-          ) {
-            self.icon = "network-wireless-acquiring-symbolic";
-          } else {
-            self.icon = Network.wifi?.iconName || "";
-          }
-          // self.icon = Network.wifi?.iconName || "";
+          self.label = Network.primary || "offline";
         },
       ],
     ],
   });
-
-const wifiBox = () => {
-  let revealer = Widget.Revealer({
-    revealChild: false,
-    transitionDuration: 500,
-    transition: "slide_right",
-    child: Widget.Label({
-      connections: [
-        [
-          Network,
-          (self) => {
-            self.label = Network.wifi?.ssid;
-          },
-        ],
-      ],
-    }),
-  });
-
-  return Widget.EventBox({
-    className: "wifiBox",
-    child: Widget.Box({
-      spacing: 50,
-      children: [revealer, wifiIcon()],
-    }),
-    onHover: () => {
-      revealer.revealChild = true;
-    },
-    onHoverLost: () => {
-      revealer.revealChild = false;
-    },
-  });
-};
-
-const networkIndicator = () =>
-  Widget.Stack({
-    items: [
-      // ["wifi", wifiBox()],
-      ["wifi", wifiIcon()],
-      [
-        "wired",
-        Widget.Icon({
-          connections: [
-            [
-              Network,
-              (self) => {
-                if (Network.connectivity == "unknown") {
-                  self.icon = "network-wired-no-route-symbolic";
-                } else if (Network.connectivity == "none") {
-                  self.icon = "network-wired-offline-symbolic";
-                } else if (
-                  Network.connectivity == "portal" ||
-                  Network.connectivity == "limited"
-                ) {
-                  self.icon = "network-wired-acquiring-symbolic";
-                } else {
-                  self.icon = Network.wired?.iconName || "";
-                }
-                self.shown = Network.primary;
-              },
-            ],
-          ],
-        }),
-      ],
-    ],
-  });
+// Widget.Stack({
+//   className: "wifiIcon",
+//   items: [
+//     [
+//       "offline",
+//       // Widget.Icon("network-offline")
+//       Widget.Label("offline"),
+//     ],
+//     // ["wifi", wifiBox()],
+//     ["wifi", wifiIcon()],
+//     ["wired", wiredIcon()],
+//   ],
+//   // binds: [["shown", Network, "primary", (p) => p]],
+//   connections: [
+//     [
+//       2000,
+//       (self) => {
+//         self.shown = Network.primary || "offline";
+//       },
+//     ],
+//   ],
+// });
 
 const audioIcon = () =>
   Widget.Icon({
@@ -474,7 +476,19 @@ const Right = (monitorId) =>
     spacing: 7,
     style: "margin: 3px 10px 0px 0px; min-height: 30px",
     children: [
-      SysTray(monitorId),
+      revealOnClick({
+        // shown: Widget.Label("teste"),
+        shown: Widget.Icon("go-first"),
+        hidden: SysTray(),
+        connections: [
+          [
+            dwlIpc,
+            (self) => {
+              self.visible = dwlIpc.value[monitorId].active;
+            },
+          ],
+        ],
+      }),
       networkIndicator(),
       // wifiBox(),
       audioIcon(),
@@ -489,7 +503,7 @@ const Bar = ({ monitor } = {}) =>
   Widget.Window({
     name: `bar-${monitor}`,
     className: "bar",
-    monitor,
+    monitor: monitor,
     layer: "bottom",
     anchor: ["top", "left", "right"],
     exclusive: true,

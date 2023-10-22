@@ -60,10 +60,16 @@ menuitem {
     border: 0.1em solid $color12;
     background-color: lighten($background, 10%);
   }
+
+  &:disabled {
+    border: 0em;
+    font-style: italic;
+  }
 }
 
 .sysTray {
   font-size: 1.2em;
+  margin-right: 0.4em;
 }
 
 .tag {

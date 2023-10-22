@@ -22,6 +22,7 @@ export default ({ monitor } = {}) =>
     layer: "overlay",
 
     visible: false,
+    // visible: true,
 
     setup: (self) =>
       Layer.set_keyboard_mode(self, Layer.KeyboardMode.EXCLUSIVE),
