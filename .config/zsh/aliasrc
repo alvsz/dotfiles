@@ -35,7 +35,7 @@ alias luarocks="luarocks --tree ${XDG_DATA_HOME}/luarocks"
 alias nsxiv="nsxiv ${XEMBED+"-e $XEMBED"}"
 alias mpv="mpv ${XEMBED+"--wid=$XEMBED"}"
 alias zathura="zathura ${XEMBED+"-e $XEMBED"}"
-alias surf="surf ${XEMBED+"-e $XEMBED"}"
+# alias surf="surf ${XEMBED+"-e $XEMBED"}"
 
 converter265 () {
 	if [ $2 ]; then
