@@ -285,92 +285,93 @@ const SysTray = () =>
 
 const wifiIcon = () =>
   //
-  Widget.Label("wifi");
-// Widget.Icon({
-//   connections: [
-//     [
-//       Network,
-//       (self) => {
-//         self.icon = Network.wifi?.iconName || "";
-//         // if (Network.connectivity == "unknown") {
-//         //   self.icon = "network-wireless-no-route";
-//         // } else if (Network.connectivity == "none") {
-//         //   self.icon = "network-wireless-offline";
-//         // } else if (
-//         //   Network.connectivity == "portal" ||
-//         //   Network.connectivity == "limited"
-//         // ) {
-//         //   self.icon = "network-wireless-acquiring";
-//         // } else {
-//         //   self.icon = Network.wifi?.iconName || "";
-//         // }
-//         // self.icon = Network.wifi?.iconName || "";
-//       },
-//     ],
-//   ],
-// });
-
-const wiredIcon = () =>
-  //
-  Widget.Label("wired");
-// Widget.Icon({
-//   connections: [
-//     [
-//       Network,
-//       (self) => {
-//         self.icon = Network.wired?.iconName || "";
-//         // if (Network.connectivity == "unknown") {
-//         //   self.icon = "network-wired-no-route";
-//         // } else if (Network.connectivity == "none") {
-//         //   self.icon = "network-wired-offline";
-//         // } else if (
-//         //   Network.connectivity == "portal" ||
-//         //   Network.connectivity == "limited"
-//         // ) {
-//         //   self.icon = "network-wired-acquiring";
-//         // } else {
-//         //   self.icon = Network.wired?.iconName || "";
-//         // }
-//         // self.shown = Network.primary;
-//       },
-//     ],
-//   ],
-// });
-
-const networkIndicator = () =>
-  //
-  Widget.Label({
+  // Widget.Label("wifi");
+  Widget.Icon({
     connections: [
       [
-        2000,
+        Network,
         (self) => {
-          self.label = Network.primary || "offline";
+          self.icon = Network.wifi?.iconName || "";
+          // if (Network.connectivity == "unknown") {
+          //   self.icon = "network-wireless-no-route";
+          // } else if (Network.connectivity == "none") {
+          //   self.icon = "network-wireless-offline";
+          // } else if (
+          //   Network.connectivity == "portal" ||
+          //   Network.connectivity == "limited"
+          // ) {
+          //   self.icon = "network-wireless-acquiring";
+          // } else {
+          //   self.icon = Network.wifi?.iconName || "";
+          // }
+          // self.icon = Network.wifi?.iconName || "";
         },
       ],
     ],
   });
-// Widget.Stack({
-//   className: "wifiIcon",
-//   items: [
-//     [
-//       "offline",
-//       // Widget.Icon("network-offline")
-//       Widget.Label("offline"),
-//     ],
-//     // ["wifi", wifiBox()],
-//     ["wifi", wifiIcon()],
-//     ["wired", wiredIcon()],
-//   ],
-//   // binds: [["shown", Network, "primary", (p) => p]],
-//   connections: [
-//     [
-//       2000,
-//       (self) => {
-//         self.shown = Network.primary || "offline";
-//       },
-//     ],
-//   ],
-// });
+
+const wiredIcon = () =>
+  //
+  // Widget.Label("wired");
+  Widget.Icon({
+    connections: [
+      [
+        Network,
+        (self) => {
+          self.icon = Network.wired?.iconName || "";
+          // if (Network.connectivity == "unknown") {
+          //   self.icon = "network-wired-no-route";
+          // } else if (Network.connectivity == "none") {
+          //   self.icon = "network-wired-offline";
+          // } else if (
+          //   Network.connectivity == "portal" ||
+          //   Network.connectivity == "limited"
+          // ) {
+          //   self.icon = "network-wired-acquiring";
+          // } else {
+          //   self.icon = Network.wired?.iconName || "";
+          // }
+          // self.shown = Network.primary;
+        },
+      ],
+    ],
+  });
+
+const networkIndicator = () =>
+  //
+  // Widget.Label({
+  //   connections: [
+  //     [
+  //       2000,
+  //       (self) => {
+  //         self.label = Network.primary || "offline";
+  //       },
+  //     ],
+  //   ],
+  // });
+  Widget.Stack({
+    className: "wifiIcon",
+    items: [
+      [
+        "offline",
+        Widget.Icon("network-offline"),
+        // Widget.Label("offline"),
+      ],
+      // ["wifi", wifiBox()],
+      ["wifi", wifiIcon()],
+      ["wired", wiredIcon()],
+    ],
+    // binds: [["shown", Network, "primary", (p) => p]],
+    connections: [
+      [
+        Network,
+        // 2000,
+        (self) => {
+          self.shown = Network.primary || "offline";
+        },
+      ],
+    ],
+  });
 
 const audioIcon = () =>
   Widget.Icon({
