@@ -6,11 +6,14 @@ import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
+
 import { revealOnClick, revealOnHover } from "./misc/Revealer.js";
 
 import * as user from "./misc/User.js";
 
 globalThis.user = user;
+globalThis.audio = Audio;
+globalThis.battery = Battery;
 
 import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 
@@ -35,10 +38,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-        ? "selected"
-        : occupied
-          ? "occupied"
-          : "normal",
+      ? "selected"
+      : occupied
+      ? "occupied"
+      : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -83,8 +86,8 @@ const clientTitle = (monitorId) =>
           const title = mon.title != ""
             ? mon.title
             : mon.appid != ""
-              ? mon.appid
-              : "";
+            ? mon.appid
+            : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -206,8 +209,9 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")
-                } - ${mpris.trackTitle}`;
+              self.label = `${
+                mpris.trackArtists.join(", ")
+              } - ${mpris.trackTitle}`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -248,8 +252,8 @@ const Notification = () =>
 const Center = () =>
   Widget.Box({
     children: [
-      // Media(),
-      Notification(),
+      Media(),
+      // Notification(),
     ],
   });
 
@@ -274,98 +278,44 @@ const SysTray = () =>
           );
         },
       ],
-      // [
-      //   dwlIpc,
-      //   (self) => {
-      //     self.visible = dwlIpc.value[monitorId].active;
-      //   },
-      // ],
     ],
   });
 
 const wifiIcon = () =>
-  //
-  // Widget.Label("wifi");
   Widget.Icon({
     connections: [
       [
         Network,
         (self) => {
           self.icon = Network.wifi?.iconName || "";
-          // if (Network.connectivity == "unknown") {
-          //   self.icon = "network-wireless-no-route";
-          // } else if (Network.connectivity == "none") {
-          //   self.icon = "network-wireless-offline";
-          // } else if (
-          //   Network.connectivity == "portal" ||
-          //   Network.connectivity == "limited"
-          // ) {
-          //   self.icon = "network-wireless-acquiring";
-          // } else {
-          //   self.icon = Network.wifi?.iconName || "";
-          // }
-          // self.icon = Network.wifi?.iconName || "";
         },
       ],
     ],
   });
 
 const wiredIcon = () =>
-  //
-  // Widget.Label("wired");
   Widget.Icon({
     connections: [
       [
         Network,
         (self) => {
           self.icon = Network.wired?.iconName || "";
-          // if (Network.connectivity == "unknown") {
-          //   self.icon = "network-wired-no-route";
-          // } else if (Network.connectivity == "none") {
-          //   self.icon = "network-wired-offline";
-          // } else if (
-          //   Network.connectivity == "portal" ||
-          //   Network.connectivity == "limited"
-          // ) {
-          //   self.icon = "network-wired-acquiring";
-          // } else {
-          //   self.icon = Network.wired?.iconName || "";
-          // }
-          // self.shown = Network.primary;
         },
       ],
     ],
   });
 
 const networkIndicator = () =>
-  //
-  // Widget.Label({
-  //   connections: [
-  //     [
-  //       2000,
-  //       (self) => {
-  //         self.label = Network.primary || "offline";
-  //       },
-  //     ],
-  //   ],
-  // });
   Widget.Stack({
     className: "wifiIcon",
     items: [
-      [
-        "offline",
-        Widget.Icon("network-offline"),
-        // Widget.Label("offline"),
-      ],
-      // ["wifi", wifiBox()],
+      ["offline", Widget.Icon("network-offline")],
       ["wifi", wifiIcon()],
       ["wired", wiredIcon()],
     ],
-    // binds: [["shown", Network, "primary", (p) => p]],
     connections: [
       [
         Network,
-        // 2000,
         (self) => {
           self.shown = Network.primary || "offline";
         },
@@ -385,7 +335,7 @@ const audioIcon = () =>
           const vol = Audio.speaker.volume * 100;
           let icon;
 
-          if (Audio.speaker.isMuted) {
+          if (Audio.control.get_default_sink().get_is_muted()) {
             self.icon = "audio-volume-muted-symbolic";
           } else {
             icon = [
@@ -503,7 +453,6 @@ const Right = (monitorId) =>
 const Bar = ({ monitor } = {}) =>
   Widget.Window({
     name: `bar-${monitor}`,
-    className: "bar",
     monitor: monitor,
     layer: "bottom",
     anchor: ["top", "left", "right"],

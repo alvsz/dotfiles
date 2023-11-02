@@ -1,6 +1,6 @@
 // import { App, Service, Utils } from "../imports.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
-import Service from "resource:///com/github/Aylur/ags/service/service.js";
+import Service from "resource:///com/github/Aylur/ags/service.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 const authpy = App.configDir + "/scripts/auth.py";

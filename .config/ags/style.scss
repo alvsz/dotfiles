@@ -192,3 +192,38 @@ window {
 .avatar {
   font-size: 10em;
 }
+
+.basewindow {
+  margin: 10px;
+}
+
+.notificationCenter {
+  @extend .basewindow;
+  // background-color: $background;
+  // margin: 10em;
+  border-width: 2px;
+  border-style: solid;
+  border-color: lighten($background, 15%);
+  background-color: $background;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.notification {
+  background-color: lighten($background, 4%);
+  border-radius: 10px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: lighten($background, 15%);
+  // min-width: 50em;
+}
+
+.popupList {
+  @extend .basewindow;
+  min-width: 25em;
+  // border-width: 2px;
+  // border-style: solid;
+  // border-color: lighten($background, 15%);
+  transition: 0.1s;
+  // padding: 1em;
+}

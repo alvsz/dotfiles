@@ -5,6 +5,10 @@
 // import GLib from 'gi://GLib'
 
 import Bar from "./js/bar.js";
+import {
+  NotificationCenter,
+  NotificationsPopupWindow,
+} from "./js/notificationCenter.js";
 import AppMenu from "./js/appmenu.js";
 import * as utils from "./js/utils.js";
 import Lockscreen from "./js/lockscreen.js";
@@ -19,6 +23,8 @@ export default {
   windows: [
     utils.forMonitors(Bar),
     utils.forMonitors(Lockscreen),
+    NotificationCenter(),
+    NotificationsPopupWindow(),
     AppMenu(),
   ].flat(2),
 };
