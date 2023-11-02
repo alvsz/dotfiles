@@ -4,12 +4,13 @@ icon="brightness-high"
 
 send_notification() {
 	backlight=$(xbacklight -get)
-	if (pgrep eww && (
-		eww update backlight="$backlight"
-		! eww windows | grep '*dashboard' && eww get backlighthover | grep -q "false"
-	)) || ! pgrep eww; then
-		notify-send -u low -i "$(geticon.lua "$icon")" -h int:value:"$backlight" -h "string:wired-tag:backlight" -h "string:wired-note:osd" "$backlight%" -t 3000 -r 666
-	fi
+	notify-send -u low -i "$icon" -h int:value:"$backlight" -h "string:wired-tag:backlight" -h "string:wired-note:osd" "$backlight%" -t 3000 -r 666
+	# if (pgrep eww && (
+	# 	eww update backlight="$backlight"
+	# 	! eww windows | grep '*dashboard' && eww get backlighthover | grep -q "false"
+	# )) || ! pgrep eww; then
+	# 	# notify-send -u low -i "$(geticon.lua "$icon")" -h int:value:"$backlight" -h "string:wired-tag:backlight" -h "string:wired-note:osd" "$backlight%" -t 3000 -r 666
+	# fi
 }
 
 # get_backlight() {
