@@ -11,6 +11,7 @@ import { execAsync, timeout } from "resource:///com/github/Aylur/ags/utils.js";
 const Header = () =>
   Widget.Box({
     className: "header",
+    hexpand: true,
     children: [
       Widget.Label("Do Not Disturb"),
       DNDSwitch(),
@@ -25,12 +26,12 @@ export const NotificationCenter = () =>
     // className: "notificationCenter",
     anchor: ["right", "top", "bottom"],
     popup: true,
-    // focusable: true,
+    focusable: true,
     visible: false,
     child: Widget.Box({
       children: [
         Widget.EventBox({
-          hexpand: true,
+          // hexpand: true,
           connections: [
             [
               "button-press-event",
@@ -43,6 +44,7 @@ export const NotificationCenter = () =>
           children: [Header(), NotificationList()],
         }),
       ],
+      hexpand: true,
       className: "notificationCenter",
     }),
   });
@@ -50,6 +52,7 @@ export const NotificationCenter = () =>
 export const NotificationsPopupWindow = () =>
   Widget.Window({
     name: "popup-window",
+    visible: true,
     anchor: ["top"],
     child: PopupList(),
   });

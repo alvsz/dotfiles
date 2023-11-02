@@ -51,7 +51,7 @@ const NotificationIcon = ({ appEntry, appIcon, image }) => {
 export const Notification = (n) =>
     Widget.EventBox({
         className: `notification ${n.urgency}`,
-        halign: "center",
+        // halign: "center",
         onPrimaryClick: () => n.dismiss(),
         properties: [["hovered", false]],
         onHover: (self) => {
@@ -125,7 +125,7 @@ export const Notification = (n) =>
                             onClicked: () => n.invoke(id),
                             hexpand: true,
                             child: Widget.Label(label),
-                        }),
+                        })
                     ),
                 }),
             ],

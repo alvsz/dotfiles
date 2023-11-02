@@ -36,10 +36,13 @@ const Placeholder = () =>
 
 export const NotificationList = () =>
     Widget.Scrollable({
+        className: "scroll",
+        hexpand: true,
         hscroll: "never",
         vscroll: "automatic",
         child: Widget.Box({
             className: "list",
+            spacing: 5,
             vertical: true,
             children: [List(), Placeholder()],
         }),
