@@ -1,1 +1,2 @@
-90-custom-keyboard.hwdb
+evdev:input:b0003v258Ap0049e*-*
+ KEYBOARD_KEY_70048=102nd
