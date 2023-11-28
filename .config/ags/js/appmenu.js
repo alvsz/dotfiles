@@ -4,6 +4,8 @@ import Applications from "resource:///com/github/Aylur/ags/service/applications.
 import PopupWindow from "./misc/PopupWindow.js";
 import icons from "./icons.js";
 
+globalThis.apps = Applications;
+
 const WINDOW_NAME = "applauncher";
 
 const AppItem = (app) => {
@@ -17,7 +19,7 @@ const AppItem = (app) => {
       halign: "center",
     });
 
-  if (app.iconName == "") {
+  if (app.iconName === "") {
     if (icon && icon.get_file) {
       iconName = icon.get_file().get_path();
     } else {

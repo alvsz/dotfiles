@@ -7,6 +7,8 @@ import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 
+import GLib from "gi://GLib";
+
 import { revealOnClick, revealOnHover } from "./misc/Revealer.js";
 
 import * as user from "./misc/User.js";
@@ -14,6 +16,9 @@ import * as user from "./misc/User.js";
 globalThis.user = user;
 globalThis.audio = Audio;
 globalThis.battery = Battery;
+globalThis.notification = Notifications;
+globalThis.bluetooth = Bluetooth;
+// globalThis.glib = GLib;
 
 import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
 
@@ -33,7 +38,6 @@ const Workspace = ({
     onPrimaryClick: onPrimaryClick,
     onSecondaryClick: onSecondaryClick,
     onMiddleClick: onMiddleClick,
-    style: "font: 13pt siji",
     valign: "center",
     className: urgent
       ? "urgent"
@@ -53,6 +57,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -64,6 +71,7 @@ const dwlTags = (monitorId) =>
     vertical: false,
     spacing: 8,
     homogeneous: true,
+    className: "dwlTags",
     connections: [
       [
         dwlIpc,
@@ -137,15 +145,12 @@ const layoutIcon = (monitorId) =>
     halign: "start",
     valign: "center",
     className: "layoutIcon",
-    // className: "tag",
     child: Widget.Label({
-      style: "font: 13pt siji",
       connections: [
         [
           dwlIpc,
           (self) => {
             const mon = dwlIpc.value[monitorId];
-            // self.label = mon.title;
 
             self.label = mon.layout.new.symbol;
           },
@@ -168,13 +173,12 @@ const archDash = () =>
   Widget.Button({
     child: Widget.Label({
       label: "",
-      style:
-        "color: #1793d1; font: 12pt Symbols Nerd Font; margin: 0px 14px 0px 14px;",
+      className: "archDash",
     }),
     halign: "start",
     valign: "fill",
     onPrimaryClick: () => {
-      Utils.execAsync(["echo", "Hi Mom"]);
+      utils.execAsync(["echo", "Hi Mom"]);
     },
     className: "module",
   });
@@ -187,7 +191,7 @@ const Left = (monitorId) =>
     hexpand: true,
     vexpand: true,
     homogeneous: false,
-    style: "margin: 3px 0px 0px 10px; min-height: 30px",
+    className: "leftBar",
     children: [
       archDash(),
       dwl(monitorId),
@@ -255,6 +259,7 @@ const Center = () =>
       Media(),
       // Notification(),
     ],
+    className: "centerBar",
   });
 
 const SysTray = () =>
@@ -358,6 +363,7 @@ const audioIcon = () =>
 const bluetoothIcon = () =>
   Widget.Icon({
     className: "bluetoothIcon",
+    visible: false,
     connections: [
       [
         Bluetooth,
@@ -372,6 +378,13 @@ const bluetoothIcon = () =>
 
           self.icon = `bluetooth-${icon}-symbolic`;
 
+          // for (const dev of Bluetooth.connectedDevices) {
+          //   if (dev.connected) {
+          //     self.visible = true;
+          //     break;
+          //   }
+          // }
+
           let active = false;
           for (const dev of Bluetooth.connectedDevices) {
             if (dev.connected) {
@@ -379,8 +392,9 @@ const bluetoothIcon = () =>
               break;
             }
           }
+          // let active = true;
 
-          !active
+          active
             ? (self.className = "bluetoothIcon connected")
             : (self.className = "bluetoothIcon");
         },
@@ -412,10 +426,10 @@ const Clock = () =>
     connections: [
       [
         5000,
-        (self) =>
-          execAsync(["date", "+%a %d, %R"])
-            .then((date) => (self.label = date))
-            .catch(console.error),
+        (self) => {
+          let time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
+          self.label = time.format("%a %d, %R");
+        },
       ],
     ],
   });
@@ -423,9 +437,9 @@ const Clock = () =>
 const Right = (monitorId) =>
   Widget.Box({
     halign: "end",
-    className: "module",
+    hexpand: "false",
     spacing: 7,
-    style: "margin: 3px 10px 0px 0px; min-height: 30px",
+    className: "rightBar",
     children: [
       revealOnClick({
         // shown: Widget.Label("teste"),

@@ -5,15 +5,19 @@ import * as vars from "./vars.js";
 export const cssPath = `${App.configDir}/style.css`;
 export const scssPath = `${App.configDir}/style.scss`;
 
+const reloadTheme = () => {
+  console.log("scss reloaded");
+  Utils.exec(`sassc ${scssPath} ${cssPath}`);
+  App.resetCss();
+  App.applyCss(cssPath);
+};
+
 export const scssWatcher = () => {
+  reloadTheme();
+
   Utils.subprocess(
     ["inotifywait", "--recursive", "--event", "create,modify", "-m", scssPath],
-    () => {
-      console.log("scss reloaded");
-      Utils.exec(`sassc ${scssPath} ${cssPath}`);
-      App.resetCss();
-      App.applyCss(cssPath);
-    },
+    reloadTheme,
   );
 };
 

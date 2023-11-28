@@ -1,9 +1,14 @@
 import Gtk from "gi://Gtk";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
+globalThis.widget = Widget;
+
+// const Spinner = Widget.subclass(Gtk.Spinner);
+
 export default (props) =>
-    Widget({
-        ...props,
-        type: Gtk.Spinner,
-        active: true,
-    });
+  // Spinner({
+  Widget.Spinner({
+    ...props,
+    // type: Gtk.Spinner,
+    active: true,
+  });

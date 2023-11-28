@@ -12,7 +12,7 @@ const Padding = (windowName) =>
 
 const PopupRevealer = (windowName, transition, child) =>
   Widget.Box({
-    style: "padding: 1px;",
+    css: "padding: 1px;",
     child: Widget.Revealer({
       transition,
       child,
@@ -32,7 +32,7 @@ const layouts = {
   center: (windowName, child, expand) =>
     Widget.CenterBox({
       className: "shader",
-      style: expand ? "min-width: 5000px; min-height: 3000px;" : "",
+      css: expand ? "min-width: 5000px; min-height: 3000px;" : "",
       // style: expand ? "min-width: 500px; min-height: 300px;" : "",
       children: [
         Padding(windowName),

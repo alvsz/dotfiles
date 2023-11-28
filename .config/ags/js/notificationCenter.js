@@ -24,26 +24,14 @@ export const NotificationCenter = () =>
   Widget.Window({
     name: "notification-center",
     // className: "notificationCenter",
-    anchor: ["right", "top", "bottom"],
+    anchor: ["top"],
+    layer: "overlay",
     popup: true,
     focusable: true,
     visible: false,
     child: Widget.Box({
-      children: [
-        Widget.EventBox({
-          // hexpand: true,
-          connections: [
-            [
-              "button-press-event",
-              () => App.closeWindow("notification-center"),
-            ],
-          ],
-        }),
-        Widget.Box({
-          vertical: true,
-          children: [Header(), NotificationList()],
-        }),
-      ],
+      vertical: true,
+      children: [Header(), NotificationList()],
       hexpand: true,
       className: "notificationCenter",
     }),
@@ -52,7 +40,10 @@ export const NotificationCenter = () =>
 export const NotificationsPopupWindow = () =>
   Widget.Window({
     name: "popup-window",
+    popup: true,
+    focusable: false,
     visible: true,
+    // visible: false,
     anchor: ["top"],
     child: PopupList(),
   });

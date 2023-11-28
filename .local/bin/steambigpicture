@@ -17,7 +17,7 @@ export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
 # position=middle-left" >"$MANGOHUD_CONFIGFILE"
 
 # gamescope --prefer-vk-device=8086:3ea0 -h 720 -e -f -H 1080 -U -- sh -c "mangoapp & steam -gamepadui"
-gamescope --prefer-vk-device=8086:3ea0 -h 1080 -e -f -H 1080 -U -- steam -gamepadui
+gamescope --prefer-vk-device=8086:3ea0 -h 1080 -e -f -H 1080 -F fsr -- steam -gamepadui
 
 # killall mangoapp
 

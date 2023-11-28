@@ -16,6 +16,9 @@ const List = () =>
                         .map(Notification);
 
                     self.visible = Notifications.notifications.length > 0;
+
+                    self.children.length > 0 &&
+                        self.children[0].toggleClassName("first", true);
                 },
             ],
         ],
@@ -42,7 +45,7 @@ export const NotificationList = () =>
         vscroll: "automatic",
         child: Widget.Box({
             className: "list",
-            spacing: 5,
+            // spacing: 5,
             vertical: true,
             children: [List(), Placeholder()],
         }),
@@ -70,8 +73,8 @@ export const ClearButton = () =>
     });
 
 export const DNDSwitch = () =>
-    Widget({
-        type: Gtk.Switch,
+    Widget.Switch({
+        // type: Gtk.Switch,
         valign: "center",
         connections: [
             [
@@ -89,12 +92,25 @@ export const PopupList = () =>
         // style: "padding: 1px;", // so it shows up
         spacing: 5,
         vertical: true,
-        binds: [
+        connections: [
             [
-                "children",
                 Notifications,
-                "popups",
-                (popups) => popups.map(Notification),
+                (self) => {
+                    self.children = Notifications.popups.reverse().map(Notification);
+
+                    // self.visible = Notifications.notifications.length > 0;
+
+                    self.children.length > 0 &&
+                        self.children[0].toggleClassName("first", true);
+                },
             ],
         ],
+        // binds: [
+        //     [
+        //         "children",
+        //         Notifications,
+        //         "popups",
+        //         (popups) => popups.map(Notification),
+        //     ],
+        // ],
     });

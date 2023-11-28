@@ -18,13 +18,20 @@ globalThis.utils = utils;
 
 utils.scssWatcher();
 
+const windows = [
+  utils.forMonitors(Bar),
+  utils.forMonitors(Lockscreen),
+  NotificationCenter(),
+  NotificationsPopupWindow(),
+  AppMenu(),
+].flat(2);
+
+globalThis.windowList = windows;
+
 export default {
   style: utils.cssPath,
-  windows: [
-    utils.forMonitors(Bar),
-    utils.forMonitors(Lockscreen),
-    NotificationCenter(),
-    NotificationsPopupWindow(),
-    AppMenu(),
-  ].flat(2),
+  notificationPopupTimeout: 3000,
+  cacheNotificationActions: true,
+
+  windows: windows,
 };

@@ -45,7 +45,7 @@ volume_notif() {
 
 	[ "$mute" = true ] && summary="Mudo" || summary=${volume}%
 
-	notify-send -i "$icon" -h int:value:"$volume" -h 'string:wired-tag:volume' -h 'string:wired-note:osd' -u low "${summary}" -t 3000 -r 777
+	notify-send -i "$icon" -h int:value:"$volume" -h 'string:note:osd' -u low "${summary}" -r 777
 
 	# if (pgrep eww && (
 	# 	eww update pasinks="$(pactl --format=json list sinks | jq -c --unbuffered)"

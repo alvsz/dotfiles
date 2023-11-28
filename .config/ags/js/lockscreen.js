@@ -13,8 +13,8 @@ const Avatar = (props) =>
     icon: iconFile,
   });
 
-export default ({ monitor } = {}) =>
-  Widget.Window({
+export default ({ monitor } = {}) => {
+  const win = Widget.Window({
     name: `lockscreen-${monitor}`,
     className: "lockscreen",
 
@@ -24,13 +24,15 @@ export default ({ monitor } = {}) =>
     visible: false,
     // visible: true,
 
-    setup: (self) =>
-      Layer.set_keyboard_mode(self, Layer.KeyboardMode.EXCLUSIVE),
+    // setup: (self) => {
+    //   // Layer.init_for_window(self);
+    //   Layer.set_keyboard_mode(self, Layer.KeyboardMode.EXCLUSIVE);
+    // },
 
     connections: [[Lockscreen, (w, lock) => (w.visible = lock), "lock"]],
 
     child: Widget.Box({
-      style: "min-width: 3000px; min-height: 2000px;",
+      // css: "min-width: 3000px; min-height: 2000px;",
       className: "shader",
 
       child: Widget.Box({
@@ -77,3 +79,7 @@ export default ({ monitor } = {}) =>
       }),
     }),
   });
+
+  Layer.set_keyboard_mode(win, Layer.KeyboardMode.EXCLUSIVE);
+  return win;
+};
