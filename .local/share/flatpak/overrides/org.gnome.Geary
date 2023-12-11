@@ -1,0 +1,5 @@
+[Context]
+filesystems=!xdg-config/gtk-3.0;!xdg-config/gtk-4.0
+
+[Environment]
+GTK_THEME=WhiteSur-Light-purple
