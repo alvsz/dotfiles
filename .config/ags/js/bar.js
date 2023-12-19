@@ -18,6 +18,7 @@ globalThis.audio = Audio;
 globalThis.battery = Battery;
 globalThis.notification = Notifications;
 globalThis.bluetooth = Bluetooth;
+globalThis.network = Network;
 // globalThis.glib = GLib;
 
 import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
@@ -42,10 +43,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-      ? "selected"
-      : occupied
-      ? "occupied"
-      : "normal",
+        ? "selected"
+        : occupied
+          ? "occupied"
+          : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -57,9 +58,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -94,8 +95,8 @@ const clientTitle = (monitorId) =>
           const title = mon.title != ""
             ? mon.title
             : mon.appid != ""
-            ? mon.appid
-            : "";
+              ? mon.appid
+              : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -213,9 +214,8 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${
-                mpris.trackArtists.join(", ")
-              } - ${mpris.trackTitle}`;
+              self.label = `${mpris.trackArtists.join(", ")
+                } - ${mpris.trackTitle}`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -278,7 +278,7 @@ const SysTray = () =>
               className: "trayItem",
               onPrimaryClick: (_, event) => item.activate(event),
               onSecondaryClick: (_, event) => item.openMenu(event),
-              binds: [["tooltipText", item, "tooltipMarkup"]],
+              binds: [["tooltipText", item, "tooltip-markup"]],
             })
           );
         },
@@ -420,6 +420,14 @@ const batteryLabel = () =>
     ],
   });
 
+const batteryBox = () =>
+  Battery.available
+    ? Widget.Box({
+      spacing: 7,
+      children: [batteryIcon(), batteryLabel()],
+    })
+    : null;
+
 const Clock = () =>
   Widget.Label({
     className: "clock",
@@ -458,8 +466,9 @@ const Right = (monitorId) =>
       // wifiBox(),
       audioIcon(),
       bluetoothIcon(),
-      batteryIcon(),
-      batteryLabel(),
+      batteryBox(),
+      // batteryIcon(),
+      // batteryLabel(),
       Clock(),
     ],
   });
@@ -470,7 +479,8 @@ const Bar = ({ monitor } = {}) =>
     monitor: monitor,
     layer: "bottom",
     anchor: ["top", "left", "right"],
-    exclusive: true,
+    exclusivity: "exclusive",
+    // exclusive: true,
     className: "barwindow",
     child: Widget.CenterBox({
       startWidget: Left(monitor),
