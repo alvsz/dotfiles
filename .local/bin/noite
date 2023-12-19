@@ -1,17 +1,17 @@
 #!/bin/env sh
 
 set_dark() {
-	kvantummanager --set GraphiteNord-rimlessDark
+	# kvantummanager --set GraphiteNord-rimlessDark
 	gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 	gsettings set org.gnome.desktop.interface gtk-theme 'Graphite-purple-Dark'
-	gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord-dark'
+	gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-dark'
 	eww update dark='dark'
 }
 set_light() {
-	kvantummanager --set GraphiteNord-rimless
+	# kvantummanager --set GraphiteNord-rimless
 	gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
 	gsettings set org.gnome.desktop.interface gtk-theme 'Graphite-purple-Light'
-	gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal-nord'
+	gsettings set org.gnome.desktop.interface icon-theme 'Colloid-teal'
 	eww update dark='light'
 }
 case $1 in

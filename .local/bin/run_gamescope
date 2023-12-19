@@ -1,39 +1,12 @@
 #!/bin/env sh
 
-igpu=8086:3ea0
-export INTEL_DEBUG=noccs
-export MESA_VK_DEVICE_SELECT="$igpu"
 
 if [ "$XDG_CURRENT_DESKTOP" != "gamescope" ]; then
-	gamescope="gamescope --prefer-vk-device=$igpu $1 -H 1080 -F fsr --"
+	gamescope="gamescope $1 -F fsr --"
 fi
 
 shift
 
-# tee /tmp/gamescopecmd <<EOF >/dev/null
-# mangoapp &
-# prime-run gamemoderun "$*"
-# EOF
-#
-# chmod +x /tmp/gamescopecmd
 
-# cat /tmp/gamescopecmd
+${gamescope} env MANGOHUD=1 gamemoderun "$@"
 
-# echo "asterisco aspas"
-# args.lua "$*"
-# echo "asterisco sem aspas"
-# args.lua $*
-# echo "arroba aspas"
-# args.lua "$@"
-# echo "arroba sem aspas"
-# args.lua $@
-
-# ${gamescope} /tmp/gamescopecmd
-
-# echo "$gamescope"
-# echo "$*"
-# env MANGOHUD=1 prime-run gamemoderun $*
-
-${gamescope} env MANGOHUD=1 prime-run gamemoderun "$@"
-
-# prime-run gamemoderun "$*"
