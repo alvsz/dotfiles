@@ -126,11 +126,11 @@ windowcontrols > button.minimize:backdrop {
   background-color: #665c54;
 }
 
-window {
-  padding: 0;
-  box-shadow: none;
-}
-
-decoration {
-  padding: 0;
-}
+/* window { */
+/*   padding: 0; */
+/*   box-shadow: none; */
+/* } */
+/**/
+/* decoration { */
+/*   padding: 0; */
+/* } */

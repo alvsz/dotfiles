@@ -19,7 +19,13 @@ if [ "$1" = period-changed ]; then
 	case $3 in
 	night)
 		set_brightness $brightness_night
-		[ "$XDG_SESSION_TYPE" = "x11" ] && feh --no-fehbg --bg-fill "$HOME/Imagens/EOS-SnowCappedMountain02.jpg"
+		bg="$HOME/Imagens/EOS-SnowCappedMountain02.jpg"
+
+		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+			feh --no-fehbg --bg-fill "${bg}"
+		else
+			swww "${bg}"
+		fi
 		#	    eww update nightlight=Ativado
 		;;
 	transition)
@@ -28,7 +34,12 @@ if [ "$1" = period-changed ]; then
 		;;
 	daytime)
 		set_brightness $brightness_day
-		[ "$XDG_SESSION_TYPE" = "x11" ] && feh --no-fehbg --bg-fill "$HOME/Imagens/EOS-SnowCappedMountain01.jpg"
+		bg="$HOME/Imagens/EOS-SnowCappedMountain01.jpg"
+		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+			feh --no-fehbg --bg-fill "${bg}"
+		else
+			swww "${bg}"
+		fi
 		#	    eww update nightlight=Desativado
 		;;
 	esac
