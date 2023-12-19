@@ -1,21 +1,20 @@
-static const float colors[18][3] = {{
-    {{{color0.red}, {color0.green}, {color0.blue}}},
-    {{{color1.red}, {color1.green}, {color1.blue}}},
-    {{{color2.red}, {color2.green}, {color2.blue}}},
-    {{{color3.red}, {color3.green}, {color3.blue}}},
-    {{{color4.red}, {color4.green}, {color4.blue}}},
-    {{{color5.red}, {color5.green}, {color5.blue}}},
-    {{{color6.red}, {color6.green}, {color6.blue}}},
-    {{{color7.red}, {color7.green}, {color7.blue}}},
-    {{{color8.red}, {color8.green}, {color8.blue}}},
-    {{{color9.red}, {color9.green}, {color9.blue}}},
-    {{{color10.red}, {color10.green}, {color10.blue}}},
-    {{{color11.red}, {color11.green}, {color11.blue}}},
-    {{{color12.red}, {color12.green}, {color12.blue}}},
-    {{{color13.red}, {color13.green}, {color13.blue}}},
-    {{{color14.red}, {color14.green}, {color14.blue}}},
-    {{{color15.red}, {color15.green}, {color15.blue}}},
+// clang-format off
 
-    {{{foreground.red}, {foreground.green}, {foreground.blue}}},
-    {{{background.red}, {background.green}, {background.blue}}},
-}};
+static const float foreground[] = COLOR(0x{foreground.strip}FF);
+static const float background[]    = COLOR(0x{background.strip}FF);
+static const float color0[]        = COLOR(0x{color0.strip}FF);
+static const float color1[]        = COLOR(0x{color1.strip}FF);
+static const float color2[]        = COLOR(0x{color2.strip}FF);
+static const float color3[]        = COLOR(0x{color3.strip}FF);
+static const float color4[]        = COLOR(0x{color4.strip}FF);
+static const float color5[]        = COLOR(0x{color5.strip}FF);
+static const float color6[]        = COLOR(0x{color6.strip}FF);
+static const float color7[]        = COLOR(0x{color7.strip}FF);
+static const float color8[]        = COLOR(0x{color8.strip}FF);
+static const float color9[]        = COLOR(0x{color9.strip}FF);
+static const float color10[]       = COLOR(0x{color10.strip}FF);
+static const float color11[]       = COLOR(0x{color11.strip}FF);
+static const float color12[]       = COLOR(0x{color12.strip}FF);
+static const float color13[]       = COLOR(0x{color13.strip}FF);
+static const float color14[]       = COLOR(0x{color14.strip}FF);
+static const float color15[]       = COLOR(0x{color15.strip}FF);
