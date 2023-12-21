@@ -4,12 +4,16 @@ export STEAM_USE_MANGOAPP=1
 # export MANGOHUD_CONFIGFILE="$DG_CONFIG_HOME/MangoHud/MangoHud.conf"
 # export MANGOHUD_CONFIGFILE="$(mktemp "${XDG_RUNTIME_DIR}"/mangohud.XXXXXXXX)"
 # export INTEL_DEBUG=norbc
-export INTEL_DEBUG=noccs
-export MESA_VK_DEVICE_SELECT=8086:3ea0
+
 export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
 # export STEAM_GAMESCOPE_NIS_SUPPORTED=1
 export STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
 export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
+
+if [ "$HOST" = "vivobook" ]; then
+	export INTEL_DEBUG=noccs
+	export MESA_VK_DEVICE_SELECT=8086:3ea0
+fi
 
 # mkdir -p "$(dirname "$MANGOHUD_CONFIGFILE")"
 # echo "no_display
@@ -17,7 +21,7 @@ export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
 # position=middle-left" >"$MANGOHUD_CONFIGFILE"
 
 # gamescope --prefer-vk-device=8086:3ea0 -h 720 -e -f -H 1080 -U -- sh -c "mangoapp & steam -gamepadui"
-gamescope --prefer-vk-device=8086:3ea0 -h 1080 -e -f -H 1080 -U -- steam -gamepadui
+run_gamescope '-h 1080 -e -f -H 1080' steam -gamepadui
 
 # killall mangoapp
 

@@ -1,12 +1,37 @@
 #!/bin/env sh
 
+# if ! [[ "$1" == *"-e"* ]]; then
+
+case "$1" in
+*-e*)
+	true
+	# shift
+	;;
+*)
+	cmd="env MANGOHUD=1 gamemoderun"
+	;;
+esac
+
+# echo "$cmd"
+
+# fi
 
 if [ "$XDG_CURRENT_DESKTOP" != "gamescope" ]; then
-	gamescope="gamescope $1 -F fsr --"
+	gamescope_cmd="gamescope $1 -F fsr"
+
+	if [ "$HOST" = "vivobook" ]; then
+		gamescope_cmd="${gamescope_cmd} --prefer-vk-device=8086:3ea0"
+	fi
+	# cmd
+
+	# echo "$cmd"
+	cmd="${gamescope_cmd} -- ${cmd}"
 fi
 
 shift
 
+# echo "${@}"
 
-${gamescope} env MANGOHUD=1 gamemoderun "$@"
+${cmd} "$@"
 
+# ${cmd} "$@"
