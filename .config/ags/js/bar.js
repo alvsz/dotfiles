@@ -39,7 +39,7 @@ const Workspace = ({
     onPrimaryClick: onPrimaryClick,
     onSecondaryClick: onSecondaryClick,
     onMiddleClick: onMiddleClick,
-    valign: "center",
+    vpack: "center",
     className: urgent
       ? "urgent"
       : selected
@@ -92,11 +92,8 @@ const clientTitle = (monitorId) =>
         (self) => {
           const mon = dwlIpc.value[monitorId];
           const limitWidth = 45;
-          const title = mon.title != ""
-            ? mon.title
-            : mon.appid != ""
-              ? mon.appid
-              : "";
+          const title =
+            mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -111,7 +108,7 @@ const clientTitle = (monitorId) =>
 const clientIcon = (monitorId) =>
   Widget.Icon({
     className: "clientIcon",
-    valign: "center",
+    vpack: "center",
     connections: [
       [
         dwlIpc,
@@ -143,8 +140,8 @@ const client = (monitorId) =>
 
 const layoutIcon = (monitorId) =>
   Widget.Button({
-    halign: "start",
-    valign: "center",
+    hpack: "start",
+    vpack: "center",
     className: "layoutIcon",
     child: Widget.Label({
       connections: [
@@ -163,8 +160,8 @@ const layoutIcon = (monitorId) =>
 const dwl = (monitorId) =>
   Widget.Box({
     spacing: 8,
-    halign: "start",
-    valign: "fill",
+    hpack: "start",
+    vpack: "fill",
     vexpand: true,
     className: "module",
     children: [dwlTags(monitorId), layoutIcon(monitorId), client(monitorId)],
@@ -176,8 +173,8 @@ const archDash = () =>
       label: "",
       className: "archDash",
     }),
-    halign: "start",
-    valign: "fill",
+    hpack: "start",
+    vpack: "fill",
     onPrimaryClick: () => {
       utils.execAsync(["echo", "Hi Mom"]);
     },
@@ -187,8 +184,8 @@ const archDash = () =>
 const Left = (monitorId) =>
   Widget.Box({
     spacing: 10,
-    halign: "start",
-    valign: "fill",
+    hpack: "start",
+    vpack: "fill",
     hexpand: true,
     vexpand: true,
     homogeneous: false,
@@ -214,8 +211,8 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")
-                } - ${mpris.trackTitle}`;
+              self.label = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle
+                }`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -265,7 +262,7 @@ const Center = () =>
 const SysTray = () =>
   Widget.Box({
     className: "sysTray",
-    valign: "center",
+    vpack: "center",
     spacing: 5,
     connections: [
       [
@@ -274,12 +271,12 @@ const SysTray = () =>
           self.children = SystemTray.items.map((item) =>
             Widget.Button({
               child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
-              valign: "center",
+              vpack: "center",
               className: "trayItem",
               onPrimaryClick: (_, event) => item.activate(event),
               onSecondaryClick: (_, event) => item.openMenu(event),
               binds: [["tooltipText", item, "tooltip-markup"]],
-            })
+            }),
           );
         },
       ],
@@ -444,7 +441,7 @@ const Clock = () =>
 
 const Right = (monitorId) =>
   Widget.Box({
-    halign: "end",
+    hpack: "end",
     hexpand: "false",
     spacing: 7,
     className: "rightBar",
