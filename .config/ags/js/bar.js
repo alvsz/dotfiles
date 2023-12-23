@@ -39,7 +39,7 @@ const Workspace = ({
     onPrimaryClick: onPrimaryClick,
     onSecondaryClick: onSecondaryClick,
     onMiddleClick: onMiddleClick,
-    vpack: "center",
+    vpack: "fill",
     className: urgent
       ? "urgent"
       : selected
@@ -111,7 +111,7 @@ const clientTitle = (monitorId) =>
 const clientIcon = (monitorId) =>
   Widget.Icon({
     className: "clientIcon",
-    vpack: "center",
+    vpack: "fill",
     connections: [
       [
         dwlIpc,
@@ -144,7 +144,7 @@ const client = (monitorId) =>
 const layoutIcon = (monitorId) =>
   Widget.Button({
     hpack: "start",
-    vpack: "center",
+    vpack: "fill",
     className: "layoutIcon",
     child: Widget.Label({
       connections: [
@@ -182,22 +182,6 @@ const archDash = () =>
       utils.execAsync(["echo", "Hi Mom"]);
     },
     className: "module",
-  });
-
-const Left = (monitorId) =>
-  Widget.Box({
-    spacing: 10,
-    hpack: "start",
-    vpack: "fill",
-    hexpand: true,
-    vexpand: true,
-    homogeneous: false,
-    className: "leftBar",
-    children: [
-      archDash(),
-      dwl(monitorId),
-      // Widget.Label(realName.recursiveUnpack().toString()),
-    ],
   });
 
 const Media = () =>
@@ -253,28 +237,27 @@ const Notification = () =>
     ],
   });
 
-const Center = () =>
-  Widget.Box({
-    children: [
-      Media(),
-      // Notification(),
-    ],
-    className: "centerBar",
+const pwCalc = () =>
+  Widget.Button({
+    child: Widget.Icon("dialog-password-symbolic"),
+    onPrimaryClick: () => {
+      print("clicou");
+    },
   });
 
 const SysTray = () =>
   Widget.Box({
     className: "sysTray",
-    vpack: "center",
+    vpack: "fill",
     spacing: 5,
     connections: [
       [
         SystemTray,
         (self) => {
-          self.children = SystemTray.items.map((item) => {
+          let list = SystemTray.items.map((item) => {
             let trayItem = Widget.Button({
               child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
-              vpack: "center",
+              vpack: "fill",
               className: "trayItem",
               onPrimaryClick: (_, event) => item.activate(event),
               // onSecondaryClick: (_, event) => item.openMenu(event),
@@ -290,6 +273,10 @@ const SysTray = () =>
 
             return trayItem;
           });
+
+          list.push(pwCalc());
+
+          self.children = list;
         },
       ],
     ],
@@ -456,6 +443,31 @@ const Clock = () =>
     ],
   });
 
+const Left = (monitorId) =>
+  Widget.Box({
+    spacing: 10,
+    hpack: "start",
+    vpack: "fill",
+    hexpand: true,
+    vexpand: true,
+    homogeneous: false,
+    className: "leftBar",
+    children: [
+      archDash(),
+      dwl(monitorId),
+      // Widget.Label(realName.recursiveUnpack().toString()),
+    ],
+  });
+
+const Center = () =>
+  Widget.Box({
+    children: [
+      Media(),
+      // Notification(),
+    ],
+    className: "centerBar",
+  });
+
 const Right = (monitorId) =>
   Widget.Box({
     hpack: "end",
@@ -480,6 +492,7 @@ const Right = (monitorId) =>
       // wifiBox(),
       audioIcon(),
       bluetoothIcon(),
+      pwCalc(),
       batteryBox(),
       // batteryIcon(),
       // batteryLabel(),
