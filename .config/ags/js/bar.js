@@ -9,10 +9,9 @@ import Network from "resource:///com/github/Aylur/ags/service/network.js";
 
 import GLib from "gi://GLib";
 
-import { revealOnClick, revealOnHover } from "./misc/Revealer.js";
+import { revealOnClick } from "./misc/Revealer.js";
 
 import * as user from "./misc/User.js";
-import { pwCalc } from "./misc/pwCalc.js";
 
 globalThis.user = user;
 globalThis.audio = Audio;
@@ -20,11 +19,7 @@ globalThis.battery = Battery;
 globalThis.notification = Notifications;
 globalThis.bluetooth = Bluetooth;
 globalThis.network = Network;
-// globalThis.glib = GLib;
 
-import { exec, execAsync } from "resource:///com/github/Aylur/ags/utils.js";
-
-import * as vars from "./vars.js";
 import { dwlIpc } from "./vars.js";
 
 const Workspace = ({
@@ -210,61 +205,33 @@ const Media = () =>
     }),
   });
 
-// we don't need dunst or any other notification daemon
-// because the Notifications module is a notification daemon itself
-const Notification = () =>
-  Widget.Box({
-    className: "notification",
-    children: [
-      Widget.Icon({
-        icon: "preferences-system-notifications-symbolic",
-        connections: [
-          [
-            Notifications,
-            (self) => (self.visible = Notifications.popups.length > 0),
-          ],
-        ],
-      }),
-      Widget.Label({
-        connections: [
-          [
-            Notifications,
-            (self) => {
-              self.label = Notifications.popups[0]?.summary || "";
-            },
-          ],
-        ],
-      }),
-    ],
-  });
-
-const password = () => {
-  let button = Widget.Button({
-    child: Widget.Icon("dialog-password-symbolic"),
-  });
-
-  let menu = Widget.Menu({
-    children: [
-      Widget.MenuItem({
-        child: Widget.Label("hello"),
-      }),
-      Widget.MenuItem({
-        sensitive: false,
-        child: Widget.Entry({
-          primary_icon_name: "dialog-password-symbolic",
-          visible: false,
-        }),
-      }),
-    ],
-    className: "trayMenu",
-  });
-
-  button.onPrimaryClick = (_, event) => {
-    menu.popup_at_widget(button, 8, 2, event);
-  };
-
-  return button;
-};
+// const password = () => {
+//   let button = Widget.Button({
+//     child: Widget.Icon("dialog-password-symbolic"),
+//   });
+//
+//   let menu = Widget.Menu({
+//     children: [
+//       Widget.MenuItem({
+//         child: Widget.Label("hello"),
+//       }),
+//       Widget.MenuItem({
+//         // sensitive: false,
+//         child: Widget.Entry({
+//           primary_icon_name: "dialog-password-symbolic",
+//           visible: false,
+//         }),
+//       }),
+//     ],
+//     className: "trayMenu",
+//   });
+//
+//   button.onPrimaryClick = (_, event) => {
+//     menu.popup_at_widget(button, 8, 2, event);
+//   };
+//
+//   return button;
+// };
 
 const SysTray = () =>
   Widget.Box({
@@ -274,31 +241,20 @@ const SysTray = () =>
     connections: [
       [
         SystemTray,
-        (self) => {
-          let list = SystemTray.items.map((item) => {
-            let trayItem = Widget.Button({
+        (self) =>
+          SystemTray.items.map((item) =>
+            Widget.Button({
               child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
               vpack: "fill",
               className: "trayItem",
               onPrimaryClick: (_, event) => item.activate(event),
-              // onSecondaryClick: (_, event) => item.openMenu(event),
+              onSecondaryClick: (_, event) => {
+                item.menu.toggleClassName("trayMenu", true);
+                item.openMenu(event);
+              },
               binds: [["tooltipText", item, "tooltip-markup"]],
-            });
-
-            trayItem.onSecondaryClick = (_, event) => {
-              item.menu.toggleClassName("trayMenu", true);
-              item.menu.popup_at_widget(trayItem, 8, 2, event);
-              // print(item.menu);
-              // item.menu.children[0].toggleClassName("primeiromenu", true);
-            };
-
-            return trayItem;
-          });
-
-          // list.push(password());
-
-          self.children = list;
-        },
+            })
+          ),
       ],
     ],
   });
@@ -395,13 +351,6 @@ const bluetoothIcon = () =>
 
           self.icon = `bluetooth-${icon}-symbolic`;
 
-          // for (const dev of Bluetooth.connectedDevices) {
-          //   if (dev.connected) {
-          //     self.visible = true;
-          //     break;
-          //   }
-          // }
-
           let active = false;
           for (const dev of Bluetooth.connectedDevices) {
             if (dev.connected) {
@@ -409,7 +358,6 @@ const bluetoothIcon = () =>
               break;
             }
           }
-          // let active = true;
 
           active
             ? (self.className = "bluetoothIcon connected")
@@ -438,14 +386,14 @@ const batteryLabel = () =>
   });
 
 const batteryBox = () => {
-  Battery.available;
+  // Battery.available;
   // ?
-  if (Battery.available) {
-    return Widget.Box({
-      spacing: 7,
-      children: [batteryIcon(), batteryLabel()],
-    });
-  } else return null;
+  // if (Battery.available) {
+  return Widget.Box({
+    spacing: 7,
+    children: [batteryIcon(), batteryLabel()],
+  });
+  // } else return null;
   // : null
 };
 
@@ -454,7 +402,7 @@ const Clock = () =>
     className: "clock",
     connections: [
       [
-        5000,
+        30000,
         (self) => {
           let time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
           self.label = time.format("%a %d, %R");
