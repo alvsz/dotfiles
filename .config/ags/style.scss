@@ -128,21 +128,21 @@
   @extend .transparentWindow;
   min-width: 40em;
   min-height: 30em;
-  border-radius: 0.5em;
+  border-radius: 0.6em;
 
   .scroll {
     padding: 0.5em;
   }
 
   .header {
-    border-radius: 0.5em;
+    border-radius: 0.6em;
     background-color: $background;
-    padding: 1em;
+    padding: 0.5em;
     background-color: transparentize(lighten($background, 3%), 0.1);
 
     entry {
       all: unset;
-      padding: 0.5em;
+      padding: 0.4em;
       border: 0.1em solid lighten($background, 6%);
       transition: 0.1s;
       border-radius: 0.5em;
@@ -156,8 +156,8 @@
 
     image {
       background-color: $color12;
-      border-radius: 0.5em;
-      padding: 1em;
+      border-radius: 0.6em;
+      padding: 0.7em;
     }
   }
 

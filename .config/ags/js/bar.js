@@ -12,6 +12,7 @@ import GLib from "gi://GLib";
 import { revealOnClick, revealOnHover } from "./misc/Revealer.js";
 
 import * as user from "./misc/User.js";
+import { pwCalc } from "./misc/pwCalc.js";
 
 globalThis.user = user;
 globalThis.audio = Audio;
@@ -237,13 +238,32 @@ const Notification = () =>
     ],
   });
 
-const pwCalc = () =>
-  Widget.Button({
+const password = () => {
+  let button = Widget.Button({
     child: Widget.Icon("dialog-password-symbolic"),
-    onPrimaryClick: () => {
-      print("clicou");
-    },
   });
+
+  let menu = Widget.Menu({
+    children: [
+      Widget.MenuItem({
+        child: Widget.Label("hello"),
+      }),
+      Widget.MenuItem({
+        child: Widget.Entry({
+          primary_icon_name: "dialog-password-symbolic",
+          visible: false,
+        }),
+      }),
+    ],
+    className: "trayMenu",
+  });
+
+  button.onPrimaryClick = (_, event) => {
+    menu.popup_at_widget(button, 8, 2, event);
+  };
+
+  return button;
+};
 
 const SysTray = () =>
   Widget.Box({
@@ -274,7 +294,7 @@ const SysTray = () =>
             return trayItem;
           });
 
-          list.push(pwCalc());
+          list.push(password());
 
           self.children = list;
         },
@@ -492,7 +512,7 @@ const Right = (monitorId) =>
       // wifiBox(),
       audioIcon(),
       bluetoothIcon(),
-      pwCalc(),
+      // pwCalc(),
       batteryBox(),
       // batteryIcon(),
       // batteryLabel(),

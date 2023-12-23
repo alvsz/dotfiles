@@ -79,6 +79,7 @@ const Applauncher = () => {
   });
 
   const entry = Widget.Entry({
+    // className: "header",
     hexpand: true,
     text: "-",
     placeholderText: "Pesquisar",
