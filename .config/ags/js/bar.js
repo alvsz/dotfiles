@@ -282,8 +282,9 @@ const SysTray = () =>
             });
 
             trayItem.onSecondaryClick = (_, event) => {
+              item.menu.toggleClassName("trayMenu", true);
               item.menu.popup_at_widget(trayItem, 8, 2, event);
-              // print(item.menu.children);
+              // print(item.menu);
               // item.menu.children[0].toggleClassName("primeiromenu", true);
             };
 

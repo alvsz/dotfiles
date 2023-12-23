@@ -40,7 +40,7 @@
   color: $color4;
 }
 
-menu {
+.trayMenu {
   background-color: lighten($background, 3%);
   // font: 11pt FiraCode Nerd Font;
   font: 11pt Inter;
@@ -55,11 +55,7 @@ menu {
   }
 }
 
-.primeiromenu {
-  margin-top: 1em;
-}
-
-menuitem {
+.trayMenu menuitem {
   min-width: 7em;
   margin: 0.1em;
   border-radius: 0.4em;
@@ -75,7 +71,15 @@ menuitem {
     border: 0em;
     font-style: italic;
   }
+
+  menu {
+    @extend .trayMenu;
+  }
 }
+
+// .primeiromenu {
+//   margin-top: 1em;
+// }
 
 .sysTray {
   font-size: 1.2em;
