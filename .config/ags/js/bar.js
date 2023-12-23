@@ -249,6 +249,7 @@ const password = () => {
         child: Widget.Label("hello"),
       }),
       Widget.MenuItem({
+        sensitive: false,
         child: Widget.Entry({
           primary_icon_name: "dialog-password-symbolic",
           visible: false,
@@ -294,7 +295,7 @@ const SysTray = () =>
             return trayItem;
           });
 
-          list.push(password());
+          // list.push(password());
 
           self.children = list;
         },
@@ -437,15 +438,14 @@ const batteryLabel = () =>
   });
 
 const batteryBox = () => {
-  // Battery.available
+  Battery.available;
   // ?
-  // if (Battery.available) {
-  // return
-  Widget.Box({
-    spacing: 7,
-    children: [batteryIcon(), batteryLabel()],
-  });
-  // } else return null;
+  if (Battery.available) {
+    return Widget.Box({
+      spacing: 7,
+      children: [batteryIcon(), batteryLabel()],
+    });
+  } else return null;
   // : null
 };
 
