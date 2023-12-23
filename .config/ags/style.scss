@@ -40,14 +40,13 @@
   color: $color4;
 }
 
-.trayMenu {
+.menuBase {
   background-color: lighten($background, 3%);
   // font: 11pt FiraCode Nerd Font;
   font: 11pt Inter;
   color: $foreground;
   padding: 0.2em;
   border-radius: 0.7em;
-  margin-top: 1em;
 
   arrow {
     color: $foreground;
@@ -55,10 +54,18 @@
   }
 }
 
+.trayMenu {
+  @extend .menuBase;
+  // padding-top: 1em;
+  // margin-top: 1em;
+}
+
 .trayMenu menuitem {
   min-width: 7em;
   margin: 0.1em;
+
   border-radius: 0.4em;
+  // border: 0.1em solid turquoise;
   border: 0.1em solid lighten($background, 6%);
   transition: 0.1s;
 
@@ -73,7 +80,7 @@
   }
 
   menu {
-    @extend .trayMenu;
+    @extend .menuBase;
   }
 }
 
