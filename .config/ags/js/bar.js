@@ -92,8 +92,11 @@ const clientTitle = (monitorId) =>
         (self) => {
           const mon = dwlIpc.value[monitorId];
           const limitWidth = 45;
-          const title =
-            mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
+          const title = mon.title != ""
+            ? mon.title
+            : mon.appid != ""
+              ? mon.appid
+              : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -211,8 +214,8 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle
-                }`;
+              self.label = `${mpris.trackArtists.join(", ")
+                } - ${mpris.trackTitle}`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -268,16 +271,24 @@ const SysTray = () =>
       [
         SystemTray,
         (self) => {
-          self.children = SystemTray.items.map((item) =>
-            Widget.Button({
+          self.children = SystemTray.items.map((item) => {
+            let trayItem = Widget.Button({
               child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
               vpack: "center",
               className: "trayItem",
               onPrimaryClick: (_, event) => item.activate(event),
-              onSecondaryClick: (_, event) => item.openMenu(event),
+              // onSecondaryClick: (_, event) => item.openMenu(event),
               binds: [["tooltipText", item, "tooltip-markup"]],
-            }),
-          );
+            });
+
+            trayItem.onSecondaryClick = (_, event) => {
+              item.menu.popup_at_widget(trayItem, 8, 2, event);
+              // print(item.menu.children);
+              // item.menu.children[0].toggleClassName("primeiromenu", true);
+            };
+
+            return trayItem;
+          });
         },
       ],
     ],
@@ -417,13 +428,18 @@ const batteryLabel = () =>
     ],
   });
 
-const batteryBox = () =>
-  Battery.available
-    ? Widget.Box({
-      spacing: 7,
-      children: [batteryIcon(), batteryLabel()],
-    })
-    : null;
+const batteryBox = () => {
+  // Battery.available
+  // ?
+  // if (Battery.available) {
+  // return
+  Widget.Box({
+    spacing: 7,
+    children: [batteryIcon(), batteryLabel()],
+  });
+  // } else return null;
+  // : null
+};
 
 const Clock = () =>
   Widget.Label({
