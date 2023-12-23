@@ -82,6 +82,7 @@ const Applauncher = () => {
     hexpand: true,
     text: "-",
     placeholderText: "Pesquisar",
+    primary_icon_name: icons.apps.search,
     onAccept: ({ text }) => {
       const list = Applications.query(text);
 
@@ -112,10 +113,14 @@ const Applauncher = () => {
     vertical: true,
 
     children: [
+      // entry,
       Widget.Box({
         className: "header",
         spacing: 5,
-        children: [Widget.Icon(icons.apps.search), entry],
+        children: [
+          // Widget.Icon(icons.apps.search),
+          entry,
+        ],
       }),
 
       Widget.Scrollable({
