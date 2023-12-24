@@ -39,10 +39,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-        ? "selected"
-        : occupied
-          ? "occupied"
-          : "normal",
+      ? "selected"
+      : occupied
+      ? "occupied"
+      : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -54,9 +54,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -91,8 +91,8 @@ const clientTitle = (monitorId) =>
           const title = mon.title != ""
             ? mon.title
             : mon.appid != ""
-              ? mon.appid
-              : "";
+            ? mon.appid
+            : "";
 
           if (mon.title.length > limitWidth) {
             self.label = title.substring(0, limitWidth - 3) + "...";
@@ -194,8 +194,9 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")
-                } - ${mpris.trackTitle}`;
+              self.label = `${
+                mpris.trackArtists.join(", ")
+              } - ${mpris.trackTitle}`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -241,8 +242,8 @@ const SysTray = () =>
     connections: [
       [
         SystemTray,
-        (self) =>
-          SystemTray.items.map((item) =>
+        (self) => {
+          self.children = SystemTray.items.map((item) =>
             Widget.Button({
               child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
               vpack: "fill",
@@ -254,7 +255,8 @@ const SysTray = () =>
               },
               binds: [["tooltipText", item, "tooltip-markup"]],
             })
-          ),
+          );
+        },
       ],
     ],
   });
