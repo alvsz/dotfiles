@@ -55,7 +55,7 @@ elif [[ "$XDG_SESSION_TYPE" = "wayland" ]]; then
     export MOZ_ENABLE_WAYLAND=1
     export SDL_VIDEODRIVER=wayland
     export QT_QPA_PLATFORM=wayland
-    xhost +si:localuser:root
+    # xhost +si:localuser:root
 fi
 
 # (cat /home/mamba/.cache/wal/sequences &)
