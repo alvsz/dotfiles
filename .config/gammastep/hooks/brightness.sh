@@ -15,17 +15,22 @@ set_brightness() {
 	[ "$(xbacklight -get)" -gt "$1" ] && xbacklight -set "$1" -fps $fps &
 }
 
+set_bg() {
+	if [ "$XDG_SESSION_TYPE" = "x11" ]; then
+		feh --no-fehbg --bg-fill "${1}"
+	else
+		swww img "${1}"
+	fi
+
+}
+
 if [ "$1" = period-changed ]; then
 	case $3 in
 	night)
 		set_brightness $brightness_night
 		bg="$HOME/Imagens/EOS-SnowCappedMountain02.jpg"
+		set_bg "${bg}"
 
-		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-			feh --no-fehbg --bg-fill "${bg}"
-		else
-			swww "${bg}"
-		fi
 		#	    eww update nightlight=Ativado
 		;;
 	transition)
@@ -35,11 +40,7 @@ if [ "$1" = period-changed ]; then
 	daytime)
 		set_brightness $brightness_day
 		bg="$HOME/Imagens/EOS-SnowCappedMountain01.jpg"
-		if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-			feh --no-fehbg --bg-fill "${bg}"
-		else
-			swww "${bg}"
-		fi
+		set_bg "${bg}"
 		#	    eww update nightlight=Desativado
 		;;
 	esac
