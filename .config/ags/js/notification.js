@@ -5,7 +5,7 @@ import { lookUpIcon, timeout } from "resource:///com/github/Aylur/ags/utils.js";
 const NotificationIcon = ({ appEntry, appIcon, image }) => {
   if (image) {
     return Widget.Box({
-      valign: "start",
+      vpack: "start",
       hexpand: false,
       className: "icon img",
       style: `
@@ -29,7 +29,7 @@ const NotificationIcon = ({ appEntry, appIcon, image }) => {
   }
 
   return Widget.Box({
-    valign: "start",
+    vpack: "start",
     hexpand: false,
     className: "icon",
     // style: `
@@ -40,9 +40,9 @@ const NotificationIcon = ({ appEntry, appIcon, image }) => {
       Widget.Icon({
         icon,
         size: 58,
-        halign: "center",
+        hpack: "center",
         hexpand: true,
-        valign: "center",
+        vpack: "center",
         vexpand: true,
         className: "appIcon",
       }),
@@ -53,7 +53,7 @@ const NotificationIcon = ({ appEntry, appIcon, image }) => {
 export const Notification = (n) =>
   Widget.EventBox({
     className: `notification ${n.urgency}`,
-    // halign: "center",
+    // hpack: "center",
     onPrimaryClick: () => n.dismiss(),
     properties: [["hovered", false]],
 
@@ -93,7 +93,7 @@ export const Notification = (n) =>
                   children: [
                     Widget.Label({
                       className: "title",
-                      // valign: "start",
+                      // vpack: "start",
                       xalign: 0,
                       justification: "left",
                       hexpand: true,
@@ -113,7 +113,7 @@ export const Notification = (n) =>
 
                     Widget.Button({
                       className: "close-button",
-                      valign: "start",
+                      vpack: "start",
                       child: Widget.Icon("window-close-symbolic"),
                       onClicked: n.close.bind(n),
                     }),
@@ -124,8 +124,8 @@ export const Notification = (n) =>
                   className: "description",
                   hexpand: true,
                   vexpand: true,
-                  halign: "start",
-                  valign: "start",
+                  hpack: "start",
+                  vpack: "start",
                   useMarkup: true,
                   xalign: 0,
                   justification: "left",
