@@ -28,8 +28,8 @@ if [ "$1" = period-changed ]; then
 	case $3 in
 	night)
 		set_brightness $brightness_night
-		bg="$HOME/Imagens/EOS-SnowCappedMountain02.jpg"
-		set_bg "${bg}"
+		# bg="$HOME/Imagens/EOS-SnowCappedMountain02.jpg"
+		# set_bg "${bg}"
 
 		#	    eww update nightlight=Ativado
 		;;
@@ -39,8 +39,8 @@ if [ "$1" = period-changed ]; then
 		;;
 	daytime)
 		set_brightness $brightness_day
-		bg="$HOME/Imagens/EOS-SnowCappedMountain01.jpg"
-		set_bg "${bg}"
+		# bg="$HOME/Imagens/EOS-SnowCappedMountain01.jpg"
+		# set_bg "${bg}"
 		#	    eww update nightlight=Desativado
 		;;
 	esac
