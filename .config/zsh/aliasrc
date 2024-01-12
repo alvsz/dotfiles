@@ -42,6 +42,7 @@ converter265 () {
 		addy="by-path/pci-0000:$(lspci | grep -i 'uhd graphics' | awk '{print $1}')-render"
 	else
 		addy="renderD128"
+	fi
 
 	if [ $2 ]; then
 		dest="$2" 
