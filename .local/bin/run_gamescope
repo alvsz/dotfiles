@@ -21,7 +21,10 @@ if [ "$XDG_CURRENT_DESKTOP" != "gamescope" ]; then
 
 	if [ "$HOST" = "vivobook" ]; then
 		gamescope_cmd="${gamescope_cmd} --prefer-vk-device=8086:3ea0"
+	elif [ "$HOST" = "archlinux" ]; then
+		gamescope_cmd="${gamescope_cmd} -r 75"
 	fi
+
 	# cmd
 
 	# echo "$cmd"
