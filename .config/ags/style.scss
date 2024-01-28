@@ -1,5 +1,5 @@
 // * {
-//     all:unset;
+//   all: unset;
 // }
 
 @import "/home/mamba/.cache/wal/colors.scss";
@@ -159,6 +159,7 @@
       background-color: $color12;
       border-radius: 0.6em;
       padding: 0.7em;
+      color: $background;
     }
   }
 
@@ -351,4 +352,9 @@ window {
 
 .clock {
   margin: 0;
+}
+
+.controlCenter {
+  background-color: purple;
+  border: 2px solid turquoise;
 }

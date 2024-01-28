@@ -13,13 +13,17 @@ const reloadTheme = () => {
 };
 
 export const scssWatcher = () => {
-  reloadTheme();
-
-  Utils.subprocess(
-    ["inotifywait", "--recursive", "--event", "create,modify", "-m", scssPath],
-    reloadTheme,
-  );
+  Utils.monitorFile(scssPath, () => reloadTheme());
 };
+
+// export const scssWatcher = () => {
+//   reloadTheme();
+//
+//   Utils.subprocess(
+//     ["inotifywait", "--recursive", "--event", "create,modify", "-m", scssPath],
+//     reloadTheme,
+//   );
+// };
 
 export const jsWatcher = () => {
   Utils.subprocess(

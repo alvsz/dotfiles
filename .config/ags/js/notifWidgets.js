@@ -34,7 +34,7 @@ const Placeholder = () =>
     className: "placeholder",
     vertical: true,
     vexpand: true,
-    valign: "center",
+    vpack: "center",
     children: [
       Widget.Icon("notifications-disabled-symbolic"),
       Widget.Label("Your inbox is empty"),
@@ -80,7 +80,7 @@ export const ClearButton = () =>
 export const DNDSwitch = () =>
   Widget.Switch({
     // type: Gtk.Switch,
-    valign: "center",
+    vpack: "center",
     connections: [
       [
         "notify::active",
