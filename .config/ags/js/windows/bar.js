@@ -55,9 +55,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -192,9 +192,8 @@ const Media = () =>
             const mpris = Mpris.getPlayer("");
             // mpris player can be undefined
             if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")} - ${
-                mpris.trackTitle
-              }`;
+              self.label = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle
+                }`;
             } else {
               self.label = "Nothing is playing";
             }
@@ -400,7 +399,7 @@ const Clock = () =>
       [
         30000,
         (self) => {
-          let time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
+          const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
           self.label = time.format("%a %d, %R");
         },
       ],

@@ -135,6 +135,7 @@ export const Notification = (n) =>
 
         Widget.Box({
           className: "actions",
+          homogeneous: true,
           children: n.actions.map(({ id, label }) =>
             Widget.Button({
               className: "actionButton",
