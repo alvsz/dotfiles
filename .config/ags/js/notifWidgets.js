@@ -1,6 +1,5 @@
-import { Notification } from "./notification.js";
+import { Notification, Placeholder } from "./notification.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-import Gtk from "gi://Gtk";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
 const List = () =>
@@ -9,7 +8,7 @@ const List = () =>
     vexpand: true,
     vpack: "fill",
     children: Notifications.bind("notifications").transform((l) =>
-      l.reverse().map(Notification),
+      l.reverse().map(Notification)
     ),
     visible: true,
     // connections: [
@@ -27,19 +26,6 @@ const List = () =>
     //     },
     //   ],
     // ],
-  });
-
-const Placeholder = () =>
-  Widget.Box({
-    className: "placeholder",
-    vertical: true,
-    vexpand: true,
-    vpack: "center",
-    children: [
-      Widget.Icon("notifications-disabled-symbolic"),
-      Widget.Label("Your inbox is empty"),
-    ],
-    binds: [["visible", Notifications, "notifications", (n) => n.length === 0]],
   });
 
 export const NotificationList = () =>

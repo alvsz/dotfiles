@@ -1,30 +1,16 @@
 import GLib from "gi://GLib";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { lookUpIcon, timeout } from "resource:///com/github/Aylur/ags/utils.js";
+import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 
 const NotificationIcon = ({ appEntry, appIcon, image }) => {
-  if (image) {
-    return Widget.Box({
-      vpack: "start",
-      hexpand: false,
-      className: "icon img",
-      style: `
-                background-image: url("${image}");
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position: center;
-            `,
-      // min-width: 78px;
-      // min-height: 78px;
-    });
-  }
-
   let icon = "dialog-information-symbolic";
-  if (lookUpIcon(appIcon)) {
-    icon = appIcon;
-  }
 
-  if (lookUpIcon(appEntry)) {
+  if (image) {
+    icon = image;
+  } else if (lookUpIcon(appIcon)) {
+    icon = appIcon;
+  } else if (lookUpIcon(appEntry)) {
     icon = appEntry;
   }
 
@@ -39,7 +25,7 @@ const NotificationIcon = ({ appEntry, appIcon, image }) => {
     children: [
       Widget.Icon({
         icon,
-        size: 58,
+        // size: 58,
         hpack: "center",
         hexpand: true,
         vpack: "center",
@@ -102,6 +88,7 @@ export const Notification = (n) =>
                       wrap: true,
                       label: n.summary.replaceAll("&", "&amp;"),
                       useMarkup: true,
+                      vpack: "center",
                     }),
 
                     Widget.Label({
@@ -109,6 +96,7 @@ export const Notification = (n) =>
                         "%H:%M",
                       ),
                       className: "time",
+                      vpack: "center",
                     }),
 
                     Widget.Button({
@@ -116,8 +104,10 @@ export const Notification = (n) =>
                       vpack: "start",
                       child: Widget.Icon("window-close-symbolic"),
                       onClicked: n.close.bind(n),
+                      vpack: "center",
                     }),
                   ],
+                  vpack: "start",
                 }),
 
                 Widget.Label({
@@ -132,11 +122,10 @@ export const Notification = (n) =>
                   label: n.body.replaceAll("&", "&amp;"),
                   wrap: true,
                 }),
-
                 Widget.ProgressBar({
                   value:
                     n.hints?.value != null ? n.hints.value.unpack() / 100 : 30,
-                  visible: n.hits?.value == null,
+                  visible: n.hints?.value != null,
                   className: "progress",
                 }),
               ],
@@ -169,4 +158,17 @@ export const Notification = (n) =>
         }),
       ],
     }),
+  });
+
+export const Placeholder = () =>
+  Widget.Box({
+    className: "placeholder",
+    vertical: true,
+    vexpand: true,
+    vpack: "center",
+    children: [
+      Widget.Icon("notifications-disabled-symbolic"),
+      Widget.Label("Your inbox is empty"),
+    ],
+    binds: [["visible", Notifications, "notifications", (n) => n.length === 0]],
   });

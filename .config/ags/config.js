@@ -12,7 +12,7 @@ import {
 import AppMenu from "./js/windows/appmenu.js";
 import * as utils from "./js/utils.js";
 import Lockscreen from "./js/windows/lockscreen.js";
-// import Calendar from "./js/windows/calendar.js";
+import Calendar from "./js/windows/calendar.js";
 // import * as vars from "./js/vars.js";
 
 globalThis.utils = utils;
@@ -25,7 +25,7 @@ const windows = [
   NotificationCenter(),
   NotificationsPopupWindow(),
   AppMenu(),
-  // Calendar(),
+  Calendar(),
 ].flat(2);
 
 globalThis.windowList = windows;

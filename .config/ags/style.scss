@@ -264,7 +264,7 @@ window {
     margin-top: 0.4em;
   }
   .time {
-    margin: 0.5em;
+    margin-right: 0.5em;
   }
   .progress {
     margin: 0.5em;
@@ -277,6 +277,9 @@ window {
   .notification {
     .test {
       @extend .transparentWindow;
+      .appIcon {
+        font-size: 3.5em;
+      }
     }
   }
 }
@@ -355,6 +358,35 @@ window {
 }
 
 .controlCenter {
-  background-color: purple;
-  border: 2px solid turquoise;
+  @extend .basewindow;
+  @extend .transparentWindow;
+
+  // min-height: 100px;
+  // min-width: 100px;
+
+  border-width: 0.1em;
+  border-style: solid;
+  border-color: lighten($background, 15%);
+  border-radius: 0.5em;
+  padding: 0.4em;
+  // min-width: 40em;
+  min-height: 30em;
+  .notification {
+    .test {
+      .appIcon {
+        font-size: 3em;
+      }
+      margin-top: 0.2em;
+
+      .close-button {
+        padding: 0.2em;
+      }
+
+      .actionButton {
+        padding: 0.2em;
+      }
+
+      padding: 0.2em;
+    }
+  }
 }
