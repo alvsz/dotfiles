@@ -61,7 +61,7 @@ send_notification() {
 	# gdbus call --session --dest org.freedesktop.ScreenSaver --object-path /org/freedesktop/ScreenSaver --method org.freedesktop.ScreenSaver.SimulateUserActivity
 	# echo $notifymetadata | jq .status | grep -q 'Playing' && xset -dpms s off || xset +dpms s on
 
-	notify-send -h int:value:"$(echo "$notifymetadata" | jq '(.Position * 100) / .Metadata.length | round')" -h 'string:wired-tag:musica' -h "string:wired-note:osd" -t 3000 "$(echo "$notifymetadata" | jq -cr .Metadata.title)" -i "$(echo "$notifymetadata" | jq -cr '.artPath')"
+	notify-send -h int:value:"$(echo "$notifymetadata" | jq '(.Position * 100) / .Metadata.length | round')" -h 'string:wired-tag:musica' -h "string:wired-note:osd" "$(echo "$notifymetadata" | jq -cr .Metadata.title)" -i "$(echo "$notifymetadata" | jq -cr '.artPath')"
 }
 
 follow() {
