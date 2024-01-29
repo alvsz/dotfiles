@@ -91,7 +91,7 @@ const controlCenter = () =>
     name: "controlCenter",
     layer: "overlay",
     anchor: ["top"],
-    // visible: false,
+    visible: false,
     // exclusivity: "ignore",
     child: Widget.Box({
       className: "controlCenter",
