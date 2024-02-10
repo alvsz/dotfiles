@@ -1,9 +1,11 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import GLib from "gi://GLib";
 
 const clock = () =>
   Widget.Label({
     className: "time",
+    hpack: "center",
     connections: [
       [
         30000,
@@ -18,6 +20,7 @@ const clock = () =>
 const date = () =>
   Widget.Label({
     className: "date",
+    hpack: "center",
     connections: [
       [
         30000,
@@ -26,6 +29,24 @@ const date = () =>
           self.label = time.format("%A, %d de %B");
         },
       ],
+    ],
+  });
+
+const albumArt = () =>
+  Widget.Box({
+    hpack: "center",
+    children: [
+      Widget.Icon({
+        className: "albumArt",
+      }).hook(Mpris, (self) => {
+        const temp = Mpris.getPlayer("");
+        if (temp) {
+          self.icon = temp.coverPath;
+          self.visible = true;
+        } else {
+          icon.visible = false;
+        }
+      }),
     ],
   });
 
@@ -39,8 +60,14 @@ const Backdrop = ({ monitor } = {}) =>
     child: Widget.Box({
       className: "backdrop",
       vertical: true,
+      hpack: "center",
       homogeneous: false,
-      children: [clock(), date()],
+      children: [
+        // clock(),
+        date(),
+        clock(),
+        albumArt(),
+      ],
     }),
   });
 
