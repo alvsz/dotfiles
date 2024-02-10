@@ -453,13 +453,25 @@ window {
 }
 
 .backdrop {
+  text-shadow: 2px 2px 3px;
+  font-family: "C059";
+  color: transparentize($foreground, 0.5);
   // background-color: green;
   .time {
-    font-size: 10em;
-    color: purple;
+    // color: transparentize(, 0.9);
+    // font-weight: bold;
+    font-weight: 700;
+    margin-top: 1em;
+    // background-color: green;
+    font-size: 7em;
+    // color: purple;
   }
   .date {
-    font-size: 5em;
-    color: red;
+    // shadow
+    // font-family: "Nimbus Roman";
+    // margin-top: 1em;
+    // background-color: turquoise;
+    font-size: 2em;
+    // color: red;
   }
 }
