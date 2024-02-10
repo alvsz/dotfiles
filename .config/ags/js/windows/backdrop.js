@@ -23,7 +23,7 @@ const date = () =>
         30000,
         (self) => {
           const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
-          self.label = time.format("%a %d");
+          self.label = time.format("%A, %d de %B");
         },
       ],
     ],
