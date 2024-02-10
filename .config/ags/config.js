@@ -11,8 +11,9 @@ import {
 } from "./js/windows/notificationCenter.js";
 import AppMenu from "./js/windows/appmenu.js";
 import * as utils from "./js/utils.js";
-import Lockscreen from "./js/windows/lockscreen.js";
+// import Lockscreen from "./js/windows/lockscreen.js";
 import Calendar from "./js/windows/calendar.js";
+import Backdrop from "./js/windows/backdrop.js";
 // import * as vars from "./js/vars.js";
 
 globalThis.utils = utils;
@@ -21,7 +22,8 @@ utils.scssWatcher();
 
 const windows = [
   utils.forMonitors(Bar),
-  utils.forMonitors(Lockscreen),
+  // utils.forMonitors(Lockscreen),
+  utils.forMonitors(Backdrop),
   NotificationCenter(),
   NotificationsPopupWindow(),
   AppMenu(),
