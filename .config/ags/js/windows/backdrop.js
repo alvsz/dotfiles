@@ -2,6 +2,8 @@ import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import GLib from "gi://GLib";
 
+import Spacer from "../misc/Spacer.js";
+
 const clock = () =>
   Widget.Label({
     className: "time",
@@ -67,6 +69,7 @@ const Backdrop = ({ monitor } = {}) =>
         // clock(),
         date(),
         clock(),
+        Spacer("spacer1"),
         albumArt(),
       ],
     }),
