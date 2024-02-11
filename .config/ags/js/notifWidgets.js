@@ -11,21 +11,6 @@ const List = () =>
       l.reverse().map(Notification)
     ),
     visible: true,
-    // connections: [
-    //   [
-    //     Notifications,
-    //     (self) => {
-    //       // self.children = Notifications.notifications
-    //       //     .reverse()
-    //       //     .map(Notification);
-    //
-    //       self.visible = Notifications.notifications.length > 0;
-    //
-    //       self.children.length > 0 &&
-    //         self.children[0].toggleClassName("first", true);
-    //     },
-    //   ],
-    // ],
   });
 
 export const NotificationList = () =>
@@ -36,7 +21,6 @@ export const NotificationList = () =>
     vscroll: "automatic",
     child: Widget.Box({
       className: "list",
-      // spacing: 5,
       vertical: true,
       children: [List(), Placeholder()],
     }),
@@ -65,43 +49,18 @@ export const ClearButton = () =>
 
 export const DNDSwitch = () =>
   Widget.Switch({
-    // type: Gtk.Switch,
     vpack: "center",
-    connections: [
-      [
-        "notify::active",
-        ({ active }) => {
-          Notifications.dnd = active;
-        },
-      ],
-    ],
+  }).on("notify::active", ({ active }) => {
+    Notifications.dnd = active;
   });
 
 export const PopupList = () =>
   Widget.Box({
     className: "popupList",
-    // style: "padding: 1px;", // so it shows up
     spacing: 5,
     vertical: true,
-    connections: [
-      [
-        Notifications,
-        (self) => {
-          self.children = Notifications.popups.reverse().map(Notification);
+  }).hook(Notifications, (self) => {
+    self.children = Notifications.popups.reverse().map(Notification);
 
-          // self.visible = Notifications.notifications.length > 0;
-
-          self.children.length > 0 &&
-            self.children[0].toggleClassName("first", true);
-        },
-      ],
-    ],
-    // binds: [
-    //     [
-    //         "children",
-    //         Notifications,
-    //         "popups",
-    //         (popups) => popups.map(Notification),
-    //     ],
-    // ],
+    self.children.length > 0 && self.children[0].toggleClassName("first", true);
   });
