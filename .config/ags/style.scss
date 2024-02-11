@@ -456,22 +456,29 @@ window {
   text-shadow: 2px 2px 3px;
   font-family: "C059";
   color: transparentize($foreground, 0.5);
-  // background-color: green;
-  .time {
-    // color: transparentize(, 0.9);
-    // font-weight: bold;
-    font-weight: 700;
-    margin-top: 1em;
-    // background-color: green;
-    font-size: 7em;
-    // color: purple;
+  margin-top: 7em;
+
+  .spacer1 {
+    min-height: 2em;
   }
+
+  .time {
+    font-weight: 700;
+    font-size: 9em;
+  }
+
   .date {
-    // shadow
-    // font-family: "Nimbus Roman";
-    // margin-top: 1em;
-    // background-color: turquoise;
-    font-size: 2em;
-    // color: red;
+    font-size: 2.5em;
+  }
+
+  .albumArt {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: green;
+
+    min-height: 25em;
+
+    border-radius: 10px;
   }
 }

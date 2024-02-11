@@ -7,8 +7,7 @@ const Padding = (windowName) =>
     className: "popupPadding",
     hexpand: true,
     vexpand: true,
-    connections: [["button-press-event", () => App.toggleWindow(windowName)]],
-  });
+  }).on("button-press-event", () => App.toggleWindow(windowName));
 
 const PopupRevealer = (windowName, transition, child) =>
   Widget.Box({
@@ -17,15 +16,9 @@ const PopupRevealer = (windowName, transition, child) =>
       transition,
       child,
       transitionDuration: options.windowAnimationDuration,
-      connections: [
-        [
-          App,
-          (revealer, name, visible) => {
-            if (name === windowName) revealer.reveal_child = visible;
-          },
-        ],
-      ],
     }),
+  }).hook(App, (revealer, name, visible) => {
+    if (name === windowName) revealer.reveal_child = visible;
   });
 
 const layouts = {
@@ -79,7 +72,6 @@ export default ({ layout = "center", expand = true, name, content, ...rest }) =>
     child: layouts[layout](name, content, expand),
     popup: true,
     visible: false,
-    // visible: true,
-    focusable: true,
+    keymode: "exclusive",
     ...rest,
   });

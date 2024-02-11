@@ -87,11 +87,11 @@ const Applauncher = () => {
     secondary_icon_name: "view-refresh-symbolic",
     // primary_icon_sensitive: false,
     onAccept: ({ text }) => {
-      const list = Applications.query(text);
+      const query = Applications.query(text);
 
-      if (list[0]) {
+      if (query[0]) {
         App.toggleWindow(WINDOW_NAME);
-        list[0].launch();
+        query[0].launch();
       }
     },
     onChange: ({ text }) => {
@@ -117,7 +117,7 @@ const Applauncher = () => {
 
   return Widget.Box({
     className: "appLauncher",
-    properties: [["list", list]],
+    // properties: [["list", list]],
     vertical: true,
 
     children: [

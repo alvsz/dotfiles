@@ -1,8 +1,8 @@
 import Bar from "./js/windows/bar.js";
-import {
-  NotificationCenter,
-  // NotificationsPopupWindow,
-} from "./js/windows/notificationCenter.js";
+// import {
+//   NotificationCenter,
+//   // NotificationsPopupWindow,
+// } from "./js/windows/notificationCenter.js";
 
 import AppMenu from "./js/windows/appmenu.js";
 // import Lockscreen from "./js/windows/lockscreen.js";
@@ -25,7 +25,7 @@ const windows = [
   utils.forMonitors(Bar),
   // utils.forMonitors(Lockscreen),
   utils.forMonitors(Backdrop),
-  NotificationCenter(),
+  // NotificationCenter(),
   // NotificationsPopupWindow(),
   AppMenu(),
   Calendar(),

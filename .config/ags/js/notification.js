@@ -41,7 +41,7 @@ export const Notification = (n) =>
     className: `notification ${n.urgency}`,
     // hpack: "center",
     onPrimaryClick: () => n.dismiss(),
-    properties: [["hovered", false]],
+    attribute: [["hovered", false]],
 
     onHover: (self) => {
       if (self._hovered) {
@@ -122,13 +122,13 @@ export const Notification = (n) =>
                   label: n.body.replaceAll("&", "&amp;"),
                   wrap: true,
                 }),
-                Widget.ProgressBar({
-                  value: n.hints?.value != null
-                    ? n.hints.value.unpack() / 100
-                    : 30,
-                  visible: n.hints?.value != null,
-                  className: "progress",
-                }),
+                // Widget.ProgressBar({
+                //   value: n.hints?.value != null
+                //     ? n.hints.value.unpack() / 100
+                //     : 30,
+                //   visible: n.hints?.value != null,
+                //   className: "progress",
+                // }),
               ],
             }),
           ],
