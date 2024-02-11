@@ -29,7 +29,9 @@ export const NotificationList = () =>
 export const ClearButton = () =>
   Widget.Button({
     onClicked: () => Notifications.clear(),
-    binds: [["sensitive", Notifications, "notifications", (n) => n.length > 0]],
+    sensitive: Notifications.bind("notifications").transform(
+      (n) => n.length > 0,
+    ),
     child: Widget.Box({
       children: [
         Widget.Label("Clear"),
@@ -37,14 +39,6 @@ export const ClearButton = () =>
           icon: Notifications.bind("notifications").transform(
             (n) => `user-trash-${n.length > 0 ? "full-" : ""}symbolic`,
           ),
-          // binds: [
-          //   [
-          //     "icon",
-          //     Notifications,
-          //     "notifications",
-          //     (n) => `user-trash-${n.length > 0 ? "full-" : ""}symbolic`,
-          //   ],
-          // ],
         }),
       ],
     }),
