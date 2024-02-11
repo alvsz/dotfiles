@@ -42,7 +42,7 @@ const albumArt = () =>
     .hook(Mpris, (self) => {
       const temp = Mpris.getPlayer("");
 
-      if (temp) {
+      if (temp && temp.coverPath) {
         self.css = `background-image: url("${temp.coverPath}")`;
         self.visible = true;
       } else {
