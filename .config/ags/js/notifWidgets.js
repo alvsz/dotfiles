@@ -34,14 +34,17 @@ export const ClearButton = () =>
       children: [
         Widget.Label("Clear"),
         Widget.Icon({
-          binds: [
-            [
-              "icon",
-              Notifications,
-              "notifications",
-              (n) => `user-trash-${n.length > 0 ? "full-" : ""}symbolic`,
-            ],
-          ],
+          icon: Notifications.bind("notifications").transform(
+            (n) => `user-trash-${n.length > 0 ? "full-" : ""}symbolic`,
+          ),
+          // binds: [
+          //   [
+          //     "icon",
+          //     Notifications,
+          //     "notifications",
+          //     (n) => `user-trash-${n.length > 0 ? "full-" : ""}symbolic`,
+          //   ],
+          // ],
         }),
       ],
     }),
