@@ -15,12 +15,6 @@ const clock = () =>
         },
       ],
     ],
-  }).on("draw", (album, cr) => {
-    print("largura:");
-    print(album.get_allocated_width());
-    print("altura:");
-    print(album.get_allocated_height());
-    print("\n\n\n");
   });
 
 const date = () =>
@@ -38,20 +32,6 @@ const date = () =>
     ],
   });
 
-// const albumArt = () =>
-//   Widget.Icon({
-//     className: "albumArt",
-//   }).hook(Mpris, (self) => {
-//     const temp = Mpris.getPlayer("");
-//
-//     if (temp) {
-//       self.icon = temp.coverPath;
-//       self.visible = true;
-//     } else {
-//       self.visible = false;
-//     }
-//   });
-//
 const albumArt = () =>
   Widget.Box({
     className: "albumArt",
@@ -67,12 +47,9 @@ const albumArt = () =>
         self.visible = false;
       }
     })
-    .on("draw", (album, cr) => {
-      print("largura:");
-      print(album.get_allocated_width());
-      print("altura:");
-      print(album.get_allocated_height());
-      print("\n\n\n");
+    .on("draw", (album, _) => {
+      const height = album.get_allocated_height();
+      album.set_size_request(height, height);
     });
 
 const Backdrop = ({ monitor } = {}) =>
@@ -85,7 +62,6 @@ const Backdrop = ({ monitor } = {}) =>
     child: Widget.Box({
       className: "backdrop",
       vertical: true,
-      // hpack: "center",
       homogeneous: false,
       children: [
         // clock(),
