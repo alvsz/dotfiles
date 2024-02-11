@@ -70,52 +70,37 @@ const dwlTags = (monitorId) =>
     spacing: 5,
     homogeneous: true,
     className: "dwlTags",
-    connections: [
-      [
-        dwlIpc,
-        (self) => {
-          self.children = genTags(monitorId);
-        },
-      ],
-    ],
+  }).hook(dwlIpc, (self) => {
+    self.children = genTags(monitorId);
   });
 
 const clientTitle = (monitorId) =>
   Widget.Label({
     className: "clientTitle",
-    connections: [
-      [
-        dwlIpc,
-        (self) => {
-          const mon = dwlIpc.value[monitorId];
-          const limitWidth = 45;
-          const title =
-            mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
+  }).hook(dwlIpc, (self) => {
+    const mon = dwlIpc.value[monitorId];
+    const limitWidth = 45;
+    const title = mon.title != ""
+      ? mon.title
+      : mon.appid != ""
+        ? mon.appid
+        : "";
 
-          if (mon.title.length > limitWidth) {
-            self.label = title.substring(0, limitWidth - 3) + "...";
-          } else {
-            self.label = title;
-          }
-        },
-      ],
-    ],
+    if (mon.title.length > limitWidth) {
+      self.label = title.substring(0, limitWidth - 3) + "...";
+    } else {
+      self.label = title;
+    }
   });
 
 const clientIcon = (monitorId) =>
   Widget.Icon({
     className: "clientIcon",
     vpack: "fill",
-    connections: [
-      [
-        dwlIpc,
-        (self) => {
-          const mon = dwlIpc.value[monitorId];
+  }).hook(dwlIpc, (self) => {
+    const mon = dwlIpc.value[monitorId];
 
-          self.icon = mon.appid;
-        },
-      ],
-    ],
+    self.icon = mon.appid;
   });
 
 const client = (monitorId) =>
@@ -123,16 +108,10 @@ const client = (monitorId) =>
     spacing: 5,
     homogeneous: false,
     children: [clientIcon(monitorId), clientTitle(monitorId)],
-    connections: [
-      [
-        dwlIpc,
-        (self) => {
-          const mon = dwlIpc.value[monitorId];
+  }).hook(dwlIpc, (self) => {
+    const mon = dwlIpc.value[monitorId];
 
-          self.visible = mon.appid != "" || mon.title != "";
-        },
-      ],
-    ],
+    self.visible = mon.appid != "" || mon.title != "";
   });
 
 const layoutIcon = (monitorId) =>
@@ -140,18 +119,11 @@ const layoutIcon = (monitorId) =>
     hpack: "start",
     vpack: "fill",
     className: "layoutIcon",
-    child: Widget.Label({
-      connections: [
-        [
-          dwlIpc,
-          (self) => {
-            const mon = dwlIpc.value[monitorId];
+    child: Widget.Label({}),
+  }).hook(dwlIpc, (self) => {
+    const mon = dwlIpc.value[monitorId];
 
-            self.label = mon.layout.new.symbol;
-          },
-        ],
-      ],
-    }),
+    self.label = mon.layout.new.symbol;
   });
 
 const dwl = (monitorId) =>
@@ -184,23 +156,15 @@ const Media = () =>
     onPrimaryClick: () => Mpris.getPlayer("")?.playPause(),
     onScrollUp: () => Mpris.getPlayer("")?.next(),
     onScrollDown: () => Mpris.getPlayer("")?.previous(),
-    child: Widget.Label({
-      connections: [
-        [
-          Mpris,
-          (self) => {
-            const mpris = Mpris.getPlayer("");
-            // mpris player can be undefined
-            if (mpris) {
-              self.label = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle
-                }`;
-            } else {
-              self.label = "Nothing is playing";
-            }
-          },
-        ],
-      ],
-    }),
+    child: Widget.Label({}),
+  }).hook(Mpris, (self) => {
+    const mpris = Mpris.getPlayer("");
+    // mpris player can be undefined
+    if (mpris) {
+      self.label = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle}`;
+    } else {
+      self.label = "Nothing is playing";
+    }
   });
 
 // const password = () => {
@@ -236,50 +200,29 @@ const SysTray = () =>
     className: "sysTray",
     vpack: "fill",
     spacing: 5,
-    connections: [
-      [
-        SystemTray,
-        (self) => {
-          self.children = SystemTray.items.map((item) =>
-            Widget.Button({
-              child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
-              vpack: "fill",
-              className: "trayItem",
-              onPrimaryClick: (_, event) => item.activate(event),
-              onSecondaryClick: (_, event) => {
-                item.menu.toggleClassName("trayMenu", true);
-                item.openMenu(event);
-              },
-              binds: [["tooltipText", item, "tooltip-markup"]],
-            }),
-          );
+  }).hook(SystemTray, (self) => {
+    self.children = SystemTray.items.map((item) =>
+      Widget.Button({
+        child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
+        vpack: "fill",
+        className: "trayItem",
+        onPrimaryClick: (_, event) => item.activate(event),
+        onSecondaryClick: (_, event) => {
+          item.menu.toggleClassName("trayMenu", true);
+          item.openMenu(event);
         },
-      ],
-    ],
+        binds: [["tooltipText", item, "tooltip-markup"]],
+      })
+    );
   });
-
 const wifiIcon = () =>
-  Widget.Icon({
-    connections: [
-      [
-        Network,
-        (self) => {
-          self.icon = Network.wifi?.iconName || "";
-        },
-      ],
-    ],
+  Widget.Icon(Network.wifi?.iconName).hook(Network, (self) => {
+    self.icon = Network.wifi?.iconName || "";
   });
 
 const wiredIcon = () =>
-  Widget.Icon({
-    connections: [
-      [
-        Network,
-        (self) => {
-          self.icon = Network.wired?.iconName || "";
-        },
-      ],
-    ],
+  Widget.Icon(Network.wired?.iconName).hook(Network, (self) => {
+    self.icon = Network.wired?.iconName || "";
   });
 
 const networkIndicator = () =>
@@ -290,98 +233,75 @@ const networkIndicator = () =>
       ["wifi", wifiIcon()],
       ["wired", wiredIcon()],
     ],
-    connections: [
-      [
-        Network,
-        (self) => {
-          self.shown = Network.primary || "offline";
-        },
-      ],
-    ],
+  }).hook(Network, (self) => {
+    self.shown = Network.primary || "offline";
   });
 
 const audioIcon = () =>
   Widget.Icon({
     className: "audioIcon",
-    connections: [
-      [
-        Audio,
-        (self) => {
-          if (!Audio.speaker) return;
+  }).hook(
+    Audio,
+    (self) => {
+      if (!Audio.speaker) return;
 
-          const vol = Audio.speaker.volume * 100;
-          let icon;
+      const vol = Audio.speaker.volume * 100;
+      let icon;
 
-          if (Audio.control.get_default_sink().get_is_muted()) {
-            self.icon = "audio-volume-muted-symbolic";
-          } else {
-            icon = [
-              [101, "overamplified"],
-              [67, "high"],
-              [34, "medium"],
-              [1, "low"],
-              [0, "muted"],
-            ].find(([threshold]) => threshold <= vol)[1];
+      if (Audio.control.get_default_sink().get_is_muted()) {
+        self.icon = "audio-volume-muted-symbolic";
+      } else {
+        icon = [
+          [101, "overamplified"],
+          [67, "high"],
+          [34, "medium"],
+          [1, "low"],
+          [0, "muted"],
+        ].find(([threshold]) => threshold <= vol)[1];
 
-            self.icon = `audio-volume-${icon}`;
-          }
-          self.tooltipText = `Volume ${Math.floor(vol)}%`;
-        },
-        "speaker-changed",
-      ],
-    ],
-  });
+        self.icon = `audio-volume-${icon}`;
+      }
+      self.tooltipText = `Volume ${Math.floor(vol)}%`;
+    },
+    "speaker-changed",
+  );
 
 const bluetoothIcon = () =>
   Widget.Icon({
     className: "bluetoothIcon",
     visible: false,
-    connections: [
-      [
-        Bluetooth,
-        (self) => {
-          let icon;
+  }).hook(Bluetooth, (self) => {
+    let icon;
 
-          if (Bluetooth.enabled) {
-            icon = "active";
-          } else {
-            icon = "disabled";
-          }
+    if (Bluetooth.enabled) {
+      icon = "active";
+    } else {
+      icon = "disabled";
+    }
 
-          self.icon = `bluetooth-${icon}-symbolic`;
+    self.icon = `bluetooth-${icon}-symbolic`;
 
-          let active = false;
-          for (const dev of Bluetooth.connectedDevices) {
-            if (dev.connected) {
-              active = true;
-              break;
-            }
-          }
+    let active = false;
+    for (const dev of Bluetooth.connectedDevices) {
+      if (dev.connected) {
+        active = true;
+        break;
+      }
+    }
 
-          active
-            ? (self.className = "bluetoothIcon connected")
-            : (self.className = "bluetoothIcon");
-        },
-      ],
-    ],
+    active
+      ? (self.className = "bluetoothIcon connected")
+      : (self.className = "bluetoothIcon");
   });
 
 const batteryIcon = () =>
   Widget.Icon({
     className: "batteryIcon",
-    connections: [[Battery, (self) => (self.icon = Battery.iconName)]],
-  });
+  }).hook(Battery, (self) => (self.icon = Battery.iconName));
 
 const batteryLabel = () =>
-  Widget.Label({
-    connections: [
-      [
-        Battery,
-        (self) => {
-          self.label = `${Battery.percent}%`;
-        },
-      ],
-    ],
+  Widget.Label(`${Battery.percent}%`).hook(Battery, (self) => {
+    self.label = `${Battery.percent}%`;
   });
 
 const batteryBox = () => {
@@ -395,15 +315,9 @@ const batteryBox = () => {
 const Clock = () =>
   Widget.Label({
     className: "clock",
-    connections: [
-      [
-        30000,
-        (self) => {
-          const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
-          self.label = time.format("%a %d, %R");
-        },
-      ],
-    ],
+  }).poll(30000, (self) => {
+    const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
+    self.label = time.format("%a %d, %R");
   });
 
 const Left = (monitorId) =>
