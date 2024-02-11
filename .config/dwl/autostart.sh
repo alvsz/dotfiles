@@ -12,7 +12,7 @@ while true; do
 	wait $!
 done &
 
-if [ "${HOSTNAME}" = "vivobook" ]; then
+if [ "${HOSTNAME}" = "archlinux" ]; then
 	polychromatic-tray-applet &
 	openrgb --startminimized &
 fi
