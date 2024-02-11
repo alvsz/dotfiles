@@ -353,17 +353,10 @@ const Right = (monitorId) =>
     className: "rightBar",
     children: [
       revealOnClick({
-        // shown: Widget.Label("teste"),
         shown: Widget.Icon("go-first"),
         hidden: SysTray(),
-        connections: [
-          [
-            dwlIpc,
-            (self) => {
-              self.visible = dwlIpc.value[monitorId].active;
-            },
-          ],
-        ],
+      }).hook(dwlIpc, (self) => {
+        self.visible = dwlIpc.value[monitorId].active;
       }),
       networkIndicator(),
       // wifiBox(),
