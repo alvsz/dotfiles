@@ -203,7 +203,7 @@ const SysTray = () =>
   }).hook(SystemTray, (self) => {
     self.children = SystemTray.items.map((item) =>
       Widget.Button({
-        child: Widget.Icon({ binds: [["icon", item, "icon"]] }),
+        child: Widget.Icon({ icon: item.bind("icon") }),
         vpack: "fill",
         className: "trayItem",
         onPrimaryClick: (_, event) => item.activate(event),
@@ -211,7 +211,7 @@ const SysTray = () =>
           item.menu.toggleClassName("trayMenu", true);
           item.openMenu(event);
         },
-        binds: [["tooltipText", item, "tooltip-markup"]],
+        tooltipText: item.bind("tooltip-markup"),
       })
     );
   });
