@@ -123,8 +123,9 @@ export const Notification = (n) =>
                   wrap: true,
                 }),
                 Widget.ProgressBar({
-                  value:
-                    n.hints?.value != null ? n.hints.value.unpack() / 100 : 30,
+                  value: n.hints?.value != null
+                    ? n.hints.value.unpack() / 100
+                    : 30,
                   visible: n.hints?.value != null,
                   className: "progress",
                 }),
@@ -142,7 +143,7 @@ export const Notification = (n) =>
               onClicked: () => n.invoke(id),
               hexpand: true,
               child: Widget.Label(label),
-            }),
+            })
           ),
           setup: (self) => {
             // self.children = n.actions.map(({ id, label }) =>
@@ -171,5 +172,7 @@ export const Placeholder = () =>
       Widget.Icon("notifications-disabled-symbolic"),
       Widget.Label("Your inbox is empty"),
     ],
-    binds: [["visible", Notifications, "notifications", (n) => n.length === 0]],
+    visible: Notifications.bind("notifications").transform(
+      (n) => n.length === 0,
+    ),
   });
