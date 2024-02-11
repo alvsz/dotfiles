@@ -7,31 +7,18 @@ import Spacer from "../misc/Spacer.js";
 const clock = () =>
   Widget.Label({
     className: "time",
-    // hpack: "center",
-    connections: [
-      [
-        30000,
-        (self) => {
-          const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
-          self.label = time.format("%R");
-        },
-      ],
-    ],
+  }).poll(30000, (self) => {
+    const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
+    self.label = time.format("%R");
   });
 
 const date = () =>
   Widget.Label({
     className: "date",
     // hpack: "center",
-    connections: [
-      [
-        30000,
-        (self) => {
-          const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
-          self.label = time.format("%A, %d de %B");
-        },
-      ],
-    ],
+  }).poll(30000, (self) => {
+    const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
+    self.label = time.format("%A, %d de %B");
   });
 
 const albumArt = () =>

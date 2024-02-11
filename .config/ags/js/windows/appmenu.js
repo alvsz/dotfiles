@@ -108,10 +108,8 @@ const Applauncher = () => {
 
       placeholder.visible = list.children.length == 0;
     },
-  });
-
-  entry.connect("icon-press", (_, pos) => {
-    if (pos == 1) {
+  }).on("icon-press", (_, pos) => {
+    if (pos === 1) {
       Applications.reload();
       print("applications reloaded");
     }
@@ -144,17 +142,11 @@ const Applauncher = () => {
         }),
       }),
     ],
-    connections: [
-      [
-        App,
-        (_, name, visible) => {
-          if (name != WINDOW_NAME) return;
+  }).hook(App, (_, name, visible) => {
+    if (name != WINDOW_NAME) return;
 
-          entry.set_text("");
-          if (visible) entry.grab_focus();
-        },
-      ],
-    ],
+    entry.set_text("");
+    if (visible) entry.grab_focus();
   });
 };
 
