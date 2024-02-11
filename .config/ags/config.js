@@ -1,20 +1,21 @@
-// importing
-// import App from 'resource:///com/github/Aylur/ags/app.js';
-// import Variable from 'resource:///com/github/Aylur/ags/variable.js';
-// import { exec, execAsync } from 'resource:///com/github/Aylur/ags/utils.js';
-// import GLib from 'gi://GLib'
-
 import Bar from "./js/windows/bar.js";
 import {
   NotificationCenter,
-  NotificationsPopupWindow,
+  // NotificationsPopupWindow,
 } from "./js/windows/notificationCenter.js";
+
 import AppMenu from "./js/windows/appmenu.js";
-import * as utils from "./js/utils.js";
 // import Lockscreen from "./js/windows/lockscreen.js";
 import Calendar from "./js/windows/calendar.js";
 import Backdrop from "./js/windows/backdrop.js";
+
+import * as utils from "./js/utils.js";
 // import * as vars from "./js/vars.js";
+
+import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+
+Notifications.popupTimeout = 3000;
+Notifications.cacheActions = true;
 
 globalThis.utils = utils;
 
@@ -25,17 +26,14 @@ const windows = [
   // utils.forMonitors(Lockscreen),
   utils.forMonitors(Backdrop),
   NotificationCenter(),
-  NotificationsPopupWindow(),
+  // NotificationsPopupWindow(),
   AppMenu(),
   Calendar(),
 ].flat(2);
 
-globalThis.windowList = windows;
+// globalThis.windowList = windows;
 
 export default {
   style: utils.cssPath,
-  notificationPopupTimeout: 3000,
-  cacheNotificationActions: true,
-
   windows: windows,
 };
