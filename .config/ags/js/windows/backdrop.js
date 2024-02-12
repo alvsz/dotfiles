@@ -16,7 +16,7 @@ const date = () =>
   Widget.Label({
     className: "date",
     // hpack: "center",
-  }).poll(30000, (self) => {
+  }).poll(600000, (self) => {
     const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
     self.label = time.format("%A, %d de %B");
   });
