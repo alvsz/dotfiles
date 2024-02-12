@@ -16,6 +16,7 @@
   background-color: $background;
   border-radius: 0.5em;
   padding: 0.1em 0.4em 0.1em 0.4em;
+
   button {
     border-radius: 0.4em;
     min-height: 0em;
@@ -453,7 +454,7 @@ window {
 }
 
 .backdrop {
-  text-shadow: 2px 2px 3px;
+  text-shadow: 2px 2px 7px;
   font-family: "C059";
   color: transparentize($foreground, 0.5);
   margin-top: 7em;
@@ -463,7 +464,7 @@ window {
   }
 
   .time {
-    font-weight: 700;
+    font-weight: bold;
     font-size: 9em;
   }
 
