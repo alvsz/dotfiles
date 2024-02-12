@@ -1,7 +1,6 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
-import PopupWindow from "../misc/PopupWindow.js";
 import icons from "../icons.js";
 
 globalThis.apps = Applications;
@@ -70,7 +69,7 @@ const AppItem = (app) => {
   });
 };
 
-const Applauncher = () => {
+export const Applauncher = () => {
   const list = Widget.Box({ vertical: true });
 
   const placeholder = Widget.Label({
@@ -151,8 +150,13 @@ const Applauncher = () => {
 };
 
 export default () =>
-  PopupWindow({
+  Widget.Window({
     name: WINDOW_NAME,
+    anchor: [],
+    layer: "overlay",
+    popup: true,
+    keymode: "exclusive",
+    visible: false,
     // expand: false,
-    content: Applauncher(),
+    child: Applauncher(),
   });

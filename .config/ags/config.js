@@ -5,9 +5,9 @@ import Bar from "./js/windows/bar.js";
 // } from "./js/windows/notificationCenter.js";
 
 import AppMenu from "./js/windows/appmenu.js";
-// import Lockscreen from "./js/windows/lockscreen.js";
 import Calendar from "./js/windows/calendar.js";
 import Backdrop from "./js/windows/backdrop.js";
+// import Lockscreen from "./js/windows/lockscreen.js";
 
 import * as utils from "./js/utils.js";
 // import * as vars from "./js/vars.js";
