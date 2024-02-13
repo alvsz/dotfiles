@@ -70,20 +70,17 @@ export default {
     },
     mpris: {
         fallback: "audio-x-generic-symbolic",
-        shuffle: {
-            enabled: "󰒟",
-            disabled: "󰒟",
-        },
+        shuffle: "media-playlist-shuffle-symbolic",
         loop: {
-            none: "󰓦",
-            track: "󰓦",
-            playlist: "󰑐",
+            none: "media-playlist-consecutive-symbolic",
+            track: "media-playlist-repeat-song-symbolic",
+            playlist: "media-playlist-repeat-symbolic",
         },
-        playing: "󰏦",
-        paused: "󰐍",
-        stopped: "󰐍",
-        prev: "󰒮",
-        next: "󰒭",
+        playing: "media-playback-pause-symbolic",
+        paused: "media-playback-start-symbolic",
+        stopped: "media-playback-start-symbolic",
+        prev: "media-skip-backward-symbolic",
+        next: "media-skip-forward-symbolic",
     },
     ui: {
         arrow: {
