@@ -10,6 +10,7 @@ import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import GLib from "gi://GLib";
 
 import { revealOnClick } from "../misc/Revealer.js";
+import icons from "../icons.js";
 
 import * as user from "../misc/User.js";
 
@@ -80,11 +81,8 @@ const clientTitle = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
     const limitWidth = 45;
-    const title = mon.title != ""
-      ? mon.title
-      : mon.appid != ""
-        ? mon.appid
-        : "";
+    const title =
+      mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
 
     if (mon.title.length > limitWidth) {
       self.label = title.substring(0, limitWidth - 3) + "...";
@@ -212,7 +210,7 @@ const SysTray = () =>
           item.openMenu(event);
         },
         tooltipText: item.bind("tooltip-markup"),
-      })
+      }),
     );
   });
 const wifiIcon = () =>
@@ -271,15 +269,11 @@ const bluetoothIcon = () =>
     className: "bluetoothIcon",
     visible: false,
   }).hook(Bluetooth, (self) => {
-    let icon;
-
     if (Bluetooth.enabled) {
-      icon = "active";
+      self.icon = icons.bluetooth.enabled;
     } else {
-      icon = "disabled";
+      self.icon = icons.bluetooth.disabled;
     }
-
-    self.icon = `bluetooth-${icon}-symbolic`;
 
     let active = false;
     for (const dev of Bluetooth.connectedDevices) {

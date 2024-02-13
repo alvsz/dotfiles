@@ -453,10 +453,13 @@ window {
   }
 }
 
-.backdrop {
+.glow {
   text-shadow: 2px 2px 7px;
   font-family: "C059";
   color: transparentize($foreground, 0.5);
+}
+
+.backdrop {
   margin-top: 7em;
 
   .spacer1 {
@@ -464,11 +467,13 @@ window {
   }
 
   .time {
+    @extend .glow;
     font-weight: bold;
     font-size: 9em;
   }
 
   .date {
+    @extend .glow;
     font-size: 2.5em;
   }
 
@@ -481,5 +486,42 @@ window {
     min-height: 25em;
 
     border-radius: 10px;
+  }
+
+  .playerBox {
+    padding: 1.5em;
+    background-color: transparentize($background, 0.5);
+    border-radius: 20px;
+    font-size: 1.1em;
+
+    .title {
+      font-weight: bold;
+    }
+
+    .playerTime {
+      // background-color: blue;
+      // min-width: 30em;
+      padding: 0.5em;
+      .length {
+        // color: green;
+        background-color: purple;
+      }
+      .position {
+        background-color: turquoise;
+      }
+      .progress {
+        min-width: 10em;
+        margin-left: 1em;
+        margin-right: 1em;
+        // background-color: red;
+        // color: blue;
+        // padding: 0.5em;
+        // border-radius: 1em;
+      }
+    }
+
+    .controls {
+      font-size: 1.5em;
+    }
   }
 }
