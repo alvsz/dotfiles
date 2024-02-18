@@ -228,11 +228,11 @@ const wiredIcon = () =>
 const networkIndicator = () =>
   Widget.Stack({
     className: "wifiIcon",
-    children: [
-      ["offline", Widget.Icon("network-offline")],
-      ["wifi", wifiIcon()],
-      ["wired", wiredIcon()],
-    ],
+    children: {
+      offline: Widget.Icon("network-offline"),
+      wifi: wifiIcon(),
+      wired: wiredIcon(),
+    },
   }).hook(Network, (self) => {
     self.shown = Network.primary || "offline";
   });
