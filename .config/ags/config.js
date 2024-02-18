@@ -9,7 +9,7 @@ import Calendar from "./js/windows/calendar.js";
 import Backdrop from "./js/windows/backdrop.js";
 // import Lockscreen from "./js/windows/lockscreen.js";
 
-import * as utils from "./js/utils.js";
+import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 // import * as vars from "./js/vars.js";
 
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
@@ -17,17 +17,15 @@ import Notifications from "resource:///com/github/Aylur/ags/service/notification
 Notifications.popupTimeout = 3000;
 Notifications.cacheActions = true;
 
-globalThis.utils = utils;
-
 import Goa from "./js/services/goa.js";
 globalThis.goa = Goa;
 
-utils.scssWatcher();
+scssWatcher();
 
 const windows = [
-  utils.forMonitors(Bar),
-  // utils.forMonitors(Lockscreen),
-  utils.forMonitors(Backdrop),
+  forMonitors(Bar),
+  // forMonitors(Lockscreen),
+  forMonitors(Backdrop),
   // NotificationCenter(),
   // NotificationsPopupWindow(),
   AppMenu(),
@@ -37,6 +35,6 @@ const windows = [
 // globalThis.windowList = windows;
 
 export default {
-  style: utils.cssPath,
+  style: cssPath,
   windows: windows,
 };
