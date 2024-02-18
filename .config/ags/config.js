@@ -19,8 +19,8 @@ Notifications.cacheActions = true;
 
 globalThis.utils = utils;
 
-import goa from "./js/services/goa.js";
-globalThis.goa = goa;
+import Goa from "./js/services/goa.js";
+globalThis.goa = Goa;
 
 utils.scssWatcher();
 
