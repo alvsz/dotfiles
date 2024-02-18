@@ -11,10 +11,10 @@ import Backdrop from "./js/windows/backdrop.js";
 
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
-import goaClient from "./js/services/goa.js";
+import goaClient from "./js/services/goaClient.js";
 globalThis.goa = goaClient;
 
-import iCal from "./js/services/ical.js";
+import iCal from "./js/services/iCal.js";
 globalThis.ical = iCal;
 
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
