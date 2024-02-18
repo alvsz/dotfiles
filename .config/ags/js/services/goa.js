@@ -7,6 +7,7 @@ const makeAccounts = (accounts) => {
     const icons = account.account.provider_icon.split(" ");
 
     let conta = {
+      obj: account,
       id: account.account.id,
       name: account.account.identity,
       type: account.account.provider_type,
@@ -37,9 +38,8 @@ const makeAccounts = (accounts) => {
       conta.auth.type = "oauth2";
 
       try {
-        conta.auth.oauth2 = account.oauth2_based.call_get_access_token_sync(
-          null,
-        );
+        conta.auth.oauth2 =
+          account.oauth2_based.call_get_access_token_sync(null);
       } catch (error) {
         print(error);
 
