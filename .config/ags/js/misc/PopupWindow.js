@@ -72,6 +72,6 @@ export default ({ layout = "center", expand = true, name, content, ...rest }) =>
     child: layouts[layout](name, content, expand),
     popup: true,
     visible: false,
-    keymode: "exclusive",
+    keymode: "on-demand",
     ...rest,
   });

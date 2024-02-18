@@ -1,6 +1,10 @@
-import fetch from "../misc/Fetch.js";
+// import fetch from "../misc/Fetch.js";
 
-export default (account) => {
+// import Fetch from "resource:///com/github/Aylur/ags/utils.js";
+
+// import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
+
+const teste = (account) => {
   let calendars = [];
 
   if (!account.auth.oauth2[0]) {

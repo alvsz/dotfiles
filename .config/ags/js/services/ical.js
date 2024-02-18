@@ -1,9 +1,29 @@
 import goa from "./goa.js";
-import googleCalendar from "./googleCalendar.js";
+// import teste from "./googleCalendar.js";
+
+const googleCalendar = (account) => {
+  let calendars = [];
+
+  if (!account.auth.oauth2[0]) {
+    return [];
+  }
+
+  const calendarList = fetch(
+    "https://www.googleapis.com/calendar/v3/users/me/calendarList",
+    {
+      headers: {
+        Authorization: "Bearer " + account.auth.oauth2[1],
+      },
+    },
+  );
+  print(calendarList.text());
+
+  return calendars;
+};
 
 const accounts = goa();
 
-export let calendars = [];
+export let iCal = [];
 
 for (const account of accounts) {
   if (account.calendar.active) {
@@ -17,7 +37,7 @@ for (const account of accounts) {
       conta.calendars = googleCalendar(account);
     }
 
-    calendars.push(conta);
+    iCal.push(conta);
 
     // print(account.id);
   }
