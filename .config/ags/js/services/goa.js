@@ -104,9 +104,10 @@ const makeAccounts = (accounts) => {
   return contas;
 };
 
-const client = Goa.Client.new_sync(null);
-const accounts = client.get_accounts();
+export default () => {
+  const client = Goa.Client.new_sync(null);
+  const accounts = client.get_accounts();
 
-const contas = makeAccounts(accounts);
-
-export default contas;
+  const contas = makeAccounts(accounts);
+  return contas;
+};
