@@ -1,4 +1,5 @@
 import goaClient from "./goaClient.js";
+import Fetch from "resource:///com/github/Aylur/ags/utils.js";
 // import teste from "./googleCalendar.js";
 
 const googleCalendar = (account) => {
@@ -8,7 +9,7 @@ const googleCalendar = (account) => {
     return [];
   }
 
-  const calendarList = fetch(
+  const calendarList = Fetch(
     "https://www.googleapis.com/calendar/v3/users/me/calendarList",
     {
       headers: {
