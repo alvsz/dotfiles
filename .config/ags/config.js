@@ -19,6 +19,9 @@ Notifications.cacheActions = true;
 
 globalThis.utils = utils;
 
+import goa from "./js/services/goa.js";
+globalThis.goa = goa;
+
 utils.scssWatcher();
 
 const windows = [
