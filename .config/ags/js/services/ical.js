@@ -1,4 +1,4 @@
-import goa from "./goa.js";
+import goaClient from "./goa.js";
 // import teste from "./googleCalendar.js";
 
 const googleCalendar = (account) => {
@@ -21,7 +21,7 @@ const googleCalendar = (account) => {
   return calendars;
 };
 
-const accounts = goa();
+const accounts = goaClient();
 
 export let iCal = [];
 

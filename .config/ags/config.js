@@ -11,8 +11,8 @@ import Backdrop from "./js/windows/backdrop.js";
 
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
-import Goa from "./js/services/goa.js";
-globalThis.goa = Goa;
+import goaClient from "./js/services/goa.js";
+globalThis.goa = goaClient;
 
 import iCal from "./js/services/ical.js";
 globalThis.ical = iCal;
