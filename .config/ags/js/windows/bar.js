@@ -228,7 +228,7 @@ const wiredIcon = () =>
 const networkIndicator = () =>
   Widget.Stack({
     className: "wifiIcon",
-    items: [
+    children: [
       ["offline", Widget.Icon("network-offline")],
       ["wifi", wifiIcon()],
       ["wired", wiredIcon()],
