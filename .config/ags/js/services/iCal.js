@@ -1,15 +1,16 @@
 import goaClient from "./goaClient.js";
-import Fetch from "resource:///com/github/Aylur/ags/utils.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
+// import Fetch from "resource:///com/github/Aylur/ags/utils.js";
 // import teste from "./googleCalendar.js";
 
-const googleCalendar = (account) => {
-  let calendars = [];
-
+async function googleCalendar(account) {
   if (!account.auth.oauth2[0]) {
     return [];
   }
 
-  const calendarList = Fetch(
+  let calendars = [];
+
+  const calendarList = await Utils.fetch(
     "https://www.googleapis.com/calendar/v3/users/me/calendarList",
     {
       headers: {
@@ -17,14 +18,18 @@ const googleCalendar = (account) => {
       },
     },
   );
-  print(calendarList.text());
+  // .then((res) => res.text())
+  // .then(print);
+
+  print(calendarList);
+  calendars.push(calendarList);
 
   return calendars;
-};
+}
 
 const accounts = goaClient();
 
-export let iCal = [];
+let iCal = [];
 
 for (const account of accounts) {
   if (account.calendar.active) {
@@ -35,7 +40,9 @@ for (const account of accounts) {
     };
 
     if (account.type === "google") {
-      conta.calendars = googleCalendar(account);
+      conta.calendars = await googleCalendar(account);
+      print(conta.calendars);
+      // print("teste");
     }
 
     iCal.push(conta);
@@ -43,3 +50,9 @@ for (const account of accounts) {
     // print(account.id);
   }
 }
+
+export default iCal;
+
+// globalThis.ical = iCal;
+//
+// export default teste = "";
