@@ -17,8 +17,8 @@ globalThis.goa = goaClient;
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 globalThis.utils = Utils;
 
-import iCal from "./js/services/iCal.js";
-globalThis.ical = iCal;
+// import iCal from "./js/services/iCal.js";
+// globalThis.ical = iCal;
 
 // import * as vars from "./js/vars.js";
 
