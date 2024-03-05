@@ -154,9 +154,9 @@ export default () =>
     name: WINDOW_NAME,
     anchor: [],
     layer: "overlay",
-    popup: true,
+    // popup: true,
     keymode: "exclusive",
     visible: false,
     // expand: false,
     child: Applauncher(),
-  });
+  }).keybind("Escape", () => App.closeWindow(WINDOW_NAME));

@@ -2,6 +2,7 @@ import Bar from "./js/windows/bar.js";
 import AppMenu from "./js/windows/appmenu.js";
 import Calendar from "./js/windows/calendar.js";
 import Backdrop from "./js/windows/backdrop.js";
+import controlCenter from "./js/windows/controlCenter.js";
 
 // import {
 //   NotificationCenter,
@@ -37,6 +38,7 @@ const windows = [
   // NotificationsPopupWindow(),
   AppMenu(),
   Calendar(),
+  controlCenter(),
 ].flat(2);
 
 // globalThis.windowList = windows;

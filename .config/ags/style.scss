@@ -525,3 +525,36 @@ window {
     }
   }
 }
+
+.userCenter {
+  @extend .basewindow;
+  @extend .transparentWindow;
+
+  padding: 1em;
+
+  .userImage {
+    font-size: 5em;
+  }
+
+  .powerMenu {
+    button {
+      margin-top: 0.3em;
+    }
+  }
+
+  .audioIcon {
+    font-size: 1.5em;
+  }
+
+  .volumeBar {
+    padding: 0.4em;
+  }
+
+  // .volumeInfo {
+  //   .volumeBar {
+  //     icon {
+  //       font-size: 2em;
+  //     }
+  //   }
+  // }
+}

@@ -1,15 +1,16 @@
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
-import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
+import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
 import GLib from "gi://GLib";
 
 import { revealOnClick } from "../misc/Revealer.js";
+import audioIcon from "../misc/audioIcon.js";
 import icons from "../icons.js";
 
 import * as user from "../misc/User.js";
@@ -41,10 +42,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-        ? "selected"
-        : occupied
-          ? "occupied"
-          : "normal",
+      ? "selected"
+      : occupied
+      ? "occupied"
+      : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -56,9 +57,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -81,8 +82,11 @@ const clientTitle = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
     const limitWidth = 45;
-    const title =
-      mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
+    const title = mon.title != ""
+      ? mon.title
+      : mon.appid != ""
+      ? mon.appid
+      : "";
 
     if (mon.title.length > limitWidth) {
       self.label = title.substring(0, limitWidth - 3) + "...";
@@ -210,7 +214,7 @@ const SysTray = () =>
           item.openMenu(event);
         },
         tooltipText: item.bind("tooltip-markup"),
-      }),
+      })
     );
   });
 const wifiIcon = () =>
@@ -235,34 +239,34 @@ const networkIndicator = () =>
     self.shown = Network.primary || "offline";
   });
 
-const audioIcon = () =>
-  Widget.Icon({
-    className: "audioIcon",
-  }).hook(
-    Audio,
-    (self) => {
-      if (!Audio.speaker) return;
-
-      const vol = Audio.speaker.volume * 100;
-      let icon;
-
-      if (Audio.control.get_default_sink().get_is_muted()) {
-        self.icon = "audio-volume-muted-symbolic";
-      } else {
-        icon = [
-          [101, "overamplified"],
-          [67, "high"],
-          [34, "medium"],
-          [1, "low"],
-          [0, "muted"],
-        ].find(([threshold]) => threshold <= vol)[1];
-
-        self.icon = `audio-volume-${icon}`;
-      }
-      self.tooltipText = `Volume ${Math.floor(vol)}%`;
-    },
-    "speaker-changed",
-  );
+// export const audioIcon = () =>
+//   Widget.Icon({
+//     className: "audioIcon",
+//   }).hook(
+//     Audio,
+//     (self) => {
+//       if (!Audio.speaker) return;
+//
+//       const vol = Audio.speaker.volume * 100;
+//       let icon;
+//
+//       if (Audio.control.get_default_sink().get_is_muted()) {
+//         self.icon = "audio-volume-muted-symbolic";
+//       } else {
+//         icon = [
+//           [101, "overamplified"],
+//           [67, "high"],
+//           [34, "medium"],
+//           [1, "low"],
+//           [0, "muted"],
+//         ].find(([threshold]) => threshold <= vol)[1];
+//
+//         self.icon = `audio-volume-${icon}`;
+//       }
+//       self.tooltipText = `Volume ${Math.floor(vol)}%`;
+//     },
+//     "speaker-changed",
+//   );
 
 const bluetoothIcon = () =>
   Widget.Icon({
