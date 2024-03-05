@@ -1,6 +1,6 @@
 #!/bin/lua
 
-local inspect = require('pl.import_into')().pretty.write
+-- local inspect = require('pl.import_into')().pretty.write
 local lgi = require("lgi")
 local Gtk = lgi.require("Gtk", "3.0")
 
