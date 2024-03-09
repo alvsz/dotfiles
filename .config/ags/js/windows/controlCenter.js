@@ -6,9 +6,6 @@ import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
 import { getDefaultSink, getDefaultSource } from "../utils.js";
 
-print(realName);
-print(iconFile);
-
 const audioBar = (sink) =>
   Widget.Overlay({
     child: Widget.Slider({
@@ -16,6 +13,7 @@ const audioBar = (sink) =>
       className: sink ? "volumeBar" : "micBar",
       vpack: "center",
       hexpand: true,
+
       // vexpand: true,
 
       onChange: ({ value }) => {
@@ -41,26 +39,45 @@ const audioBar = (sink) =>
     ],
   });
 
-const volumeInfo = () => {
-  const sinkList = Widget.Box({
+const audioList = (isSink) => {
+  const formatter = (stream) =>
+    Widget.ToggleButton({
+      child: Widget.Label({
+        label: stream.description,
+        maxWidthChars: 25,
+        truncate: "end",
+      }),
+
+      active: isSink
+        ? getDefaultSink().id === stream.id
+        : getDefaultSource().id === stream.id,
+
+      onToggled: () => Audio.control.set_default_sink(stream.stream),
+    });
+
+  return Widget.Box({
     vertical: true,
     homogeneous: false,
     spacing: 0,
-    children: [
-      Widget.Button({
-        child: Widget.Label("desligar"),
-      }),
-      Widget.Button({
-        child: Widget.Label("reiniciar"),
-      }),
-      Widget.Button({
-        child: Widget.Label("sair"),
-      }),
-      Widget.Button({
-        child: Widget.Label("bloquear"),
-      }),
-    ],
-  });
+  }).hook(
+    Audio,
+    (self) => {
+      self.visible = isSink
+        ? Audio.speakers.length > 0
+        : Audio.microphones.length > 0;
+
+      if (isSink) self.children = Audio.speakers.map(formatter);
+      else self.children = Audio.microphones.map(formatter);
+
+      // self.children[0].toggleClassName("first", true);
+    },
+    isSink ? "speaker-changed" : "microphone-changed",
+  );
+};
+
+const volumeInfo = () => {
+  const sinkList = audioList(true);
+  const sourceList = audioList(false);
 
   const volumeList = Widget.Revealer({
     transition: "slide_down",
@@ -71,12 +88,28 @@ const volumeInfo = () => {
       homogeneous: false,
       children: [
         audioBar(false),
+
         Widget.Separator({
           vertical: false,
+          className: "first",
         }),
+
         sinkList,
+
         Widget.Separator({
           vertical: false,
+        }).hook(
+          Audio,
+          (self) => {
+            self.visible = Audio.microphones.length > 0;
+          },
+          "microphone-changed",
+        ),
+
+        sourceList,
+        Widget.Separator({
+          vertical: false,
+          className: "last",
         }),
       ],
     }),
@@ -88,7 +121,6 @@ const volumeInfo = () => {
     child: Widget.Icon("go-down"),
     onClicked: (_) => {
       volumeList.set_reveal_child(!volumeList.child_revealed);
-      // volumeList.child.children[0].toggleClassName("first", true);
     },
   });
 

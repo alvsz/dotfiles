@@ -33,7 +33,7 @@ const audioIcon = (source) =>
         } else if (stream.volume >= 0.1) {
           icon = "low";
         } else {
-          icon = source ? "muted-symbolic" : "muted";
+          icon = "muted";
         }
       }
 

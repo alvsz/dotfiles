@@ -599,8 +599,17 @@ window {
     }
 
     separator {
-      margin: 0.3em 0;
+      margin-top: 0.3em;
     }
+
+    separator.first {
+      margin-top: 0.2em;
+    }
+
+    separator.last {
+      margin-bottom: 0.2em;
+    }
+
     button {
       margin-top: 0.3em;
     }
