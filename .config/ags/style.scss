@@ -557,7 +557,8 @@ window {
   }
 
   scale {
-    padding: 0.4em 0em;
+    margin: 0.2em 0;
+    padding: 0;
     min-width: 10em;
 
     highlight {
@@ -573,19 +574,41 @@ window {
   }
 
   // .backlightBar {
-  //   padding-right: 0em;
+  //   padding-top: 0em;
   // }
 
   .volumeInfo {
     margin-top: 0.3em;
     border-radius: 6px;
     background-color: lighten($background, 5);
-    padding-left: 0.3em;
-    padding-right: 0.3em;
+    padding: 0.2em 0.4em;
+    // padding-left: 0.3em;
+    // padding-right: 0.3em;
   }
 
   .volumeButton {
     margin-left: 0.3em;
     color: lighten($foreground, 10);
+  }
+
+  .volumeList {
+    // padding-bottom: 0.2em;
+    // padding-top: 0.2em;
+    .micBar {
+      padding: 0;
+    }
+
+    separator {
+      margin: 0.3em 0;
+    }
+    button {
+      margin-top: 0.3em;
+    }
+
+    // .first {
+    //   margin-top: 0;
+    //   // color: green;
+    //   // background-color: purple;
+    // }
   }
 }

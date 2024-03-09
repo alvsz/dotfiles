@@ -1,5 +1,7 @@
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
+import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
+
 import * as vars from "./vars.js";
 
 export const cssPath = `${App.configDir}/style.css`;
@@ -46,6 +48,20 @@ export const forMonitors = (widget) => {
     const id = vars.dwlIpc.value.indexOf(mon);
     return widget({ monitor: id });
   });
+};
+
+export const getDefaultSink = () => {
+  const defaultStream = Audio.control.get_default_sink();
+
+  if (defaultStream) return Audio.getStream(defaultStream.id);
+  else return Audio.speakers[0];
+};
+
+export const getDefaultSource = () => {
+  const defaultStream = Audio.control.get_default_source();
+
+  if (defaultStream) return Audio.getStream(defaultStream.id);
+  else return Audio.microphones[0];
 };
 
 // export const
