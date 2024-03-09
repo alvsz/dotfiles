@@ -38,6 +38,8 @@ const volumeInfo = () => {
       }),
 
       Widget.Button({
+        className: "volumeButton",
+        vpack: "center",
         child: Widget.Icon("go-down"),
       }),
     ],
@@ -142,7 +144,7 @@ const userCenter = () => {
     className: "userCenter",
     vpack: "start",
     hpack: "fill",
-    children: [info, powerMenu, volumeInfo(), Widget.Button()],
+    children: [info, powerMenu, volumeInfo()],
   });
 };
 
