@@ -535,7 +535,7 @@ window {
 
   padding: 0.5em;
 
-  border: 2px solid red;
+  // border: 2px solid red;
 
   // background-color: pink;
 
@@ -552,45 +552,37 @@ window {
   .audioIcon,
   .backlightIcon {
     font-size: 1.5em;
+    padding: 0 0.2em;
   }
 
   scale {
-    // padding: 0em;
-    // margin-left: 1em;
-    // margin-right: 1em;
-    padding-top: 0.4em;
-    padding-bottom: 0.4em;
-    // min-height: 10em;
-    min-width: 12em;
+    padding: 0.4em 0.3em 0.4em 0em;
+    min-width: 10em;
 
-    // background-color: green;
-    slider {
-      // color: red;
-      // background-color: transparent;
-      // border: 3px solid green;
-      padding: 0em;
-    }
     highlight {
       color: turquoise;
-      // background-color: red;
       padding-top: 0.7em;
       padding-bottom: 0.7em;
     }
+
+    slider {
+      all: unset;
+    }
+  }
+
+  .backlightBar {
+    padding-right: 0em;
   }
 
   .volumeInfo {
     margin-top: 0.3em;
     border-radius: 6px;
-    // background-color: transparentize(#cccccc, 0.9);
     background-color: lighten($background, 5);
-    // background-color: pink;
-    // margin-bottom: 0.3em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
   }
 
   .volumeButton {
-    border-color: lighten($background, 50);
-    // padding: 0;
-    // margin: 0;
-    // background-color: transparentize($foreground, 0.8);
+    color: lighten($foreground, 10);
   }
 }

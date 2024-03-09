@@ -27,12 +27,13 @@ const volumeInfo = () => {
         vertical: false,
         className: "volumeBar",
         vpack: "center",
+        onChange: ({ value }) => {
+          getDefaultSink().volume = value;
+        },
+
         drawValue: false,
-        digits: 100,
-        // value: 0,
         min: 0,
         max: 1,
-        // marks: [1, 2, [3, "label"], [4, "label", "bottom"]],
       }).hook(Audio, (self) => {
         self.value = getDefaultSink().volume;
       }),
@@ -62,14 +63,10 @@ const volumeInfo = () => {
         className: "backlightBar",
         vpack: "center",
         hexpand: true,
+
         drawValue: false,
-        digits: 100,
-        // value: 0,
         min: 0,
         max: 1,
-        // marks: [1, 2, [3, "label"], [4, "label", "bottom"]],
-      }).hook(Audio, (self) => {
-        self.value = getDefaultSink().volume;
       }),
     ],
   });

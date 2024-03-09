@@ -31,15 +31,15 @@ Notifications.cacheActions = true;
 scssWatcher();
 
 const windows = [
-  forMonitors(Bar),
+  ...forMonitors(Bar),
   // forMonitors(Lockscreen),
-  forMonitors(Backdrop),
+  ...forMonitors(Backdrop),
   // NotificationCenter(),
   // NotificationsPopupWindow(),
   AppMenu(),
   Calendar(),
   controlCenter(),
-].flat(2);
+];
 
 // globalThis.windowList = windows;
 
