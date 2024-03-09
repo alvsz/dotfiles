@@ -1,7 +1,9 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
-const audioIcon = () =>
+import { getDefaultSink, getDefaultSource } from "../utils.js";
+
+const audioIcon = (source) =>
   Widget.Icon({
     className: "audioIcon",
     vpack: "center",
@@ -10,25 +12,44 @@ const audioIcon = () =>
     (self) => {
       if (!Audio.speaker) return;
 
-      const vol = Audio.speaker.volume * 100;
       let icon;
+      let stream;
 
-      if (Audio.control.get_default_sink().get_is_muted()) {
-        self.icon = "audio-volume-muted-symbolic";
+      if (!source) {
+        stream = getDefaultSink();
       } else {
-        icon = [
-          [101, "overamplified"],
-          [67, "high"],
-          [34, "medium"],
-          [1, "low"],
-          [0, "muted"],
-        ].find(([threshold]) => threshold <= vol)[1];
-
-        self.icon = `audio-volume-${icon}`;
+        stream = getDefaultSource();
       }
-      self.tooltipText = `Volume ${Math.floor(vol)}%`;
+
+      if (stream.stream.isMuted) {
+        icon = "muted-symbolic";
+      } else {
+        if (stream.volume > 1) {
+          icon = "overamplified";
+        } else if (stream.volume >= 0.67) {
+          icon = "high";
+        } else if (stream.volume >= 0.34) {
+          icon = "medium";
+        } else if (stream.volume >= 0.1) {
+          icon = "low";
+        } else {
+          icon = source ? "muted-symbolic" : "muted";
+        }
+      }
+
+      self.icon = `${source ? "microphone-sensitivity" : "audio-volume"
+        }-${icon}`;
+
+      // self.icon = "microphone-sensitivity-muted-symbolic";
+      // self.icon = "microphone-sensitivity-muted";
+
+      // self.icon = source
+      //   ? `microphone-sensitivity-${icon}`
+      //   : `audio-volume-${icon}`;
+
+      self.tooltipText = `Volume ${Math.floor(stream.volume * 100)}%`;
     },
-    "speaker-changed",
+    source ? "microphone-changed" : "speaker-changed",
   );
 
 export default audioIcon;
