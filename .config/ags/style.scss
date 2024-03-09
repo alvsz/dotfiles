@@ -553,16 +553,18 @@ window {
   .backlightIcon {
     font-size: 1.5em;
     padding: 0 0.2em;
+    -gtk-icon-shadow: 1px 1px $background;
   }
 
   scale {
-    padding: 0.4em 0.3em 0.4em 0em;
+    padding: 0.4em 0em;
     min-width: 10em;
 
     highlight {
       color: turquoise;
-      padding-top: 0.7em;
-      padding-bottom: 0.7em;
+      // padding-top: 0.8em;
+      // padding-bottom: 0.8em;
+      padding: 0.8em 0;
     }
 
     slider {
@@ -570,9 +572,9 @@ window {
     }
   }
 
-  .backlightBar {
-    padding-right: 0em;
-  }
+  // .backlightBar {
+  //   padding-right: 0em;
+  // }
 
   .volumeInfo {
     margin-top: 0.3em;
@@ -583,6 +585,7 @@ window {
   }
 
   .volumeButton {
+    margin-left: 0.3em;
     color: lighten($foreground, 10);
   }
 }

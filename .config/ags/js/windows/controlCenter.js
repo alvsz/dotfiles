@@ -21,21 +21,23 @@ const volumeInfo = () => {
     homogeneous: false,
     spacing: 0,
     children: [
-      audioIcon(),
+      Widget.Overlay({
+        child: Widget.Slider({
+          vertical: false,
+          className: "volumeBar",
+          vpack: "center",
+          onChange: ({ value }) => {
+            getDefaultSink().volume = value;
+          },
 
-      Widget.Slider({
-        vertical: false,
-        className: "volumeBar",
-        vpack: "center",
-        onChange: ({ value }) => {
-          getDefaultSink().volume = value;
-        },
+          drawValue: false,
+          min: 0,
+          max: 1,
+        }).hook(Audio, (self) => {
+          self.value = getDefaultSink().volume;
+        }),
 
-        drawValue: false,
-        min: 0,
-        max: 1,
-      }).hook(Audio, (self) => {
-        self.value = getDefaultSink().volume;
+        overlays: [audioIcon().on("realize", (self) => (self.hpack = "start"))],
       }),
 
       Widget.Button({
@@ -46,29 +48,32 @@ const volumeInfo = () => {
     ],
   });
 
-  const backlightBar = Widget.Box({
-    vertical: false,
-    homogeneous: false,
-    spacing: 0,
+  const backlightBar = Widget.Overlay({
+    // vertical: false,
+    // homogeneous: false,
+    // spacing: 0,
 
-    children: [
+    // children: [
+    overlays: [
       Widget.Icon({
         vpack: "center",
+        hpack: "start",
         className: "backlightIcon",
         icon: "brightness-high",
       }),
-
-      Widget.Slider({
-        vertical: false,
-        className: "backlightBar",
-        vpack: "center",
-        hexpand: true,
-
-        drawValue: false,
-        min: 0,
-        max: 1,
-      }),
     ],
+
+    child: Widget.Slider({
+      vertical: false,
+      className: "backlightBar",
+      vpack: "center",
+      hexpand: true,
+
+      drawValue: false,
+      min: 0,
+      max: 1,
+    }),
+    // ],
   });
 
   return Widget.Box({
