@@ -11,13 +11,17 @@ const revealer = (hidden) =>
 export const revealOnClick = ({ shown, hidden, ...rest }) => {
   let reveal = revealer(hidden);
 
-  return Widget.EventBox({
-    child: Widget.Box({
-      children: [reveal, shown],
-    }),
-    onPrimaryClick: () => {
-      reveal.revealChild = !reveal.revealChild;
-    },
+  return Widget.Box({
+    children: [
+      reveal,
+      Widget.EventBox({
+        child: shown,
+
+        onPrimaryClick: () => {
+          reveal.revealChild = !reveal.revealChild;
+        },
+      }),
+    ],
     ...rest,
   });
 };
