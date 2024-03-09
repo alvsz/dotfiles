@@ -23,10 +23,16 @@ const volumeInfo = () => {
     children: [
       audioIcon(),
 
-      Widget.ProgressBar({
+      Widget.Slider({
         vertical: false,
         className: "volumeBar",
         vpack: "center",
+        drawValue: false,
+        digits: 100,
+        // value: 0,
+        min: 0,
+        max: 1,
+        // marks: [1, 2, [3, "label"], [4, "label", "bottom"]],
       }).hook(Audio, (self) => {
         self.value = getDefaultSink().volume;
       }),
@@ -37,12 +43,41 @@ const volumeInfo = () => {
     ],
   });
 
+  const backlightBar = Widget.Box({
+    vertical: false,
+    homogeneous: false,
+    spacing: 0,
+
+    children: [
+      Widget.Icon({
+        vpack: "center",
+        className: "backlightIcon",
+        icon: "brightness-high",
+      }),
+
+      Widget.Slider({
+        vertical: false,
+        className: "backlightBar",
+        vpack: "center",
+        hexpand: true,
+        drawValue: false,
+        digits: 100,
+        // value: 0,
+        min: 0,
+        max: 1,
+        // marks: [1, 2, [3, "label"], [4, "label", "bottom"]],
+      }).hook(Audio, (self) => {
+        self.value = getDefaultSink().volume;
+      }),
+    ],
+  });
+
   return Widget.Box({
     vertical: true,
     homogeneous: false,
     spacing: 0,
     className: "volumeInfo",
-    children: [volumeBar],
+    children: [volumeBar, backlightBar],
   });
 };
 
@@ -107,7 +142,7 @@ const userCenter = () => {
     className: "userCenter",
     vpack: "start",
     hpack: "fill",
-    children: [info, powerMenu, volumeInfo()],
+    children: [info, powerMenu, volumeInfo(), Widget.Button()],
   });
 };
 

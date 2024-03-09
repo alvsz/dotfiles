@@ -528,9 +528,16 @@ window {
 
 .userCenter {
   @extend .basewindow;
-  @extend .transparentWindow;
+  // @extend .transparentWindow;
+
+  // background-color: green;
+  @extend .module;
 
   padding: 1em;
+
+  border: 2px solid red;
+
+  // background-color: pink;
 
   .userImage {
     font-size: 5em;
@@ -542,19 +549,38 @@ window {
     }
   }
 
-  .audioIcon {
+  .audioIcon,
+  .backlightIcon {
     font-size: 1.5em;
   }
 
-  .volumeBar {
-    padding: 0.4em;
+  scale {
+    // padding: 0em;
+    // margin-left: 1em;
+    // margin-right: 1em;
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+    // min-height: 10em;
+    min-width: 10em;
+
+    // background-color: green;
+    slider {
+      // color: red;
+      // background-color: transparent;
+      // border: 3px solid green;
+      padding: 0em;
+    }
+    highlight {
+      color: turquoise;
+      // background-color: red;
+      padding-top: 0.7em;
+      padding-bottom: 0.7em;
+    }
   }
 
-  // .volumeInfo {
-  //   .volumeBar {
-  //     icon {
-  //       font-size: 2em;
-  //     }
-  //   }
-  // }
+  .volumeInfo {
+    margin-top: 0.3em;
+    // background-color: pink;
+    // margin-bottom: 0.3em;
+  }
 }
