@@ -3,14 +3,14 @@
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 /usr/lib/gsd-xsettings &
 
-# ags &
+ags &
 
-while true; do
-	ags &
-	inotifywait -rqe create,modify ~/.config/ags/js
-	ags -q
-	wait $!
-done &
+# while true; do
+# 	ags &
+# 	inotifywait -rqe create,modify ~/.config/ags/js
+# 	ags -q
+# 	wait $!
+# done &
 
 # / "sh", "-c", "eww daemon", NULL,
 # / "eww", "open", "bar-wayland", NULL,
