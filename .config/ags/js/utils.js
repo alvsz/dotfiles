@@ -64,4 +64,7 @@ export const getDefaultSource = () => {
   else return Audio.microphones[0];
 };
 
+globalThis.defaultsource = getDefaultSource;
+globalThis.defaultsink = getDefaultSink;
+
 // export const

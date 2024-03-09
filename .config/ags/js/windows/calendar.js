@@ -88,13 +88,13 @@ const notificationList = () => {
 
 const controlCenter = () =>
   Widget.Window({
-    name: "controlCenter",
+    name: "calendar",
     layer: "overlay",
     anchor: ["top"],
     visible: false,
     // exclusivity: "ignore",
     child: Widget.Box({
-      className: "controlCenter",
+      className: "calendar",
       homogeneous: true,
       spacing: 5,
       // vertical: true,
