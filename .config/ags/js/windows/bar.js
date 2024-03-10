@@ -42,10 +42,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-      ? "selected"
-      : occupied
-      ? "occupied"
-      : "normal",
+        ? "selected"
+        : occupied
+          ? "occupied"
+          : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -57,9 +57,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -82,11 +82,8 @@ const clientTitle = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
     const limitWidth = 45;
-    const title = mon.title != ""
-      ? mon.title
-      : mon.appid != ""
-      ? mon.appid
-      : "";
+    const title =
+      mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
 
     if (mon.title.length > limitWidth) {
       self.label = title.substring(0, limitWidth - 3) + "...";
@@ -214,7 +211,7 @@ const SysTray = () =>
           item.openMenu(event);
         },
         tooltipText: item.bind("tooltip-markup"),
-      })
+      }),
     );
   });
 const wifiIcon = () =>
@@ -230,6 +227,8 @@ const wiredIcon = () =>
 const networkIndicator = () =>
   Widget.Stack({
     className: "wifiIcon",
+    transition: "slide_down",
+
     children: {
       offline: Widget.Icon("network-offline"),
       wifi: wifiIcon(),
@@ -238,35 +237,6 @@ const networkIndicator = () =>
   }).hook(Network, (self) => {
     self.shown = Network.primary || "offline";
   });
-
-// export const audioIcon = () =>
-//   Widget.Icon({
-//     className: "audioIcon",
-//   }).hook(
-//     Audio,
-//     (self) => {
-//       if (!Audio.speaker) return;
-//
-//       const vol = Audio.speaker.volume * 100;
-//       let icon;
-//
-//       if (Audio.control.get_default_sink().get_is_muted()) {
-//         self.icon = "audio-volume-muted-symbolic";
-//       } else {
-//         icon = [
-//           [101, "overamplified"],
-//           [67, "high"],
-//           [34, "medium"],
-//           [1, "low"],
-//           [0, "muted"],
-//         ].find(([threshold]) => threshold <= vol)[1];
-//
-//         self.icon = `audio-volume-${icon}`;
-//       }
-//       self.tooltipText = `Volume ${Math.floor(vol)}%`;
-//     },
-//     "speaker-changed",
-//   );
 
 const bluetoothIcon = () =>
   Widget.Icon({
