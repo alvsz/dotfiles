@@ -1,7 +1,5 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
-// import Gtk from 'gi://Gtk'
-// import GLib from "gi://GLib";
 
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
@@ -187,12 +185,11 @@ const volumeInfo = () => {
   });
 };
 
-// const FlowBox = Widget.subclass(Gtk.FlowBox)
-
 const controlCenter = () => {
   const flowBox = Widget.FlowBox({
     maxChildrenPerLine: 2,
     minChildrenPerLine: 2,
+    selectionMode: 0,
     className: "controlCenter",
   });
 
