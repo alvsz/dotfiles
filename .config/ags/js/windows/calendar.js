@@ -10,26 +10,39 @@ const Calendar = () => {
     showHeading: false,
     show_day_names: false,
     detail_height_rows: 0,
+    // detail_width_chars: 10,
+
     vpack: "start",
     hpack: "fill",
-  });
 
-  cal.set_detail_func((self, year, month, day) => {
-    if (day % 2 === 0) {
-      return "par";
-    } else return "ímpar";
+    setup: (self) => {
+      // const parent_window = self.get_parent_window();
+      // if (parent_window) {
+      //   parent_window.on("show", () => {
+      //     self.select_day();
+      //   });
+      // }
+
+      self.set_detail_func((self, year, month, day) => {
+        // return "";
+        if (day % 2 === 0) {
+          return "par\nteste";
+        } else return "ímpar";
+      });
+    },
   });
 
   const monthName = Widget.Label({
     className: "monthName",
     vpack: "start",
     label: "teste",
-  });
-
-  monthName.hook(
+  }).hook(
     cal,
     (self) => {
       const [y, m, d] = cal.get_date();
+
+      // if (!cal.get_day_is_marked(d)) cal.mark_day(d);
+      // else cal.unmark_day(d);
 
       // const iso8601 = `${y}-${m + 1}-${d}`;
       // print(iso8601);

@@ -55,7 +55,10 @@ const audioList = (isSink) => {
         ? getDefaultSink()?.id === stream.id
         : getDefaultSource()?.id === stream.id,
 
-      onToggled: () => Audio.control.set_default_sink(stream.stream),
+      onToggled: () => {
+        print(param);
+        Audio.control.set_default_sink(stream.stream);
+      },
     });
 
   return Widget.Box({
@@ -82,8 +85,6 @@ const audioList = (isSink) => {
           self.visible = false;
         }
       }
-
-      // self.children[0].toggleClassName("first", true);
     },
     isSink ? "speaker-changed" : "microphone-changed",
   );
@@ -142,15 +143,7 @@ const volumeInfo = () => {
     vertical: false,
     homogeneous: false,
     spacing: 0,
-    children: [
-      audioBar(true),
-      // Widget.Overlay({
-      //   child: audioBar(true),
-      //
-      //   overlays: [audioIcon().on("realize", (self) => (self.hpack = "start"))],
-      // }),
-      volumeListButton,
-    ],
+    children: [audioBar(true), volumeListButton],
   });
 
   const backlightBar = Widget.Overlay({
@@ -188,16 +181,21 @@ const volumeInfo = () => {
 const controlCenter = () => {
   const flowBox = Widget.FlowBox({
     maxChildrenPerLine: 2,
-    minChildrenPerLine: 2,
+    minChildrenPerLine: 1,
     selectionMode: 0,
+    homogeneous: false,
+
     className: "controlCenter",
   });
 
   const hideButton = () =>
     Widget.Button({
       child: Widget.Label("esconder esse botão"),
-    }).on("clicked", (self) => {
-      self.parent.visible = false;
+      halign: "start",
+      hexpand: false,
+      onClicked: (self) => {
+        self.parent.visible = false;
+      },
     });
 
   const showButton = Widget.Button({
@@ -205,6 +203,9 @@ const controlCenter = () => {
       flowBox.add(hideButton());
       flowBox.show_all();
     },
+
+    halign: "start",
+    hexpand: false,
     child: Widget.Label("mostrar tudo"),
   });
 
