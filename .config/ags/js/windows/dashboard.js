@@ -254,7 +254,7 @@ const userCenter = () => {
         Widget.Button({
           child: Widget.Label("sair"),
           onClicked: () => {
-            Utils.exec("loginctl terminate-session");
+            Utils.exec("loginctl terminate-session self");
           },
         }),
         Widget.Button({
