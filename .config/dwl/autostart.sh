@@ -22,7 +22,7 @@ org.gnome.Geary --gapplication-service &
 
 # / "sh", "-c", "xss-lock -- bloqueador", NULL,
 
-# swayidle -w lock 'bloqueador' timeout 720 'bloqueador' timeout 420 'dpms off' resume 'dpms on'", NULL,
+swayidle -w lock 'bloqueador' timeout 720 'bloqueador' timeout 420 'dpms off' resume 'dpms on'
 
 # sh", "-c", "scratchpad vdirsyncer sync", NULL,
 
