@@ -1,5 +1,6 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
@@ -181,7 +182,7 @@ const volumeInfo = () => {
 const controlCenter = () => {
   const flowBox = Widget.FlowBox({
     maxChildrenPerLine: 2,
-    minChildrenPerLine: 1,
+    minChildrenPerLine: 2,
     selectionMode: 0,
     homogeneous: false,
 
@@ -240,15 +241,19 @@ const userCenter = () => {
       children: [
         Widget.Button({
           child: Widget.Label("desligar"),
+          onClicked: Utils.exec("systemctl poweroff"),
         }),
         Widget.Button({
           child: Widget.Label("reiniciar"),
+          onClicked: Utils.exec("systemctl reboot"),
         }),
         Widget.Button({
           child: Widget.Label("sair"),
+          onClicked: Utils.exec("loginctl terminate-session"),
         }),
         Widget.Button({
           child: Widget.Label("bloquear"),
+          onClicked: Utils.exec("loginctl lock-session"),
         }),
       ],
     }),
@@ -294,7 +299,7 @@ const dashboard = () =>
     name: "dashboard",
     layer: "overlay",
     anchor: ["top", "right"],
-    visible: true,
+    visible: false,
     child: userCenter(),
   });
 
