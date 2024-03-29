@@ -241,19 +241,27 @@ const userCenter = () => {
       children: [
         Widget.Button({
           child: Widget.Label("desligar"),
-          onClicked: Utils.exec("systemctl poweroff"),
+          onClicked: () => {
+            Utils.exec("systemctl poweroff");
+          },
         }),
         Widget.Button({
           child: Widget.Label("reiniciar"),
-          onClicked: Utils.exec("systemctl reboot"),
+          onClicked: () => {
+            Utils.exec("systemctl reboot");
+          },
         }),
         Widget.Button({
           child: Widget.Label("sair"),
-          onClicked: Utils.exec("loginctl terminate-session"),
+          onClicked: () => {
+            Utils.exec("loginctl terminate-session");
+          },
         }),
         Widget.Button({
           child: Widget.Label("bloquear"),
-          onClicked: Utils.exec("loginctl lock-session"),
+          onClicked: () => {
+            Utils.exec("loginctl lock-session");
+          },
         }),
       ],
     }),
