@@ -41,5 +41,6 @@ kdeconnect-indicator &
 if [ "${HOSTNAME}" = "archlinux" ]; then
 	polychromatic-tray-applet &
 	openrgb --startminimized &
-	openrgb -p 'puro roxo'
+	openrgb -c 800080
+	# openrgb -p 'puro roxo'
 fi
