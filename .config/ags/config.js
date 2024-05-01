@@ -4,6 +4,8 @@ import Calendar from "./js/windows/calendar.js";
 import Backdrop from "./js/windows/backdrop.js";
 import Dashboard from "./js/windows/dashboard.js";
 
+import App from "resource:///com/github/Aylur/ags/app.js";
+
 // import {
 //   NotificationCenter,
 //   // NotificationsPopupWindow,
@@ -43,7 +45,7 @@ const windows = [
 
 // globalThis.windowList = windows;
 
-export default {
+App.config({
   style: cssPath,
   windows: windows,
-};
+});

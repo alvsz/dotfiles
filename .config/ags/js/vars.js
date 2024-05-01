@@ -12,13 +12,13 @@ if (ok) {
   colors = JSON.parse(new TextDecoder().decode(colorsJson));
 }
 
-const dwlIpc = Variable(JSON.parse(Utils.exec("dwl-msg status")), {
-  listen: [["dwl-msg", "follow"], (out) => JSON.parse(out)],
-});
-
-// const dwlIpc = Variable(JSON.parse("[]"), {
+// const dwlIpc = Variable(JSON.parse(Utils.exec("dwl-msg status")), {
 //   listen: [["dwl-msg", "follow"], (out) => JSON.parse(out)],
 // });
+
+const dwlIpc = Variable(JSON.parse("[]"), {
+  listen: [["dwl-msg", "follow"], (out) => JSON.parse(out)],
+});
 
 // const time = Variable(0, {
 //   poll: [1000, ["date", "+%s"]],
