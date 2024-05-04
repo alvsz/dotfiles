@@ -1,0 +1,9 @@
+[Unit]
+Description=Set OpenRGB colors
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sh -c 'openrgb -p padrao && openrgb -c 800080'
+
+[Install]
+WantedBy=default.target
