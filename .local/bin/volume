@@ -60,20 +60,20 @@ case $1 in
 up)
 	pamixer -u
 	pamixer -i 4
-	volume_notif out
+	# volume_notif out
 	;;
 down)
 	pamixer -d 4
-	volume_notif out
+	# volume_notif out
 	;;
 mute)
 	pamixer -t
-	volume_notif out
+	# volume_notif out
 	;;
 set)
 	pamixer -u
 	pamixer --set-volume "$2"
-	volume_notif out
+	# volume_notif out
 	;;
 mic)
 	defaultsource=$(pactl --format=json info | jq '.default_source_name' -r)
@@ -98,7 +98,7 @@ mic)
 		pactl set-source-mute "${defaultsource}" toggle
 		;;
 	esac
-	volume_notif in
+	# volume_notif in
 	;;
 *)
 	echo "erro brutal steve magal"

@@ -21,12 +21,12 @@ case $1 in
 up)
 	xbacklight -inc 4
 	icon="brightness-high"
-	send_notification
+	# send_notification
 	;;
 down)
 	xbacklight -dec 4
 	icon="brightness-low"
-	send_notification
+	# send_notification
 	;;
 *)
 	echo "erro brutal, argumento inválido"
