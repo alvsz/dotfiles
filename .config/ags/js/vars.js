@@ -12,8 +12,8 @@ if (ok) {
   colors = JSON.parse(new TextDecoder().decode(colorsJson));
 }
 
-const dwlIpc = Variable(JSON.parse(Utils.exec("dwl-msg status")), {
-  listen: [["dwlmsg"], (out) => JSON.parse(out)],
+const dwlIpc = Variable(JSON.parse(Utils.exec("dwlmsg status")), {
+  listen: [["dwlmsg", "follow"], (out) => JSON.parse(out)],
 });
 
 // const dwlIpc = Variable(JSON.parse("[]"), {

@@ -57,7 +57,7 @@ const audioList = (isSink) => {
         : getDefaultSource()?.id === stream.id,
 
       onToggled: () => {
-        print(param);
+        // print(param);
         Audio.control.set_default_sink(stream.stream);
       },
     });
