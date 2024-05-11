@@ -5,6 +5,8 @@ import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
 import { getDefaultSink, getDefaultSource } from "../utils.js";
+import Network from "resource:///com/github/Aylur/ags/service/network.js";
+import { networkIndicator } from "../misc/networkIcon.js";
 
 const audioBar = (sink) =>
   Widget.Overlay({
@@ -179,6 +181,57 @@ const volumeInfo = () => {
   });
 };
 
+const hideButton = () =>
+  Widget.Button({
+    child: Widget.Label("esconder esse botão"),
+    halign: "start",
+    hexpand: false,
+    onClicked: (self) => {
+      self.parent.visible = false;
+    },
+  });
+
+const networkButton = () =>
+  Widget.Button({
+    child: Widget.Box({
+      vertical: false,
+      homogeneous: false,
+      spacing: 0,
+      children: [
+        networkIndicator(),
+        Widget.Box({
+          vertical: true,
+          homogeneous: true,
+          children: [
+            Widget.Label({
+              className: "networkType",
+            }).hook(Network, (self) => {
+              switch (Network.primary) {
+                case "wifi":
+                  self.label = "Rede sem fio";
+                  break;
+                case "wired":
+                  self.label = "Rede cabeada";
+                  break;
+                default:
+                  self.label = "Offline";
+              }
+            }),
+            Widget.Label({
+              className: "networkName",
+            }).hook(Network, (self) => {
+              self.label = Network.wifi.ssid;
+              visible = Network.primary === "wifi";
+            }),
+          ],
+        }),
+      ],
+    }),
+    onClicked: (self) => {
+      self.parent.visible = false;
+    },
+  });
+
 const controlCenter = () => {
   const flowBox = Widget.FlowBox({
     maxChildrenPerLine: 2,
@@ -188,16 +241,6 @@ const controlCenter = () => {
 
     className: "controlCenter",
   });
-
-  const hideButton = () =>
-    Widget.Button({
-      child: Widget.Label("esconder esse botão"),
-      halign: "start",
-      hexpand: false,
-      onClicked: (self) => {
-        self.parent.visible = false;
-      },
-    });
 
   const showButton = Widget.Button({
     onClicked: () => {
@@ -211,15 +254,7 @@ const controlCenter = () => {
   });
 
   flowBox.add(showButton);
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
-  flowBox.add(hideButton());
+  flowBox.add(networkButton());
   flowBox.add(hideButton());
 
   return flowBox;

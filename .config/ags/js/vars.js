@@ -13,7 +13,10 @@ if (ok) {
 }
 
 const dwlIpc = Variable(JSON.parse(Utils.exec("dwlmsg status")), {
-  listen: [["dwlmsg", "follow"], (out) => JSON.parse(out)],
+  listen: [
+    ["sh", "-c", "while true; do dwlmsg follow; done"],
+    (out) => JSON.parse(out),
+  ],
 });
 
 // const dwlIpc = Variable(JSON.parse("[]"), {

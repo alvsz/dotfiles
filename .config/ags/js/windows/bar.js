@@ -13,6 +13,8 @@ import { revealOnClick } from "../misc/Revealer.js";
 import audioIcon from "../misc/audioIcon.js";
 import icons from "../icons.js";
 
+import { networkIndicator } from "../misc/networkIcon.js";
+
 import * as user from "../misc/User.js";
 
 globalThis.user = user;
@@ -213,29 +215,6 @@ const SysTray = () =>
         tooltipText: item.bind("tooltip-markup"),
       }),
     );
-  });
-const wifiIcon = () =>
-  Widget.Icon(Network.wifi?.iconName).hook(Network, (self) => {
-    self.icon = Network.wifi?.iconName || "";
-  });
-
-const wiredIcon = () =>
-  Widget.Icon(Network.wired?.iconName).hook(Network, (self) => {
-    self.icon = Network.wired?.iconName || "";
-  });
-
-const networkIndicator = () =>
-  Widget.Stack({
-    className: "wifiIcon",
-    transition: "slide_down",
-
-    children: {
-      offline: Widget.Icon("network-offline"),
-      wifi: wifiIcon(),
-      wired: wiredIcon(),
-    },
-  }).hook(Network, (self) => {
-    self.shown = Network.primary || "offline";
   });
 
 const bluetoothIcon = () =>
