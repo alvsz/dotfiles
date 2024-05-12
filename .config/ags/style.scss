@@ -37,10 +37,6 @@
   // background-color: green;
 }
 
-.connected {
-  color: $color4;
-}
-
 .menuBase {
   background-color: lighten($background, 3%);
   // border: 0.1em solid turquoise;
@@ -346,6 +342,9 @@ window {
   margin: 3px 10px 0px 0px;
   min-height: 30px;
   @extend .module;
+  .connected {
+    color: $color4;
+  }
 }
 
 .centerBar {
@@ -365,7 +364,8 @@ window {
   // min-height: 100px;
   // min-width: 100px;
 
-  border: 0.1em solid lighten($background, 15%);
+  border: 0.1em solid darken($background, 5%);
+  // border: 0.1em solid lighten($background, 15%);
 
   border-radius: 0.5em;
   padding: 0.4em;
@@ -518,6 +518,8 @@ window {
   // background-color: green;
   @extend .module;
 
+  border: 0.1em solid darken($background, 5%);
+
   padding: 0.5em;
 
   // border: 2px solid red;
@@ -563,7 +565,7 @@ window {
   // }
 
   .volumeInfo {
-    margin-top: 0.3em;
+    margin: 0.2em 0.1em;
     border-radius: 6px;
     background-color: lighten($background, 5);
     padding: 0.2em 0.4em;
@@ -598,11 +600,67 @@ window {
     button {
       margin-top: 0.3em;
     }
+  }
 
-    // .first {
-    //   margin-top: 0;
-    //   // color: green;
-    //   // background-color: purple;
-    // }
+  .players {
+    .mediaPlayer {
+      margin: 0.2em 0.1em;
+      // margin: 0.1em;
+      border-radius: 6px;
+      background-color: lighten($background, 5);
+      padding: 0.4em;
+
+      .albumCover {
+        font-size: 4.5em;
+        margin-right: 0.1em;
+      }
+
+      // .rightstuff {
+      //   margin-left: 0.2em;
+      // }
+
+      .position {
+        highlight {
+          padding: 0.5em;
+        }
+      }
+
+      .trackTitle {
+        font-weight: bolder;
+      }
+    }
   }
 }
+
+.controlCenter {
+  // padding: 1em;
+  // background-color: turquoise;
+
+  .networkName,
+  .bluetoothDevice {
+    font-weight: lighter;
+    // background-color: green;
+  }
+
+  button {
+    margin: 0;
+    // padding: 0;
+    // background-color: lighten($background, 5);
+    // border-radius: 100em;
+  }
+
+  .networkButton,
+  .bluetoothButton {
+    image {
+      // background-color: purple;
+      padding: 0.2em;
+    }
+    // background-color: $color5;
+    // margin: 1em;
+    // border-radius: 10px;
+  }
+}
+
+// .networkType {
+//   font-weight: bolder;
+// }

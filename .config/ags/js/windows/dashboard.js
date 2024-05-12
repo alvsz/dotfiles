@@ -2,14 +2,15 @@ import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
+import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
 import { getDefaultSink, getDefaultSource } from "../utils.js";
-
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
+import scrollable from "../misc/bouncingText.js";
 
 const audioBar = (sink) =>
   Widget.Overlay({
@@ -184,16 +185,6 @@ const volumeInfo = () => {
   });
 };
 
-const hideButton = () =>
-  Widget.Button({
-    child: Widget.Label("esconder esse botão"),
-    // hpack: "start",
-    hexpand: false,
-    onClicked: (self) => {
-      self.parent.visible = false;
-    },
-  });
-
 const networkButton = () =>
   Widget.Button({
     className: "networkButton",
@@ -273,13 +264,6 @@ const bluetoothButton = () =>
               hpack: "start",
               label: "Bluetooth",
             }),
-            // .hook(Bluetooth, (self) => {
-            //   if (Bluetooth.enabled) {
-            //     self.label = "Bluetooth ativado";
-            //   } else {
-            //     self.label = "Bluetooth desativado";
-            //   }
-            // }),
 
             Widget.Label({
               className: "bluetoothDevice",
@@ -333,6 +317,104 @@ const controlCenter = () => {
   });
 
   return stack;
+};
+
+const mediaPlayer = (player) => {
+  return Widget.Box({
+    vertical: false,
+    homogeneous: false,
+    className: "mediaPlayer",
+    children: [
+      Widget.Icon({
+        className: "albumCover",
+      }).hook(player, (self) => {
+        self.visible = player.coverPath != null;
+        self.icon = player.coverPath;
+      }),
+
+      Widget.CenterBox({
+        vertical: true,
+        hpack: "fill",
+        vpack: "fill",
+        className: "rightstuff",
+        startWidget: Widget.Box({
+          vertical: false,
+          homogeneous: false,
+          children: [
+            scrollable(
+              Widget.Label({
+                label: player.bind("trackTitle"),
+                className: "trackTitle",
+                hexpand: true,
+                hpack: "start",
+              }),
+            ),
+            Widget.Icon({
+              icon: player.bind("name"),
+              className: "playerIcon",
+              hpack: "end",
+            }),
+          ],
+        }),
+
+        centerWidget: Widget.Slider({
+          vertical: false,
+          className: "position",
+          vpack: "center",
+          hexpand: true,
+
+          drawValue: false,
+          min: 0,
+          max: 1,
+        }).hook(player, (self) => {
+          if (player.length === -1 || player.position === -1) {
+            return;
+          }
+
+          self.value = player.position / player.length;
+        }),
+
+        endWidget: Widget.CenterBox({
+          vertical: false,
+          startWidget: Widget.Label({
+            hpack: "start",
+          }).hook(player, (self) => {
+            if (player.length == -1 || player.position == -1) {
+              self.label = "";
+              self.visible = false;
+            }
+
+            const mins = Math.floor(player.position / 60);
+            const secs = Math.floor(player.position - 60 * mins);
+
+            self.label = `${String(mins).padStart(2, "0")}:${String(
+              secs,
+            ).padStart(2, "0")}`;
+          }),
+
+          centerWidget: Widget.Label({
+            label: player.bind("play-back-status"),
+          }),
+
+          endWidget: Widget.Label({
+            hpack: "end",
+          }).hook(player, (self) => {
+            if (player.length == -1 || player.position == -1) {
+              self.label = "";
+              self.visible = false;
+            }
+
+            const mins = Math.floor(player.length / 60);
+            const secs = Math.floor(player.length - 60 * mins);
+
+            self.label = `${String(mins).padStart(2, "0")}:${String(
+              secs,
+            ).padStart(2, "0")}`;
+          }),
+        }),
+      }),
+    ],
+  });
 };
 
 const userCenter = () => {
@@ -401,6 +483,13 @@ const userCenter = () => {
     children: [userImage, spacer, powerButton],
   });
 
+  const players = Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    className: "players",
+    children: Mpris.bind("players").as((p) => p.map(mediaPlayer)),
+  });
+
   return Widget.Box({
     vertical: true,
     spacing: 0,
@@ -408,7 +497,7 @@ const userCenter = () => {
     className: "userCenter",
     vpack: "start",
     hpack: "fill",
-    children: [info, powerMenu, volumeInfo(), controlCenter()],
+    children: [info, powerMenu, volumeInfo(), players, controlCenter()],
   });
 };
 
