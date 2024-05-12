@@ -198,7 +198,7 @@ const networkButton = () =>
         Widget.Box({
           vertical: true,
           homogeneous: false,
-          hpack: "start",
+          hpack: "fill",
           vpack: "center",
           hexpand: true,
           children: [
@@ -220,17 +220,20 @@ const networkButton = () =>
               }
             }),
 
-            Widget.Label({
-              className: "networkName",
-              justification: "left",
-              hpack: "start",
-              maxWidthChars: 15,
-              truncate: "end",
-              visible: false,
-            }).hook(Network, (self) => {
-              self.label = Network.wifi.ssid;
-              self.visible = Network.primary === "wifi";
-            }),
+            scrollable(
+              Widget.Label({
+                className: "networkName",
+                justification: "left",
+                hpack: "start",
+                // maxWidthChars: 15,
+                // truncate: "end",
+                visible: false,
+              }).hook(Network, (self) => {
+                self.label = Network.wifi.ssid;
+                self.visible = Network.primary === "wifi";
+              }),
+              50,
+            ),
           ],
         }),
       ],
@@ -265,27 +268,28 @@ const bluetoothButton = () =>
               label: "Bluetooth",
             }),
 
-            Widget.Label({
-              className: "bluetoothDevice",
-              justification: "left",
-              hpack: "start",
-              maxWidthChars: 15,
-              truncate: "end",
-              visible: false,
-            }).hook(Network, (self) => {
-              let active = false;
+            scrollable(
+              Widget.Label({
+                className: "bluetoothDevice",
+                justification: "left",
+                hpack: "start",
+                // maxWidthChars: 15,
+                // truncate: "end",
+                visible: false,
+              }).hook(Network, (self) => {
+                let active = false;
 
-              for (const dev of Bluetooth.connectedDevices) {
-                if (dev.connected) {
-                  self.label = "coisa";
-                  // self.label = dev.alias;
-                  active = true;
-                  break;
+                for (const dev of Bluetooth.connectedDevices) {
+                  if (dev.connected) {
+                    self.label = dev.alias;
+                    active = true;
+                    break;
+                  }
                 }
-              }
 
-              self.visible = active;
-            }),
+                self.visible = active;
+              }),
+            ),
           ],
         }),
       ],
@@ -387,9 +391,11 @@ const mediaPlayer = (player) => {
             const mins = Math.floor(player.position / 60);
             const secs = Math.floor(player.position - 60 * mins);
 
-            self.label = `${String(mins).padStart(2, "0")}:${String(
-              secs,
-            ).padStart(2, "0")}`;
+            self.label = `${String(mins).padStart(2, "0")}:${
+              String(
+                secs,
+              ).padStart(2, "0")
+            }`;
           }),
 
           centerWidget: Widget.Label({
@@ -407,9 +413,11 @@ const mediaPlayer = (player) => {
             const mins = Math.floor(player.length / 60);
             const secs = Math.floor(player.length - 60 * mins);
 
-            self.label = `${String(mins).padStart(2, "0")}:${String(
-              secs,
-            ).padStart(2, "0")}`;
+            self.label = `${String(mins).padStart(2, "0")}:${
+              String(
+                secs,
+              ).padStart(2, "0")
+            }`;
           }),
         }),
       }),

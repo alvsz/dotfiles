@@ -5,7 +5,7 @@ const scrollable = (widget, scrollSpeed) => {
   let scrollDirection = 1;
 
   if (!scrollSpeed) {
-    scrollSpeed = 50;
+    scrollSpeed = 200;
   }
 
   return Widget.Scrollable({
@@ -22,9 +22,11 @@ const scrollable = (widget, scrollSpeed) => {
         const hAdjustment = self.get_hadjustment();
         const currentValue = hAdjustment.get_value();
 
-        let newValue = currentValue + scrollDirection * 1; // Adjust the scroll speed by changing this value
+        let newValue = currentValue + scrollDirection * (scrollSpeed / 200); // Adjust the scroll speed by changing this value
         hAdjustment.set_value(newValue);
-      }, scrollSpeed);
+
+        self.queue_draw();
+      }, 100);
     })
     .on("edge-reached", () => {
       scrollDirection *= -1;
