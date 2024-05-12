@@ -1,12 +1,15 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
+import Network from "resource:///com/github/Aylur/ags/service/network.js";
+import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
 import { getDefaultSink, getDefaultSource } from "../utils.js";
-import Network from "resource:///com/github/Aylur/ags/service/network.js";
-import { networkIndicator } from "../misc/networkIcon.js";
+
+import networkIndicator from "../misc/networkIcon.js";
+import bluetoothIcon from "../misc/bluetoothIcon.js";
 
 const audioBar = (sink) =>
   Widget.Overlay({
@@ -184,7 +187,7 @@ const volumeInfo = () => {
 const hideButton = () =>
   Widget.Button({
     child: Widget.Label("esconder esse botão"),
-    halign: "start",
+    // hpack: "start",
     hexpand: false,
     onClicked: (self) => {
       self.parent.visible = false;
@@ -193,18 +196,26 @@ const hideButton = () =>
 
 const networkButton = () =>
   Widget.Button({
+    className: "networkButton",
     child: Widget.Box({
       vertical: false,
       homogeneous: false,
       spacing: 0,
       children: [
         networkIndicator(),
+
         Widget.Box({
           vertical: true,
-          homogeneous: true,
+          homogeneous: false,
+          hpack: "start",
+          vpack: "center",
+          hexpand: true,
           children: [
             Widget.Label({
               className: "networkType",
+              justification: "left",
+              hpack: "start",
+              wrap: true,
             }).hook(Network, (self) => {
               switch (Network.primary) {
                 case "wifi":
@@ -217,19 +228,87 @@ const networkButton = () =>
                   self.label = "Offline";
               }
             }),
+
             Widget.Label({
               className: "networkName",
+              justification: "left",
+              hpack: "start",
+              maxWidthChars: 15,
+              truncate: "end",
+              visible: false,
             }).hook(Network, (self) => {
               self.label = Network.wifi.ssid;
-              visible = Network.primary === "wifi";
+              self.visible = Network.primary === "wifi";
             }),
           ],
         }),
       ],
     }),
-    onClicked: (self) => {
-      self.parent.visible = false;
-    },
+    // onClicked: (self) => {
+    //   self.parent.visible = false;
+    // },
+  });
+
+const bluetoothButton = () =>
+  Widget.Button({
+    className: "bluetoothButton",
+
+    child: Widget.Box({
+      vertical: false,
+      homogeneous: false,
+      spacing: 0,
+      children: [
+        bluetoothIcon(),
+
+        Widget.Box({
+          vertical: true,
+          homogeneous: false,
+          hpack: "start",
+          vpack: "center",
+          hexpand: true,
+          children: [
+            Widget.Label({
+              className: "bluetoothStatus",
+              justification: "left",
+              hpack: "start",
+              label: "Bluetooth",
+            }),
+            // .hook(Bluetooth, (self) => {
+            //   if (Bluetooth.enabled) {
+            //     self.label = "Bluetooth ativado";
+            //   } else {
+            //     self.label = "Bluetooth desativado";
+            //   }
+            // }),
+
+            Widget.Label({
+              className: "bluetoothDevice",
+              justification: "left",
+              hpack: "start",
+              maxWidthChars: 15,
+              truncate: "end",
+              visible: false,
+            }).hook(Network, (self) => {
+              let active = false;
+
+              for (const dev of Bluetooth.connectedDevices) {
+                if (dev.connected) {
+                  self.label = "coisa";
+                  // self.label = dev.alias;
+                  active = true;
+                  break;
+                }
+              }
+
+              self.visible = active;
+            }),
+          ],
+        }),
+      ],
+    }),
+    // onClicked: (self) => {
+    //   self.parent.visible = false;
+    // },
   });
 
 const controlCenter = () => {
@@ -237,27 +316,23 @@ const controlCenter = () => {
     maxChildrenPerLine: 2,
     minChildrenPerLine: 2,
     selectionMode: 0,
-    homogeneous: false,
+    homogeneous: true,
 
     className: "controlCenter",
   });
 
-  const showButton = Widget.Button({
-    onClicked: () => {
-      flowBox.add(hideButton());
-      flowBox.show_all();
-    },
+  flowBox.add(networkButton());
+  flowBox.add(bluetoothButton());
 
-    halign: "start",
-    hexpand: false,
-    child: Widget.Label("mostrar tudo"),
+  const stack = Widget.Stack({
+    transition: "slide_down",
+    children: {
+      flowbox: flowBox,
+    },
+    shown: "flowbox",
   });
 
-  flowBox.add(showButton);
-  flowBox.add(networkButton());
-  flowBox.add(hideButton());
-
-  return flowBox;
+  return stack;
 };
 
 const userCenter = () => {

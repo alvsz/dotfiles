@@ -1,6 +1,5 @@
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
-import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
@@ -9,11 +8,11 @@ import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
 import GLib from "gi://GLib";
 
-import { revealOnClick } from "../misc/Revealer.js";
+import revealOnClick from "../misc/revealOnClick.js";
 import audioIcon from "../misc/audioIcon.js";
-import icons from "../icons.js";
 
-import { networkIndicator } from "../misc/networkIcon.js";
+import networkIndicator from "../misc/networkIcon.js";
+import bluetoothIcon from "../misc/bluetoothIcon.js";
 
 import * as user from "../misc/User.js";
 
@@ -21,7 +20,6 @@ globalThis.user = user;
 globalThis.audio = Audio;
 globalThis.battery = Battery;
 globalThis.notification = Notifications;
-globalThis.bluetooth = Bluetooth;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
 
@@ -84,8 +82,11 @@ const clientTitle = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
     const limitWidth = 45;
-    const title =
-      mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
+    const title = mon.title != ""
+      ? mon.title
+      : mon.appid != ""
+        ? mon.appid
+        : "";
 
     if (mon.title.length > limitWidth) {
       self.label = title.substring(0, limitWidth - 3) + "...";
@@ -213,32 +214,8 @@ const SysTray = () =>
           item.openMenu(event);
         },
         tooltipText: item.bind("tooltip-markup"),
-      }),
+      })
     );
-  });
-
-const bluetoothIcon = () =>
-  Widget.Icon({
-    className: "bluetoothIcon",
-    visible: false,
-  }).hook(Bluetooth, (self) => {
-    if (Bluetooth.enabled) {
-      self.icon = icons.bluetooth.enabled;
-    } else {
-      self.icon = icons.bluetooth.disabled;
-    }
-
-    let active = false;
-    for (const dev of Bluetooth.connectedDevices) {
-      if (dev.connected) {
-        active = true;
-        break;
-      }
-    }
-
-    active
-      ? (self.className = "bluetoothIcon connected")
-      : (self.className = "bluetoothIcon");
   });
 
 const batteryIcon = () =>

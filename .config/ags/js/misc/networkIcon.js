@@ -1,17 +1,10 @@
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
-export const wifiIcon = () =>
-  Widget.Icon(Network.wifi?.iconName).hook(Network, (self) => {
-    self.icon = Network.wifi?.iconName || "";
-  });
+import wiredIcon from "./wiredIcon.js";
+import wifiIcon from "./wifiIcon.js";
 
-export const wiredIcon = () =>
-  Widget.Icon(Network.wired?.iconName).hook(Network, (self) => {
-    self.icon = Network.wired?.iconName || "";
-  });
-
-export const networkIndicator = () =>
+const networkIndicator = () =>
   Widget.Stack({
     className: "wifiIcon",
     transition: "slide_down",
@@ -24,3 +17,5 @@ export const networkIndicator = () =>
   }).hook(Network, (self) => {
     self.shown = Network.primary || "offline";
   });
+
+export default networkIndicator;
