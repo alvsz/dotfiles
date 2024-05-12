@@ -227,7 +227,8 @@ const networkButton = () =>
                 hpack: "start",
               }).hook(Network, (self) => {
                 self.label = Network.wifi.ssid;
-                self.parent.visible = Network.primary === "wifi";
+                self.parent.visible = Network.primary === "wifi" &&
+                  Network.wifi.ssid.length > 0;
               }),
               50,
             ),
@@ -385,10 +386,11 @@ const mediaPlayer = (player) => {
             const mins = Math.floor(player.position / 60);
             const secs = Math.floor(player.position - 60 * mins);
 
-            self.label = `${String(mins).padStart(2, "0")}:${String(
-              secs,
-            ).padStart(2, "0")
-              }`;
+            self.label = `${String(mins).padStart(2, "0")}:${
+              String(
+                secs,
+              ).padStart(2, "0")
+            }`;
           }),
 
           centerWidget: Widget.Label({
@@ -406,10 +408,11 @@ const mediaPlayer = (player) => {
             const mins = Math.floor(player.length / 60);
             const secs = Math.floor(player.length - 60 * mins);
 
-            self.label = `${String(mins).padStart(2, "0")}:${String(
-              secs,
-            ).padStart(2, "0")
-              }`;
+            self.label = `${String(mins).padStart(2, "0")}:${
+              String(
+                secs,
+              ).padStart(2, "0")
+            }`;
           }),
         }),
       }),
