@@ -42,10 +42,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-        ? "selected"
-        : occupied
-          ? "occupied"
-          : "normal",
+      ? "selected"
+      : occupied
+      ? "occupied"
+      : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -57,9 +57,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -85,8 +85,8 @@ const clientTitle = (monitorId) =>
     const title = mon.title != ""
       ? mon.title
       : mon.appid != ""
-        ? mon.appid
-        : "";
+      ? mon.appid
+      : "";
 
     if (mon.title.length > limitWidth) {
       self.label = title.substring(0, limitWidth - 3) + "...";
@@ -114,6 +114,7 @@ const client = (monitorId) =>
     const mon = dwlIpc.value[monitorId];
 
     self.visible = mon.appid != "" || mon.title != "";
+    self.tooltipText = `${mon.appid} - ${mon.title}`;
   });
 
 const layoutIcon = (monitorId) =>
