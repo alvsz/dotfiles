@@ -55,7 +55,7 @@ const audioList = (isSink) => {
     Widget.ToggleButton({
       child: Widget.Label({
         label: stream.description,
-        maxWidthChars: 25,
+        // maxWidthChars: 25,
         truncate: "end",
       }),
 

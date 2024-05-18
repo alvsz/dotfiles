@@ -49,7 +49,7 @@ const mediaPlayer = (player) => {
           drawValue: false,
           min: 0,
           max: 1,
-        }).hook(player, (self) => {
+        }).poll(500, (self) => {
           if (player.length === -1 || player.position === -1) {
             return;
           }
@@ -61,7 +61,7 @@ const mediaPlayer = (player) => {
           vertical: false,
           startWidget: Widget.Label({
             hpack: "start",
-          }).hook(player, (self) => {
+          }).poll(500, (self) => {
             if (player.length == -1 || player.position == -1) {
               self.label = "";
               self.visible = false;
@@ -72,8 +72,7 @@ const mediaPlayer = (player) => {
 
             self.label = `${String(mins).padStart(2, "0")}:${String(
               secs,
-            ).padStart(2, "0")
-              }`;
+            ).padStart(2, "0")}`;
           }),
 
           centerWidget: Widget.Label({
@@ -82,7 +81,7 @@ const mediaPlayer = (player) => {
 
           endWidget: Widget.Label({
             hpack: "end",
-          }).hook(player, (self) => {
+          }).poll(500, (self) => {
             if (player.length == -1 || player.position == -1) {
               self.label = "";
               self.visible = false;
@@ -93,8 +92,7 @@ const mediaPlayer = (player) => {
 
             self.label = `${String(mins).padStart(2, "0")}:${String(
               secs,
-            ).padStart(2, "0")
-              }`;
+            ).padStart(2, "0")}`;
           }),
         }),
       }),
