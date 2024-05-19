@@ -47,14 +47,14 @@ const mediaPlayer = (player) => {
           vertical: false,
           homogeneous: false,
           children: [
-            scrollable(
-              Widget.Label({
+            scrollable({
+              child: Widget.Label({
                 label: player.bind("trackTitle"),
                 className: "trackTitle",
                 hexpand: true,
                 hpack: "start",
               }),
-            ),
+            }),
             Widget.Icon({
               icon: player.bind("name"),
               className: "playerIcon",

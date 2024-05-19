@@ -1,11 +1,9 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
-const scrollable = (widget, scrollSpeed) => {
+const scrollable = ({ child, ...rest }) => {
   let scrollDirection = 1;
 
-  if (!scrollSpeed) {
-    scrollSpeed = 200;
-  }
+  const scrollSpeed = 500;
 
   return Widget.Scrollable({
     hscroll: "always",
@@ -14,13 +12,14 @@ const scrollable = (widget, scrollSpeed) => {
     hexpand: true,
     hpack: "fill",
     className: "bouncingText",
-    child: widget,
+    child: child,
+    ...rest,
   })
     .poll(50, (self) => {
       const hAdjustment = self.get_hadjustment();
       const currentValue = hAdjustment.get_value();
 
-      let newValue = currentValue + scrollDirection * (scrollSpeed / 200); // Adjust the scroll speed by changing this value
+      let newValue = currentValue + scrollDirection * (scrollSpeed / 500);
       hAdjustment.set_value(newValue);
     })
     .on("edge-reached", () => {

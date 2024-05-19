@@ -221,18 +221,17 @@ const networkButton = () =>
               }
             }),
 
-            scrollable(
-              Widget.Label({
+            scrollable({
+              child: Widget.Label({
                 className: "networkName",
                 justification: "left",
                 hpack: "start",
               }).hook(Network, (self) => {
                 self.label = Network.wifi.ssid;
-                self.parent.visible = Network.primary === "wifi" &&
-                  Network.wifi.ssid.length > 0;
+                self.parent.visible =
+                  Network.primary === "wifi" && Network.wifi.ssid.length > 0;
               }),
-              50,
-            ),
+            }),
           ],
         }),
       ],
@@ -267,8 +266,8 @@ const bluetoothButton = () =>
               label: "Bluetooth",
             }),
 
-            scrollable(
-              Widget.Label({
+            scrollable({
+              child: Widget.Label({
                 className: "bluetoothDevice",
                 justification: "left",
                 hpack: "start",
@@ -285,7 +284,7 @@ const bluetoothButton = () =>
 
                 self.parent.visible = active;
               }),
-            ),
+            }),
           ],
         }),
       ],

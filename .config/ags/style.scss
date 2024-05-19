@@ -548,15 +548,18 @@ window {
     padding: 0;
     min-width: 20em;
 
-    highlight {
-      color: turquoise;
-      // padding-top: 0.8em;
-      // padding-bottom: 0.8em;
-      padding: 0.8em 0;
-    }
+    trough {
+      // padding: 0.2em;
+      highlight {
+        color: turquoise;
+        // padding-top: 0.8em;
+        // padding-bottom: 0.8em;
+        padding: 0.8em 0;
+      }
 
-    slider {
-      all: unset;
+      slider {
+        all: unset;
+      }
     }
   }
 
@@ -602,44 +605,14 @@ window {
     }
   }
 
-  .players {
-    .mediaPlayer {
-      margin: 0.2em 0.1em;
-      // margin: 0.1em;
-      border-radius: 6px;
-      background-color: lighten($background, 5);
-      padding: 0.4em;
-
-      .albumCover {
-        font-size: 4.5em;
-        margin-right: 0.1em;
-      }
-
-      // .rightstuff {
-      //   margin-left: 0.2em;
-      // }
-
-      .position {
-        highlight {
-          padding: 0.5em;
-        }
-      }
-
-      .trackTitle {
-        font-weight: bolder;
-      }
-    }
-  }
+  // .players {
+  // }
 }
 
 .controlCenter {
-  // padding: 1em;
-  // background-color: turquoise;
-
   .networkName,
   .bluetoothDevice {
     font-weight: lighter;
-    // background-color: green;
   }
 
   button {
@@ -664,3 +637,29 @@ window {
 // .networkType {
 //   font-weight: bolder;
 // }
+
+.mediaPlayer {
+  margin: 0.2em 0.1em;
+  // margin: 0.1em;
+  border-radius: 6px;
+  background-color: lighten($background, 5);
+  padding: 0.4em;
+
+  .albumCover {
+    font-size: 4.5em;
+    margin-right: 0.1em;
+  }
+
+  .position {
+    trough {
+      padding: 0.25em;
+      highlight {
+        padding: 0.3em;
+      }
+    }
+  }
+
+  .trackTitle {
+    font-weight: bolder;
+  }
+}

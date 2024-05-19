@@ -13,6 +13,7 @@ import audioIcon from "../misc/audioIcon.js";
 
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
+import scrollable from "../misc/bouncingText.js";
 
 import * as user from "../misc/User.js";
 
@@ -42,10 +43,10 @@ const Workspace = ({
     className: urgent
       ? "urgent"
       : selected
-      ? "selected"
-      : occupied
-      ? "occupied"
-      : "normal",
+        ? "selected"
+        : occupied
+          ? "occupied"
+          : "normal",
   });
 
 const genTags = (monitorId) => {
@@ -57,9 +58,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -79,20 +80,14 @@ const dwlTags = (monitorId) =>
 const clientTitle = (monitorId) =>
   Widget.Label({
     className: "clientTitle",
+    maxWidthChars: 45,
+    hpack: "start",
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
-    const limitWidth = 45;
-    const title = mon.title != ""
-      ? mon.title
-      : mon.appid != ""
-      ? mon.appid
-      : "";
+    const title =
+      mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
 
-    if (mon.title.length > limitWidth) {
-      self.label = title.substring(0, limitWidth - 3) + "...";
-    } else {
-      self.label = title;
-    }
+    self.label = title;
   });
 
 const clientIcon = (monitorId) =>
@@ -215,7 +210,7 @@ const SysTray = () =>
           item.openMenu(event);
         },
         tooltipText: item.bind("tooltip-markup"),
-      })
+      }),
     );
   });
 
