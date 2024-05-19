@@ -3,6 +3,29 @@ import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import scrollable from "../misc/bouncingText.js";
 
 const mediaPlayer = (player) => {
+  const slider = Widget.Slider({
+    vertical: false,
+    className: "position",
+    vpack: "center",
+    hexpand: true,
+
+    drawValue: false,
+    min: 0,
+    max: 1,
+  });
+
+  const positionTimer = Widget.Label({
+    hpack: "start",
+  });
+
+  const playbackStatus = Widget.Label({
+    label: player.bind("play-back-status"),
+  });
+
+  const lengthTimer = Widget.Label({
+    hpack: "end",
+  });
+
   return Widget.Box({
     vertical: false,
     homogeneous: false,
@@ -40,61 +63,37 @@ const mediaPlayer = (player) => {
           ],
         }),
 
-        centerWidget: Widget.Slider({
-          vertical: false,
-          className: "position",
-          vpack: "center",
-          hexpand: true,
-
-          drawValue: false,
-          min: 0,
-          max: 1,
-        }).poll(500, (self) => {
-          if (player.length === -1 || player.position === -1) {
-            return;
-          }
-
-          self.value = player.position / player.length;
-        }),
+        centerWidget: slider,
 
         endWidget: Widget.CenterBox({
           vertical: false,
-          startWidget: Widget.Label({
-            hpack: "start",
-          }).poll(500, (self) => {
-            if (player.length == -1 || player.position == -1) {
-              self.label = "";
-              self.visible = false;
-            }
-
-            const mins = Math.floor(player.position / 60);
-            const secs = Math.floor(player.position - 60 * mins);
-
-            self.label = `${String(mins).padStart(2, "0")}:${String(
-              secs,
-            ).padStart(2, "0")}`;
-          }),
-
-          centerWidget: Widget.Label({
-            label: player.bind("play-back-status"),
-          }),
-
-          endWidget: Widget.Label({
-            hpack: "end",
-          }).poll(500, (self) => {
-            if (player.length == -1 || player.position == -1) {
-              self.label = "";
-              self.visible = false;
-            }
-
-            const mins = Math.floor(player.length / 60);
-            const secs = Math.floor(player.length - 60 * mins);
-
-            self.label = `${String(mins).padStart(2, "0")}:${String(
-              secs,
-            ).padStart(2, "0")}`;
-          }),
+          startWidget: positionTimer,
+          centerWidget: playbackStatus,
+          endWidget: lengthTimer,
         }),
+      }).poll(500, () => {
+        if (player.length == -1 || player.position == -1) {
+          slider.value = 0;
+          positionTimer.visible = false;
+          lengthTimer.visible = false;
+          return;
+        }
+
+        slider.value = player.position / player.length;
+
+        const pmins = Math.floor(player.position / 60);
+        const psecs = Math.floor(player.position - 60 * pmins);
+
+        positionTimer.label = `${String(pmins).padStart(2, "0")}:${String(
+          psecs,
+        ).padStart(2, "0")}`;
+
+        const mins = Math.floor(player.length / 60);
+        const secs = Math.floor(player.length - 60 * mins);
+
+        lengthTimer.label = `${String(mins).padStart(2, "0")}:${String(
+          secs,
+        ).padStart(2, "0")}`;
       }),
     ],
   });
