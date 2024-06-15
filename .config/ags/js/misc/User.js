@@ -16,7 +16,7 @@ const call = (prop) =>
     Gio.DBusSendMessageFlags.NONE,
     -1,
     null,
-    null,
+    // null,
   );
 
 export const realName = call("RealName").recursiveUnpack().toString();

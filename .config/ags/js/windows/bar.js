@@ -13,11 +13,10 @@ import audioIcon from "../misc/audioIcon.js";
 
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
-import scrollable from "../misc/bouncingText.js";
 
-import * as user from "../misc/User.js";
+import * as User from "../misc/User.js";
 
-globalThis.user = user;
+globalThis.user = User;
 globalThis.audio = Audio;
 globalThis.battery = Battery;
 globalThis.notification = Notifications;

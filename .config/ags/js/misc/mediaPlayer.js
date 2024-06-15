@@ -1,4 +1,5 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import scrollable from "../misc/bouncingText.js";
 
@@ -56,9 +57,22 @@ const mediaPlayer = (player) => {
               }),
             }),
             Widget.Icon({
-              icon: player.bind("name"),
               className: "playerIcon",
               hpack: "end",
+            }).hook(player, (self) => {
+              self.tooltipText = player.identity;
+
+              if (Utils.lookUpIcon(player.name)) {
+                self.icon = player.name;
+              } else {
+                const palavras = player.identity.split(" ");
+
+                palavras.forEach((element) => {
+                  if (Utils.lookUpIcon(element.toLowerCase())) {
+                    self.icon = element;
+                  }
+                });
+              }
             }),
           ],
         }),
