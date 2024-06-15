@@ -255,7 +255,7 @@ const bluetoothButton = () =>
         Widget.Box({
           vertical: true,
           homogeneous: false,
-          hpack: "start",
+          hpack: "fill",
           vpack: "center",
           hexpand: true,
           children: [
