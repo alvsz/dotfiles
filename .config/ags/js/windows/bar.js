@@ -57,9 +57,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -83,10 +83,19 @@ const clientTitle = (monitorId) =>
     hpack: "start",
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
+
+    const limitWidth = 45;
+
     const title =
       mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
 
-    self.label = title;
+    if (title.length > limitWidth) {
+      self.label = title.substring(0, limitWidth - 3) + "...";
+    } else {
+      self.label = title;
+    }
+
+    // self.label = title;
   });
 
 const clientIcon = (monitorId) =>
@@ -153,15 +162,24 @@ const Media = () =>
     onPrimaryClick: () => Mpris.getPlayer("")?.playPause(),
     onScrollUp: () => Mpris.getPlayer("")?.next(),
     onScrollDown: () => Mpris.getPlayer("")?.previous(),
-    child: Widget.Label({}),
-  }).hook(Mpris, (self) => {
-    const mpris = Mpris.getPlayer("");
-    // mpris player can be undefined
-    if (mpris) {
-      self.label = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle}`;
-    } else {
-      self.label = "Nothing is playing";
-    }
+    child: Widget.Label({}).hook(Mpris, (self) => {
+      const mpris = Mpris.getPlayer("");
+
+      const limitWidth = 45;
+
+      const title = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle}`;
+
+      // mpris player can be undefined
+      if (mpris) {
+        if (title.length > limitWidth) {
+          self.label = title.substring(0, limitWidth - 3) + "...";
+        } else {
+          self.label = title;
+        }
+      } else {
+        self.label = "Nothing is playing";
+      }
+    }),
   });
 
 // const password = () => {
