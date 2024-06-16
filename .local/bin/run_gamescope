@@ -8,7 +8,7 @@ case "$1" in
 	# shift
 	;;
 *)
-	cmd="env MANGOHUD=1 gamemoderun"
+	cmd="gamemoderun"
 	;;
 esac
 
@@ -17,7 +17,7 @@ esac
 # fi
 
 if [ "$XDG_CURRENT_DESKTOP" != "gamescope" ]; then
-	gamescope_cmd="gamescope $1 -F fsr"
+	gamescope_cmd="gamescope $1 -F fsr --mangoapp"
 
 	if [ "$HOST" = "vivobook" ]; then
 		gamescope_cmd="${gamescope_cmd} --prefer-vk-device=8086:3ea0"
