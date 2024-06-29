@@ -13,7 +13,7 @@ swayidle timeout 420 'dpms off' resume 'dpms on' &
 
 swww init
 
-/usr/lib/kdeconnectd &
+kdeconnectd &
 
 spotify_player -d
 
