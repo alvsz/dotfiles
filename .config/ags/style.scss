@@ -517,6 +517,16 @@ window {
 
   .powerMenu {
     button {
+      // all: unset;
+      color: purple;
+      transition: 0.1s;
+      background-color: gtk("@view_bg_color");
+
+      &:hover {
+        background-color: unquote("alpha(currentColor, 0.08)");
+        // box-shadow: inset 0 0 0 9999px unquote("alpha(currentColor, 0.08)");
+      }
+
       margin-top: 0.3em;
     }
   }

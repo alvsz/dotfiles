@@ -92,6 +92,8 @@ const mediaPlayer = (player) => {
           lengthTimer.visible = false;
           return;
         }
+        positionTimer.visible = true;
+        lengthTimer.visible = true;
 
         slider.value = player.position / player.length;
 
