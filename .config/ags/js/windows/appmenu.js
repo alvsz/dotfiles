@@ -95,14 +95,9 @@ export const Applauncher = () => {
     },
     onChange: ({ text }) => {
       list.children = Applications.query(text)
-        .map((app) => [
-          // Separator(),
-          //
-          AppItem(app),
-        ])
+        .map((app) => [AppItem(app)])
         .flat();
 
-      // list.add(Separator());
       list.show_all();
 
       placeholder.visible = list.children.length == 0;
@@ -116,19 +111,10 @@ export const Applauncher = () => {
 
   return Widget.Box({
     className: "appLauncher",
-    // properties: [["list", list]],
     vertical: true,
 
     children: [
-      // entry,
-      Widget.Box({
-        className: "header",
-        spacing: 5,
-        children: [
-          // Widget.Icon(icons.apps.search),
-          entry,
-        ],
-      }),
+      entry,
 
       Widget.Scrollable({
         hscroll: "never",
@@ -154,9 +140,7 @@ export default () =>
     name: WINDOW_NAME,
     anchor: [],
     layer: "overlay",
-    // popup: true,
     keymode: "exclusive",
     visible: false,
-    // expand: false,
     child: Applauncher(),
   }).keybind("Escape", () => App.closeWindow(WINDOW_NAME));

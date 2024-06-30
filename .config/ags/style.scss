@@ -4,6 +4,10 @@
 
 @import "/home/mamba/.cache/wal/colors.scss";
 
+@function gtk($color) {
+  @return unquote($color);
+}
+
 // .barwindow {
 //   // all: unset;
 //   background-color: transparent;
@@ -12,19 +16,15 @@
 // }
 
 .module {
-  // min-height: 1em;
-  background-color: $background;
+  min-height: 1em;
+  background-color: gtk("@window_bg_color");
   border-radius: 0.5em;
   padding: 0.1em 0.4em 0.1em 0.4em;
 
   button {
-    border-radius: 0.4em;
     min-height: 0em;
     min-width: 0em;
     margin: 0;
-    // padding: 0;
-
-    // background: transparent;
   }
 }
 
@@ -38,39 +38,27 @@
 }
 
 .menuBase {
-  background-color: lighten($background, 3%);
-  // border: 0.1em solid turquoise;
-  // font: 11pt FiraCode Nerd Font;
   font: 11pt Inter;
-  color: $foreground;
   padding: 0.2em;
   border-radius: 0.7em;
 
-  arrow {
-    color: $foreground;
-    background-color: transparent;
-  }
+  // arrow {
+  // }
 }
 
 .trayMenu {
   @extend .menuBase;
-  // padding-top: 1em;
-  // margin-top: 1em;
 }
 
 .trayMenu menuitem {
   min-width: 7em;
-  margin: 0.1em;
+  // margin: 0.1em;
 
   border-radius: 0.4em;
-  // border: 0.1em solid turquoise;
-  border: 0.1em solid lighten($background, 6%);
   transition: 0.1s;
 
-  &:hover {
-    border: 0.1em solid $color12;
-    background-color: lighten($background, 10%);
-  }
+  // &:hover {
+  // }
 
   &:disabled {
     border: 0em;
@@ -100,20 +88,25 @@
   @extend .tag;
   color: $color1;
 }
+
 .selected {
   @extend .tag;
   color: $color4;
 }
+
 .occupied {
   @extend .tag;
   color: $color3;
 }
+
 .normal {
   @extend .tag;
+
   &:hover {
     color: $color2;
   }
 }
+
 .layoutIcon {
   @extend .normal;
 }
@@ -123,38 +116,34 @@
 }
 
 .appLauncher {
-  @extend .transparentWindow;
+  @extend .basewindow;
+  background-color: gtk("@window_bg_color");
+  border: 0.1em solid gtk("@headerbar_border_color");
+  // @extend .transparentWindow;
   min-width: 40em;
   min-height: 30em;
-  border-radius: 0.6em;
+  padding: 1em;
+  padding-bottom: 0.2em;
+  // margin: 1em;
 
   .scroll {
-    padding: 0.5em;
+    // padding: 1.4em;
+    padding-top: 0em;
+
+    .placeholder {
+      font-style: italic;
+    }
   }
 
-  .header {
-    border-radius: 0.6em;
-    background-color: $background;
-    padding: 0.5em;
-    background-color: transparentize(lighten($background, 3%), 0.1);
-
-    entry {
-      all: unset;
-      padding: 0.4em;
-      border: 0.1em solid lighten($background, 6%);
-      transition: 0.1s;
-      border-radius: 0.5em;
-
-      &:focus,
-      &:selected {
-        border: 0.1em solid $color12;
-        background-color: lighten($background, 10%);
-      }
-    }
+  entry {
+    margin-bottom: 1em;
+    padding: 0.4em;
+    transition: 0.1s;
+    border-radius: 0.5em;
 
     image {
-      background-color: $color12;
-      border-radius: 0.6em;
+      background-color: gtk("@accent_color");
+      border-radius: 0.5em;
       padding: 0.7em;
       color: $background;
     }
@@ -163,16 +152,13 @@
   .app {
     margin: 0.1em;
     border-radius: 0.4em;
-    background-color: transparent;
-    border: 0.1em solid lighten($background, 6%);
     transition: 0.1s;
     padding: 0.4em;
 
     &:hover,
     &:selected,
     &:focus {
-      border: 0.1em solid $color12;
-      background-color: lighten($background, 10%);
+      border: 0.1em solid gtk("@accent_color");
     }
 
     .title {
@@ -187,9 +173,8 @@
 
 window {
   background-color: transparent;
-  // font: 11pt FiraCode Nerd Font;
   font: 11pt Inter;
-  color: $foreground;
+  // color: $foreground;
 }
 
 .lockscreen {
@@ -202,16 +187,14 @@ window {
 }
 
 .basewindow {
+  border-radius: 0.6em;
   margin: 10px;
   // font: 11pt FiraCode Nerd Font;
   font: 11pt Inter;
-  color: $foreground;
+  // color: gtk("@window_fg_color");
 }
 
 .scroll {
-  .placeholder {
-    font-style: italic;
-  }
   scrollbar {
     background-color: transparent;
 
@@ -260,9 +243,11 @@ window {
     border-color: lighten($background, 15%);
     margin-top: 0.4em;
   }
+
   .time {
     margin-right: 0.5em;
   }
+
   .progress {
     margin: 0.5em;
   }
@@ -271,9 +256,11 @@ window {
 .popupList {
   @extend .basewindow;
   min-width: 25em;
+
   .notification {
     .test {
       @extend .transparentWindow;
+
       .appIcon {
         font-size: 3.5em;
       }
@@ -289,6 +276,7 @@ window {
   .test {
     margin-top: 0em;
   }
+
   // margin-top: 0;
 }
 
@@ -342,6 +330,7 @@ window {
   margin: 3px 10px 0px 0px;
   min-height: 30px;
   @extend .module;
+
   .connected {
     color: $color4;
   }
@@ -396,6 +385,7 @@ window {
       }
     }
   }
+
   .first {
     .test {
       margin-top: 0;
@@ -487,13 +477,16 @@ window {
       // background-color: blue;
       // min-width: 30em;
       padding: 0.5em;
+
       .length {
         // color: green;
         background-color: purple;
       }
+
       .position {
         background-color: turquoise;
       }
+
       .progress {
         min-width: 10em;
         margin-left: 1em;
@@ -513,18 +506,10 @@ window {
 
 .userCenter {
   @extend .basewindow;
-  // @extend .transparentWindow;
 
-  // background-color: green;
-  @extend .module;
-
-  border: 0.1em solid darken($background, 5%);
-
-  padding: 0.5em;
-
-  // border: 2px solid red;
-
-  // background-color: pink;
+  background-color: gtk("@window_bg_color");
+  border: 0.1em solid gtk("@headerbar_border_color");
+  padding: 1em;
 
   .userImage {
     font-size: 4.5em;
@@ -628,6 +613,7 @@ window {
       // background-color: purple;
       padding: 0.2em;
     }
+
     // background-color: $color5;
     // margin: 1em;
     // border-radius: 10px;
@@ -653,6 +639,7 @@ window {
   .position {
     trough {
       padding: 0.25em;
+
       highlight {
         padding: 0.3em;
       }
