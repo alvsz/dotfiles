@@ -4,6 +4,10 @@ import Calendar from "./js/windows/calendar.js";
 import Backdrop from "./js/windows/backdrop.js";
 import Dashboard from "./js/windows/dashboard.js";
 
+import Weather from "./js/services/weather.js";
+
+globalThis.weather = Weather;
+
 import App from "resource:///com/github/Aylur/ags/app.js";
 
 // import {
