@@ -8,9 +8,10 @@ import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
 import GLib from "gi://GLib";
 
+import weather from "../services/weather.js";
+
 import revealOnClick from "../misc/revealOnClick.js";
 import audioIcon from "../misc/audioIcon.js";
-
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
 
@@ -257,6 +258,18 @@ const Clock = () =>
     self.label = time.format("%a %d, %R");
   });
 
+const WeatherConditions = () =>
+  Widget.Label().hook(
+    weather,
+    (self) => {
+      const conditions = weather.get_conditions();
+
+      if (conditions == "-") self.label = weather.get_sky();
+      else self.label = conditions;
+    },
+    "notify",
+  );
+
 const Left = (monitorId) =>
   Widget.Box({
     spacing: 10,
@@ -304,6 +317,7 @@ const Right = (monitorId) =>
       // batteryIcon(),
       // batteryLabel(),
       Clock(),
+      WeatherConditions(),
     ],
   });
 
