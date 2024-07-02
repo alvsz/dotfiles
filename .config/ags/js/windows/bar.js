@@ -8,7 +8,7 @@ import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
 import GLib from "gi://GLib";
 
-import weather from "../services/weather.js";
+import Weather from "../services/weather.js";
 
 import revealOnClick from "../misc/revealOnClick.js";
 import audioIcon from "../misc/audioIcon.js";
@@ -23,6 +23,7 @@ globalThis.battery = Battery;
 globalThis.notification = Notifications;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
+globalThis.weather = Weather;
 
 import { dwlIpc } from "../vars.js";
 
@@ -58,9 +59,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -262,9 +263,9 @@ const WeatherConditions = () =>
   Widget.Label().hook(
     weather,
     (self) => {
-      const conditions = weather.get_conditions();
+      const conditions = Weather.get_conditions();
 
-      if (conditions == "-") self.label = weather.get_sky();
+      if (conditions == "-") self.label = Weather.get_sky();
       else self.label = conditions;
     },
     "notify",

@@ -56,7 +56,7 @@ function main() {
 
   let info = GWeather.Info.new(city);
 
-  info.set_enabled_providers(GWeather.Provider.ALL);
+  // info.set_enabled_providers(GWeather.Provider.ALL);
   info.contact_info = "joao.aac@disroot.org";
   info.update();
 

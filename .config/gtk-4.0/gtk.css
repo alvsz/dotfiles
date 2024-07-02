@@ -1,6 +1,6 @@
-/* @define-color accent_color rgb(116, 199, 236); */
-/* @define-color accent_bg_color rgb(137, 180, 250); */
-/* @define-color accent_fg_color rgb(17, 17, 27); */
+/* @define-color accent_color #74C7EC; */
+/* @define-color accent_bg_color #89B4FA; */
+/* @define-color accent_fg_color #11111B; */
 
 @define-color accent_color #dc8add;
 @define-color accent_bg_color #9141ac;
@@ -26,16 +26,16 @@
 @define-color headerbar_fg_color #CDD6F4;
 @define-color headerbar_border_color #313244;
 @define-color headerbar_backdrop_color @window_bg_color;
-@define-color headerbar_shade_color #0000005B;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
 @define-color card_bg_color #181825;
 @define-color card_fg_color #CDD6F4;
-@define-color card_shade_color #0000005B;
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
 @define-color dialog_bg_color #181825;
 @define-color dialog_fg_color #CDD6F4;
 @define-color popover_bg_color #181825;
 @define-color popover_fg_color #CDD6F4;
-@define-color shade_color #0000005B;
-@define-color scrollbar_outline_color #0000007F;
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);
 
 @define-color blue_1 #99c1f1;
 @define-color blue_2 #62a0ea;
