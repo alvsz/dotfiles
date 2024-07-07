@@ -408,7 +408,7 @@ const userCenter = () => {
     vpack: "center",
     children: [batteryIcon(), batteryLabel()],
 
-    setup: (self) => {
+  }).hook(Battery, (self) => {
       let tooltip;
 
       if (Battery.charged) tooltip = "Carregado";
@@ -421,8 +421,7 @@ const userCenter = () => {
       }
 
       self.tooltip_text = tooltip;
-    },
-  });
+    })
 
   const info = Widget.Box({
     vertical: false,
