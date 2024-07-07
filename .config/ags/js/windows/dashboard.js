@@ -205,6 +205,11 @@ const volumeInfo = () => {
 const networkButton = () =>
   Widget.Button({
     className: "networkButton",
+
+    onPrimaryClick: () => {
+      Network.toggleWifi();
+    },
+
     child: Widget.Box({
       vertical: false,
       homogeneous: false,
@@ -225,6 +230,8 @@ const networkButton = () =>
               hpack: "start",
               wrap: true,
             }).hook(Network, (self) => {
+              let active = true;
+
               switch (Network.primary) {
                 case "wifi":
                   self.label = "Rede sem fio";
@@ -233,8 +240,10 @@ const networkButton = () =>
                   self.label = "Rede cabeada";
                   break;
                 default:
+                  active = false;
                   self.label = "Offline";
               }
+              self.parent.parent.parent.toggleClassName("active", active);
             }),
 
             scrollable({
@@ -260,6 +269,10 @@ const networkButton = () =>
 const bluetoothButton = () =>
   Widget.Button({
     className: "bluetoothButton",
+
+    onPrimaryClick: () => {
+      Bluetooth.toggle();
+    },
 
     child: Widget.Box({
       vertical: false,
@@ -287,7 +300,7 @@ const bluetoothButton = () =>
                 className: "bluetoothDevice",
                 justification: "left",
                 hpack: "start",
-              }).hook(Network, (self) => {
+              }).hook(Bluetooth, (self) => {
                 let active = false;
 
                 for (const dev of Bluetooth.connectedDevices) {
@@ -299,6 +312,10 @@ const bluetoothButton = () =>
                 }
 
                 self.parent.visible = active;
+                self.parent.parent.parent.parent.toggleClassName(
+                  "active",
+                  active,
+                );
               }),
             }),
           ],

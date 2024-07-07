@@ -225,23 +225,6 @@ const batteryIcon = () =>
     visible: Battery.bind("available"),
     icon: Battery.bind("iconName"),
   });
-//   .hook(Battery, (self) => {
-//   self.visible = Battery.available;
-//   self.icon = Battery.iconName;
-// });
-
-// const batteryLabel = () =>
-//   Widget.Label(`${Battery.percent}%`).hook(Battery, (self) => {
-//     self.label = `${Battery.percent}%`;
-//   });
-//
-// const batteryBox = () => {
-//   return Widget.Box({
-//     // spacing: 7,
-//     // visible: Battery.bind("available"),
-//     children: [batteryIcon(), batteryLabel()],
-//   }).hook(Battery, (self) => (self.visible = Battery.available));
-// };
 
 const Clock = () =>
   Widget.Label({
