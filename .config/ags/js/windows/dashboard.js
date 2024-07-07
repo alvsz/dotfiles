@@ -3,7 +3,10 @@ import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
+import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
+
+import GLib from "gi://GLib";
 
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
@@ -333,7 +336,6 @@ const userCenter = () => {
     className: "userImage",
     icon: iconFile,
     hpack: "start",
-    hexpand: true,
   });
 
   const powerMenu = Widget.Revealer({
@@ -389,20 +391,84 @@ const userCenter = () => {
     },
   });
 
-  // const spacer = Widget.Box({
-  //   hexpand: true,
-  //   hpack: "fill",
-  // });
+  const batteryIcon = () =>
+    Widget.Icon({
+      vpack: "center",
+      icon: Battery.bind("iconName"),
+    });
+
+  const batteryLabel = () =>
+    Widget.Label({
+      vpack: "center",
+      label: Battery.bind("percent").as((l) => `${l}%`),
+    });
+
+  const batteryBox = Widget.Box({
+    className: "batteryBox",
+    vpack: "center",
+    children: [batteryIcon(), batteryLabel()],
+
+    setup: (self) => {
+      let tooltip;
+
+      if (Battery.charged) tooltip = "Carregado";
+      else {
+        let time = Math.floor(Battery.time_remaining / 60);
+
+        if (Battery.charging)
+          tooltip = `${time} minuto(s) até a carga completa`;
+        else tooltip = `${time} minuto(s) restante`;
+      }
+
+      self.tooltip_text = tooltip;
+    },
+  });
 
   const info = Widget.Box({
     vertical: false,
     homogeneous: false,
-    spacing: 0,
     className: "info",
     vpack: "start",
     hpack: "fill",
     hexpand: true,
-    children: [userImage, powerButton],
+    children: [
+      userImage,
+
+      Widget.Box({
+        vertical: true,
+        homogeneous: false,
+        vpack: "center",
+        hpack: "start",
+        hexpand: true,
+        vexpand: true,
+
+        children: [
+          Widget.Label({
+            label: realName,
+            vpack: "start",
+            hpack: "start",
+            justification: "left",
+            className: "realName",
+          }),
+          Widget.Label({
+            label: `${GLib.get_user_name()}@${GLib.get_host_name()}`,
+            vpack: "end",
+            hpack: "start",
+            justification: "left",
+            className: "hostName",
+          }),
+        ],
+      }),
+
+      batteryBox,
+
+      powerButton,
+    ],
+
+    setup: (self) => {
+      self.children.length > 0 &&
+        self.children[0].toggleClassName("firstH", true);
+    },
   });
 
   return Widget.Box({
