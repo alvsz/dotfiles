@@ -171,18 +171,19 @@ const archDash = () =>
 const Media = () =>
   Widget.Button({
     className: "media",
+
     onPrimaryClick: () => Mpris.getPlayer("")?.playPause(),
     onScrollUp: () => Mpris.getPlayer("")?.next(),
     onScrollDown: () => Mpris.getPlayer("")?.previous(),
+
     child: Widget.Label({}).hook(Mpris, (self) => {
-      const mpris = Mpris.getPlayer("");
+      const mpris = Mpris.players?.[0];
 
       const limitWidth = 45;
 
-      const title = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle}`;
-
-      // mpris player can be undefined
       if (mpris) {
+        const title = `${mpris.trackArtists.join(", ")} - ${mpris.trackTitle}`;
+
         if (title.length > limitWidth) {
           self.label = title.substring(0, limitWidth - 3) + "...";
         } else {

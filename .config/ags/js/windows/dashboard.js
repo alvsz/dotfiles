@@ -7,200 +7,16 @@ import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import GLib from "gi://GLib";
+import Gtk from "gi://Gtk";
+
+const RadioButton = Widget.subclass(Gtk.RadioButton);
 
 import { iconFile, realName } from "../misc/User.js";
 import audioIcon from "../misc/audioIcon.js";
-import { getDefaultSink, getDefaultSource } from "../utils.js";
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
 import scrollable from "../misc/bouncingText.js";
 import mediaPlayer from "../misc/mediaPlayer.js";
-
-function get_css_properties(widget) {
-  let styleContext = widget.get_style_context();
-  let properties = styleContext.list_properties();
-  let cssProperties = {};
-
-  for (let property of properties) {
-    let value = styleContext.get_property(property.name, Gtk.StateFlags.NORMAL);
-    cssProperties[property.name] = value;
-  }
-
-  return cssProperties;
-}
-
-const audioBar = (sink) =>
-  Widget.Overlay({
-    child: Widget.Slider({
-      vertical: false,
-      className: sink ? "volumeBar" : "micBar",
-      vpack: "center",
-      hexpand: true,
-
-      // vexpand: true,
-
-      onChange: ({ value }) => {
-        if (sink) {
-          const sink = getDefaultSink();
-          if (sink) sink.volume = value;
-        } else {
-          const source = getDefaultSource();
-          if (source) source.volume = value;
-        }
-      },
-
-      drawValue: false,
-      min: 0,
-      max: 1,
-    }).hook(Audio, (self) => {
-      if (sink) {
-        const sink = getDefaultSink();
-        self.value = sink ? getDefaultSink().volume : 0;
-      } else {
-        const source = getDefaultSource();
-        self.value = source ? getDefaultSource().volume : 0;
-      }
-    }),
-    overlays: [
-      audioIcon(!sink).on("realize", (self) => (self.hpack = "start")),
-    ],
-  });
-
-const audioList = (isSink) => {
-  const formatter = (stream) =>
-    Widget.ToggleButton({
-      child: Widget.Label({
-        label: stream.description,
-        // maxWidthChars: 25,
-        truncate: "end",
-      }),
-
-      active: isSink
-        ? getDefaultSink()?.id === stream.id
-        : getDefaultSource()?.id === stream.id,
-
-      onToggled: () => {
-        // print(param);
-        Audio.control.set_default_sink(stream.stream);
-      },
-    });
-
-  return Widget.Box({
-    vertical: true,
-    homogeneous: false,
-    spacing: 0,
-  }).hook(
-    Audio,
-    (self) => {
-      if (isSink) {
-        if (Audio.speakers.length > 0) {
-          self.children = Audio.speakers.map(formatter);
-          self.visible = true;
-        } else {
-          self.children = [];
-          self.visible = false;
-        }
-      } else {
-        if (Audio.speakers.length > 0) {
-          self.children = Audio.microphones.map(formatter);
-          self.visible = true;
-        } else {
-          self.children = [];
-          self.visible = false;
-        }
-      }
-    },
-    isSink ? "speaker-changed" : "microphone-changed",
-  );
-};
-
-const volumeInfo = () => {
-  const sinkList = audioList(true);
-  const sourceList = audioList(false);
-
-  const volumeList = Widget.Revealer({
-    transition: "slide_down",
-    transitionDuration: 500,
-    className: "volumeList",
-    child: Widget.Box({
-      vertical: true,
-      homogeneous: false,
-      children: [
-        audioBar(false),
-
-        Widget.Separator({
-          vertical: false,
-          className: "first",
-        }),
-
-        sinkList,
-
-        Widget.Separator({
-          vertical: false,
-        }).hook(
-          Audio,
-          (self) => {
-            self.visible = Audio.microphones.length > 0;
-          },
-          "microphone-changed",
-        ),
-
-        sourceList,
-        Widget.Separator({
-          vertical: false,
-          className: "last",
-        }),
-      ],
-    }),
-  });
-
-  const volumeListButton = Widget.Button({
-    className: "volumeButton",
-    vpack: "center",
-    child: Widget.Icon("go-down"),
-    onClicked: (_) => {
-      volumeList.set_reveal_child(!volumeList.child_revealed);
-    },
-  });
-
-  const volumeBar = Widget.Box({
-    vertical: false,
-    homogeneous: false,
-    spacing: 0,
-    children: [audioBar(true), volumeListButton],
-  });
-
-  const backlightBar = Widget.Overlay({
-    child: Widget.Slider({
-      vertical: false,
-      className: "backlightBar",
-      vpack: "center",
-      hexpand: true,
-      // vexpand: true,
-
-      drawValue: false,
-      min: 0,
-      max: 1,
-    }),
-
-    overlays: [
-      Widget.Icon({
-        vpack: "center",
-        hpack: "start",
-        className: "backlightIcon",
-        icon: "brightness-high",
-      }),
-    ],
-  });
-
-  return Widget.Box({
-    vertical: true,
-    homogeneous: false,
-    spacing: 0,
-    className: "volumeInfo",
-    children: [volumeBar, volumeList, backlightBar],
-  });
-};
 
 const networkButton = () =>
   Widget.Button({
@@ -388,11 +204,8 @@ const userCenter = () => {
 
         Widget.Button({
           child: Widget.Label("bloquear"),
-          onClicked: (self) => {
+          onClicked: () => {
             Utils.exec("loginctl lock-session");
-
-            const cssProperties = get_css_properties(self);
-            print(JSON.stringify(cssProperties, null, 2));
           },
         }),
       ],
@@ -493,14 +306,19 @@ const userCenter = () => {
     className: "userCenter",
     vpack: "start",
     hpack: "fill",
-    children: [info, powerMenu, volumeInfo(), controlCenter()],
+    children: [
+      info,
+      powerMenu,
+      // volumeInfo(),
+      controlCenter(),
+    ],
 
     setup: (self) => {
       const update = () => {
         const array1 = [
           info,
           powerMenu,
-          volumeInfo(),
+          // volumeInfo(),
           Mpris.players.map((p) => mediaPlayer(p)),
           controlCenter(),
         ].flat(1);
