@@ -312,7 +312,7 @@ const bluetoothButton = () =>
                 }
 
                 self.parent.visible = active;
-                self.parent.parent.parent.parent.toggleClassName(
+                self.parent.parent.parent.parent.parent.toggleClassName(
                   "active",
                   active,
                 );
