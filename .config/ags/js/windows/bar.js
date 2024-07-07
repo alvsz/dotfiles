@@ -235,21 +235,6 @@ const Clock = () =>
     self.label = time.format("%a %d, %R");
   });
 
-const WeatherConditions = () =>
-  Widget.Icon({
-    vpack: "center",
-  }).hook(
-    weather,
-    (self) => {
-      const icon = weather.get_icon_name();
-      if (Utils.lookUpIcon(icon)) {
-        self.visible = true;
-        self.icon = icon;
-      } else self.visible = false;
-    },
-    "notify",
-  );
-
 const Left = (monitorId) =>
   Widget.Box({
     hpack: "start",
@@ -292,7 +277,6 @@ const Right = (monitorId) =>
       batteryIcon(),
       // batteryBox(),
       Clock(),
-      WeatherConditions(),
     ],
 
     setup: (self) => {
