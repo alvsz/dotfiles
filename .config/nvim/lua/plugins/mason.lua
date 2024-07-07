@@ -6,7 +6,12 @@ return {
     -- overrides `require("mason-lspconfig").setup(...)`
     opts = {
       ensure_installed = {
+        "clangd",
+        "css-lsp",
+        "debugpy",
+        "jedi-language-server",
         "lua_ls",
+        "tsserver",
         -- add more arguments for adding more language servers
       },
     },
@@ -18,6 +23,9 @@ return {
     opts = {
       ensure_installed = {
         "stylua",
+        "jq",
+        "prettier",
+        "shfmt",
         -- add more arguments for adding more null-ls sources
       },
     },
