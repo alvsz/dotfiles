@@ -8,6 +8,7 @@ const networkIndicator = () =>
   Widget.Stack({
     className: "wifiIcon",
     transition: "slide_down",
+    vpack: "center",
 
     children: {
       offline: Widget.Icon("network-offline"),

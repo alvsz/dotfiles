@@ -37,15 +37,9 @@ const audioIcon = (source) =>
         }
       }
 
-      self.icon = `${source ? "microphone-sensitivity" : "audio-volume"
-        }-${icon}`;
-
-      // self.icon = "microphone-sensitivity-muted-symbolic";
-      // self.icon = "microphone-sensitivity-muted";
-
-      // self.icon = source
-      //   ? `microphone-sensitivity-${icon}`
-      //   : `audio-volume-${icon}`;
+      self.icon = `${
+        source ? "microphone-sensitivity" : "audio-volume"
+      }-${icon}`;
 
       self.tooltipText = `Volume ${Math.floor(stream.volume * 100)}%`;
     },
