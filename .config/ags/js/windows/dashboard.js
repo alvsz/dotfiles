@@ -407,21 +407,20 @@ const userCenter = () => {
     className: "batteryBox",
     vpack: "center",
     children: [batteryIcon(), batteryLabel()],
-
+    visible: Battery.bind("available"),
   }).hook(Battery, (self) => {
-      let tooltip;
+    let tooltip;
 
-      if (Battery.charged) tooltip = "Carregado";
-      else {
-        let time = Math.floor(Battery.time_remaining / 60);
+    if (Battery.charged) tooltip = "Carregado";
+    else {
+      let time = Math.floor(Battery.time_remaining / 60);
 
-        if (Battery.charging)
-          tooltip = `${time} minuto(s) até a carga completa`;
-        else tooltip = `${time} minuto(s) restante`;
-      }
+      if (Battery.charging) tooltip = `${time} minuto(s) até a carga completa`;
+      else tooltip = `${time} minuto(s) restante`;
+    }
 
-      self.tooltip_text = tooltip;
-    })
+    self.tooltip_text = tooltip;
+  });
 
   const info = Widget.Box({
     vertical: false,
