@@ -5,8 +5,10 @@ import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import GLib from "gi://GLib";
+import Gtk from "gi://Gtk";
 
 import Weather from "../services/weather.js";
 
@@ -17,6 +19,8 @@ import bluetoothIcon from "../misc/bluetoothIcon.js";
 
 import * as User from "../misc/User.js";
 
+globalThis.gtk = Gtk;
+globalThis.glib = GLib;
 globalThis.user = User;
 globalThis.audio = Audio;
 globalThis.battery = Battery;
@@ -24,6 +28,7 @@ globalThis.notification = Notifications;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
 globalThis.weather = Weather;
+globalThis.utils = Utils;
 
 import { dwlIpc } from "../vars.js";
 
@@ -59,9 +64,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -72,7 +77,7 @@ const dwlTags = (monitorId) =>
   Widget.Box({
     vertical: false,
     spacing: 5,
-    homogeneous: true,
+    homogeneous: false,
     className: "dwlTags",
   }).hook(dwlIpc, (self) => {
     self.children = genTags(monitorId);
@@ -112,8 +117,9 @@ const clientIcon = (monitorId) =>
 
 const client = (monitorId) =>
   Widget.Box({
-    spacing: 5,
+    // spacing: 5,
     homogeneous: false,
+    className: "client",
     children: [clientIcon(monitorId), clientTitle(monitorId)],
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
@@ -127,7 +133,7 @@ const layoutIcon = (monitorId) =>
     hpack: "start",
     vpack: "fill",
     className: "layoutIcon",
-    child: Widget.Label({}),
+    child: Widget.Label(),
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
 
@@ -136,12 +142,16 @@ const layoutIcon = (monitorId) =>
 
 const dwl = (monitorId) =>
   Widget.Box({
-    spacing: 8,
+    // spacing: 8,
     hpack: "start",
     vpack: "fill",
-    vexpand: true,
-    className: "module",
+    // vexpand: true,
+    className: "dwl",
     children: [dwlTags(monitorId), layoutIcon(monitorId), client(monitorId)],
+    setup: (self) => {
+      self.children.length > 0 &&
+        self.children[0].toggleClassName("firstH", true);
+    },
   });
 
 const archDash = () =>
@@ -184,45 +194,17 @@ const Media = () =>
     }),
   });
 
-// const password = () => {
-//   let button = Widget.Button({
-//     child: Widget.Icon("dialog-password-symbolic"),
-//   });
-//
-//   let menu = Widget.Menu({
-//     children: [
-//       Widget.MenuItem({
-//         child: Widget.Label("hello"),
-//       }),
-//       Widget.MenuItem({
-//         // sensitive: false,
-//         child: Widget.Entry({
-//           primary_icon_name: "dialog-password-symbolic",
-//           visible: false,
-//         }),
-//       }),
-//     ],
-//     className: "trayMenu",
-//   });
-//
-//   button.onPrimaryClick = (_, event) => {
-//     menu.popup_at_widget(button, 8, 2, event);
-//   };
-//
-//   return button;
-// };
-
 const SysTray = () =>
   Widget.Box({
     className: "sysTray",
     vpack: "fill",
-    spacing: 5,
   }).hook(SystemTray, (self) => {
     self.children = SystemTray.items.map((item) =>
       Widget.Button({
         child: Widget.Icon({ icon: item.bind("icon") }),
         vpack: "fill",
         className: "trayItem",
+
         onPrimaryClick: (_, event) => item.activate(event),
         onSecondaryClick: (_, event) => {
           item.menu.toggleClassName("trayMenu", true);
@@ -231,76 +213,87 @@ const SysTray = () =>
         tooltipText: item.bind("tooltip-markup"),
       }),
     );
+
+    self.children.length > 0 &&
+      self.children[0].toggleClassName("firstH", true);
   });
 
 const batteryIcon = () =>
   Widget.Icon({
     className: "batteryIcon",
-  }).hook(Battery, (self) => (self.icon = Battery.iconName));
-
-const batteryLabel = () =>
-  Widget.Label(`${Battery.percent}%`).hook(Battery, (self) => {
-    self.label = `${Battery.percent}%`;
+    vpack: "center",
+    visible: Battery.bind("available"),
+    icon: Battery.bind("iconName"),
   });
+//   .hook(Battery, (self) => {
+//   self.visible = Battery.available;
+//   self.icon = Battery.iconName;
+// });
 
-const batteryBox = () => {
-  return Widget.Box({
-    spacing: 7,
-    // visible: Battery.bind("available"),
-    children: [batteryIcon(), batteryLabel()],
-  }).hook(Battery, (self) => (self.visible = Battery.available));
-};
+// const batteryLabel = () =>
+//   Widget.Label(`${Battery.percent}%`).hook(Battery, (self) => {
+//     self.label = `${Battery.percent}%`;
+//   });
+//
+// const batteryBox = () => {
+//   return Widget.Box({
+//     // spacing: 7,
+//     // visible: Battery.bind("available"),
+//     children: [batteryIcon(), batteryLabel()],
+//   }).hook(Battery, (self) => (self.visible = Battery.available));
+// };
 
 const Clock = () =>
   Widget.Label({
-    className: "clock",
+    vpack: "center",
   }).poll(30000, (self) => {
     const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
     self.label = time.format("%a %d, %R");
   });
 
 const WeatherConditions = () =>
-  Widget.Label().hook(
+  Widget.Icon({
+    vpack: "center",
+  }).hook(
     weather,
     (self) => {
-      const conditions = Weather.get_conditions();
-
-      if (conditions == "-") self.label = Weather.get_sky();
-      else self.label = conditions;
+      const icon = weather.get_icon_name();
+      if (Utils.lookUpIcon(icon)) {
+        self.visible = true;
+        self.icon = icon;
+      } else self.visible = false;
     },
     "notify",
   );
 
 const Left = (monitorId) =>
   Widget.Box({
-    spacing: 10,
     hpack: "start",
     vpack: "fill",
     hexpand: true,
     vexpand: true,
     homogeneous: false,
     className: "leftBar",
-    children: [
-      archDash(),
-      dwl(monitorId),
-      // Widget.Label(realName.recursiveUnpack().toString()),
-    ],
+    children: [archDash(), dwl(monitorId)],
   });
 
 const Center = () =>
   Widget.Box({
-    children: [
-      Media(),
-      // Notification(),
-    ],
+    vpack: "fill",
+    children: [Media()],
     className: "centerBar",
+    setup: (self) => {
+      self.children.length > 0 &&
+        self.children[0].toggleClassName("firstH", true);
+    },
   });
 
 const Right = (monitorId) =>
   Widget.Box({
     hpack: "end",
-    hexpand: "false",
-    spacing: 7,
+    vpack: "fill",
+    // hexpand: false,
+    // spacing: 7,
     className: "rightBar",
     children: [
       revealOnClick({
@@ -310,16 +303,18 @@ const Right = (monitorId) =>
         self.visible = dwlIpc.value[monitorId].active;
       }),
       networkIndicator(),
-      // wifiBox(),
       audioIcon(),
       bluetoothIcon(),
-      // pwCalc(),
-      batteryBox(),
-      // batteryIcon(),
-      // batteryLabel(),
+      batteryIcon(),
+      // batteryBox(),
       Clock(),
       WeatherConditions(),
     ],
+
+    setup: (self) => {
+      self.children.length > 0 &&
+        self.children[0].toggleClassName("firstH", true);
+    },
   });
 
 const Bar = ({ monitor } = {}) =>

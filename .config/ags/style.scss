@@ -1,19 +1,17 @@
-// * {
-//   all: unset;
-// }
-
 @import "/home/mamba/.cache/wal/colors.scss";
 
 @function css($color) {
   @return unquote($color);
 }
 
-// .barwindow {
-//   // all: unset;
-//   background-color: transparent;
-//   font: 11pt FiraCode Nerd Font;
-//   color: $foreground;
-// }
+.verticalSpacer {
+  margin: 0.4em 0em 0em 0em;
+}
+
+.horizontalSpacer {
+  // margin-left: 1em;
+  margin: 0em 0em 0em 0.3em;
+}
 
 .module {
   min-height: 1em;
@@ -24,8 +22,61 @@
   button {
     min-height: 0em;
     min-width: 0em;
+    // margin: 0;
+  }
+
+  &>* {
+    @extend .horizontalSpacer;
+  }
+
+  &>.firstH {
     margin: 0;
   }
+}
+
+.dwl {
+  @extend .module;
+
+  @extend .horizontalSpacer;
+
+  .tag {
+    font: 13pt siji;
+    transition: 0.1s;
+    padding: 0.4em 0.6em 0.4em 0.6em;
+    // margin: 0em 1em;
+  }
+
+  .urgent {
+    @extend .tag;
+    color: $color1;
+  }
+
+  .selected {
+    @extend .tag;
+    color: $color4;
+  }
+
+  .occupied {
+    @extend .tag;
+    color: $color3;
+  }
+
+  .normal {
+    @extend .tag;
+
+    &:hover {
+      color: $color2;
+    }
+  }
+}
+
+.layoutIcon {
+  @extend .normal;
+  margin: 0em 0em 0em 0.6em;
+}
+
+.client {
+  margin: 0em 0em 0em 0.6em;
 }
 
 .clientIcon,
@@ -34,7 +85,6 @@
 .bluetoothIcon,
 .batteryIcon {
   font-size: 1.5em;
-  // background-color: green;
 }
 
 .menuBase {
@@ -54,7 +104,7 @@
   min-width: 7em;
   // margin: 0.1em;
 
-  border-radius: 0.4em;
+  border-radius: 0.5em;
   transition: 0.1s;
 
   // &:hover {
@@ -77,38 +127,16 @@
 .sysTray {
   font-size: 1.2em;
   margin-right: 0.4em;
-}
 
-.tag {
-  transition: 0.1s;
-  padding: 0.4em 0.6em 0.4em 0.6em;
-}
-
-.urgent {
-  @extend .tag;
-  color: $color1;
-}
-
-.selected {
-  @extend .tag;
-  color: $color4;
-}
-
-.occupied {
-  @extend .tag;
-  color: $color3;
-}
-
-.normal {
-  @extend .tag;
-
-  &:hover {
-    color: $color2;
+  .trayItem {
+    // margin: 0;
+    // font-size: 0.5em;
+    @extend .horizontalSpacer;
   }
-}
 
-.layoutIcon {
-  @extend .normal;
+  .firstH {
+    margin-left: 0em;
+  }
 }
 
 .transparentWindow {
@@ -285,7 +313,7 @@ window {
 }
 
 .firstH {
-  margin-left: 0em;
+  // margin-left: 0em;
 }
 
 .icon {
@@ -305,20 +333,10 @@ window {
   // background-
 }
 
-.layoutIcon {
-  font: 13pt siji;
-}
-
-.dwlTags {
-  button {
-    @extend .layoutIcon;
-  }
-}
-
 .archDash {
   color: #1793d1;
   font: 12pt Symbols Nerd Font;
-  margin: 0px 14px 0px 14px;
+  margin: 0em 0.9em 0em 0.9em;
 }
 
 .leftBar {
@@ -338,12 +356,8 @@ window {
 
 .centerBar {
   margin: 3px 10px 0px 10px;
-  min-height: 30px;
+  // min-height: 30px;
   @extend .module;
-}
-
-.clock {
-  margin: 0;
 }
 
 .calendar {
@@ -367,6 +381,7 @@ window {
   }
 
   .notification {
+
     // min-width: 30em;
     .test {
       margin-top: 0.4em;
@@ -474,12 +489,9 @@ window {
     }
 
     .playerTime {
-      // background-color: blue;
-      // min-width: 30em;
       padding: 0.5em;
 
       .length {
-        // color: green;
         background-color: purple;
       }
 
@@ -491,10 +503,6 @@ window {
         min-width: 10em;
         margin-left: 1em;
         margin-right: 1em;
-        // background-color: red;
-        // color: blue;
-        // padding: 0.5em;
-        // border-radius: 1em;
       }
     }
 
@@ -511,65 +519,21 @@ window {
   border: 0.1em solid css("@headerbar_border_color");
   padding: 1em;
 
+  &>* {
+    @extend .verticalSpacer;
+  }
+
+  .first {
+    margin: 0em;
+  }
+
   .userImage {
     font-size: 4.5em;
   }
 
   .powerMenu {
-    button {
-      // all: unset;
-      color: purple;
-      // transition: 0.1s;
-      background-color: css("@view_bg_color");
-      transition:
-        all 75ms cubic-bezier(0, 0, 0.2, 1),
-        border-image 225ms cubic-bezier(0, 0, 0.2, 1),
-        background-size 300ms cubic-bezier(0, 0, 0.2, 1),
-        background-image 1200ms cubic-bezier(0, 0, 0.2, 1);
-      outline: none;
-      // box-shadow: inset 0 0 0 9999px transparent;
-      // background-color: transparent;
-      background-image: radial-gradient(
-        circle,
-        transparent 10%,
-        transparent 0%
-      );
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 1000% 1000%;
-      // color: rgba(255, 255, 255, 0.7);
-
-      &:active {
-        // color: white;
-        // color: green;
-        background-color: css("alpha(currentColor, 0.012)");
-        transition:
-          all 75ms cubic-bezier(0, 0, 0.2, 1),
-          border-image 225ms cubic-bezier(0, 0, 0.2, 1),
-          background-size 0ms,
-          background-image 0ms;
-        animation: ripple 225ms cubic-bezier(0, 0, 0.2, 1) forwards;
-        box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.08)");
-        background-image: radial-gradient(
-          circle,
-          css("alpha(currentColor, 0.12)") 10%,
-          transparent 0%
-        );
-        background-size: 0% 0%;
-        color: white;
-      }
-
-      // &:drop(active) {
-      //   box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.08)");
-      // }
-
-      &:hover {
-        // background-color: green;
-        background-color: css("alpha(currentColor, 0.08)");
-        box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.08)");
-      }
-
-      margin-top: 0.3em;
+    &>* {
+      @extend .verticalSpacer;
     }
   }
 
@@ -586,11 +550,8 @@ window {
     min-width: 20em;
 
     trough {
-      // padding: 0.2em;
       highlight {
         color: turquoise;
-        // padding-top: 0.8em;
-        // padding-bottom: 0.8em;
         padding: 0.8em 0;
       }
 
@@ -600,17 +561,10 @@ window {
     }
   }
 
-  // .backlightBar {
-  //   padding-top: 0em;
-  // }
-
   .volumeInfo {
-    margin: 0.2em 0.1em;
     border-radius: 6px;
     background-color: lighten($background, 5);
     padding: 0.2em 0.4em;
-    // padding-left: 0.3em;
-    // padding-right: 0.3em;
   }
 
   .volumeButton {
@@ -619,8 +573,6 @@ window {
   }
 
   .volumeList {
-    // padding-bottom: 0.2em;
-    // padding-top: 0.2em;
     .micBar {
       padding: 0;
     }
@@ -641,12 +593,16 @@ window {
       margin-top: 0.3em;
     }
   }
-
-  // .players {
-  // }
 }
 
 .controlCenter {
+  margin: 0;
+  padding: 0;
+
+  &>* {
+    padding: 0.2em;
+  }
+
   .networkName,
   .bluetoothDevice {
     font-weight: lighter;
@@ -654,51 +610,84 @@ window {
 
   button {
     margin: 0;
-    // padding: 0;
-    // background-color: lighten($background, 5);
-    // border-radius: 100em;
   }
 
   .networkButton,
   .bluetoothButton {
     image {
-      // background-color: purple;
-      padding: 0.2em;
+      margin: 0.2em;
     }
-
-    // background-color: $color5;
-    // margin: 1em;
-    // border-radius: 10px;
   }
 }
 
-// .networkType {
-//   font-weight: bolder;
-// }
-
 .mediaPlayer {
-  margin: 0.2em 0.1em;
-  // margin: 0.1em;
   border-radius: 6px;
-  background-color: lighten($background, 5);
+  background-color: css("@headerbar_border_color");
   padding: 0.4em;
 
   .albumCover {
-    font-size: 4.5em;
     margin-right: 0.1em;
+    font-size: 5.5em;
   }
 
   .position {
     trough {
-      padding: 0.25em;
-
       highlight {
         padding: 0.3em;
+        background-color: css("@theme_fg_color");
       }
+    }
+
+    slider {
+      all: unset;
     }
   }
 
   .trackTitle {
     font-weight: bolder;
+  }
+
+  .positionTimer,
+  .lengthTimer {
+    min-width: 3em;
+  }
+
+  button {
+    font-size: 1.7em;
+    margin: 0em 0.1em;
+    padding: 0;
+
+    transition:
+      all 0.1s,
+      border-image 225ms cubic-bezier(0, 0, 0.2, 1),
+      background-size 300ms cubic-bezier(0, 0, 0.2, 1),
+      background-image 1200ms cubic-bezier(0, 0, 0.2, 1);
+
+    background-color: css("alpha(currentColor, 0.04)");
+    background-image: radial-gradient(circle, transparent 10%, transparent 0%);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 1000% 1000%;
+
+    &:active {
+      background-color: css("alpha(currentColor, 0.012)");
+      transition:
+        all 75ms cubic-bezier(0, 0, 0.2, 1),
+        border-image 225ms cubic-bezier(0, 0, 0.2, 1),
+        background-size 0ms,
+        background-image 0ms;
+      animation: ripple 225ms cubic-bezier(0, 0, 0.2, 1) forwards;
+      box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.08)");
+      background-image: radial-gradient(circle,
+          css("alpha(currentColor, 0.12)") 10%,
+          transparent 0%);
+      background-size: 0% 0%;
+      color: white;
+    }
+
+    &:hover {
+      background-color: css("alpha(currentColor, 0.08)");
+      box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.08)");
+    }
   }
 }

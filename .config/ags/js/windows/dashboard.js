@@ -13,6 +13,19 @@ import bluetoothIcon from "../misc/bluetoothIcon.js";
 import scrollable from "../misc/bouncingText.js";
 import mediaPlayer from "../misc/mediaPlayer.js";
 
+function get_css_properties(widget) {
+  let styleContext = widget.get_style_context();
+  let properties = styleContext.list_properties();
+  let cssProperties = {};
+
+  for (let property of properties) {
+    let value = styleContext.get_property(property.name, Gtk.StateFlags.NORMAL);
+    cssProperties[property.name] = value;
+  }
+
+  return cssProperties;
+}
+
 const audioBar = (sink) =>
   Widget.Overlay({
     child: Widget.Slider({
@@ -289,9 +302,6 @@ const bluetoothButton = () =>
         }),
       ],
     }),
-    // onClicked: (self) => {
-    //   self.parent.visible = false;
-    // },
   });
 
 const controlCenter = () => {
@@ -322,15 +332,19 @@ const userCenter = () => {
   const userImage = Widget.Icon({
     className: "userImage",
     icon: iconFile,
+    hpack: "start",
+    hexpand: true,
   });
 
   const powerMenu = Widget.Revealer({
     transition: "slide_down",
     transitionDuration: 500,
-    className: "powerMenu",
+
     child: Widget.Box({
       vertical: true,
       homogeneous: true,
+      className: "powerMenu",
+
       children: [
         Widget.Button({
           child: Widget.Label("desligar"),
@@ -338,22 +352,28 @@ const userCenter = () => {
             Utils.exec("systemctl poweroff");
           },
         }),
+
         Widget.Button({
           child: Widget.Label("reiniciar"),
           onClicked: () => {
             Utils.exec("systemctl reboot");
           },
         }),
+
         Widget.Button({
           child: Widget.Label("sair"),
           onClicked: () => {
             Utils.exec("loginctl terminate-session self");
           },
         }),
+
         Widget.Button({
           child: Widget.Label("bloquear"),
-          onClicked: () => {
+          onClicked: (self) => {
             Utils.exec("loginctl lock-session");
+
+            const cssProperties = get_css_properties(self);
+            print(JSON.stringify(cssProperties, null, 2));
           },
         }),
       ],
@@ -363,15 +383,16 @@ const userCenter = () => {
   const powerButton = Widget.Button({
     child: Widget.Icon("system-shutdown-symbolic"),
     vpack: "center",
+    hpack: "end",
     onClicked: (_) => {
       powerMenu.set_reveal_child(!powerMenu.child_revealed);
     },
   });
 
-  const spacer = Widget.Box({
-    hexpand: true,
-    hpack: "fill",
-  });
+  // const spacer = Widget.Box({
+  //   hexpand: true,
+  //   hpack: "fill",
+  // });
 
   const info = Widget.Box({
     vertical: false,
@@ -381,14 +402,7 @@ const userCenter = () => {
     vpack: "start",
     hpack: "fill",
     hexpand: true,
-    children: [userImage, spacer, powerButton],
-  });
-
-  const players = Widget.Box({
-    vertical: true,
-    homogeneous: false,
-    className: "players",
-    children: Mpris.bind("players").as((p) => p.map(mediaPlayer)),
+    children: [userImage, powerButton],
   });
 
   return Widget.Box({
@@ -398,7 +412,32 @@ const userCenter = () => {
     className: "userCenter",
     vpack: "start",
     hpack: "fill",
-    children: [info, powerMenu, volumeInfo(), players, controlCenter()],
+    children: [info, powerMenu, volumeInfo(), controlCenter()],
+
+    setup: (self) => {
+      const update = () => {
+        const array1 = [
+          info,
+          powerMenu,
+          volumeInfo(),
+          Mpris.players.map((p) => mediaPlayer(p)),
+          controlCenter(),
+        ].flat(1);
+
+        self.children = array1;
+      };
+
+      Mpris.connect("player-closed", () => {
+        update();
+      });
+
+      Mpris.connect("player-added", () => {
+        update();
+      });
+
+      self.children.length > 0 &&
+        self.children[0].toggleClassName("first", true);
+    },
   });
 };
 
