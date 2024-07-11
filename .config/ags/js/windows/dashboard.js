@@ -12,11 +12,83 @@ import Gtk from "gi://Gtk";
 const RadioButton = Widget.subclass(Gtk.RadioButton);
 
 import { iconFile, realName } from "../misc/User.js";
-import audioIcon from "../misc/audioIcon.js";
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
 import scrollable from "../misc/bouncingText.js";
 import mediaPlayer from "../misc/mediaPlayer.js";
+import audioBar from "../misc/audioBar.js";
+
+const streamList = (isSink) =>
+  Widget.Box({
+    className: isSink ? "sinkList" : "sourceList",
+    vertical: true,
+    homogeneous: false,
+  }).hook(Audio, (self) => {
+    self.children = [];
+    let array1 = [];
+
+    let streams;
+    let defaultId;
+
+    if (isSink) {
+      streams = Audio.speakers;
+      defaultId = Audio.control.get_default_sink()?.id;
+    } else {
+      streams = Audio.microphones;
+      defaultId = Audio.control.get_default_source()?.id;
+    }
+
+    if (streams.length == 0) {
+      self.visible = false;
+      return;
+    }
+
+    self.visible = true;
+
+    for (const stream of streams) {
+      const entry = RadioButton({
+        active: stream.stream.id == defaultId,
+
+        child: Widget.Label({
+          hpack: "start",
+          justification: "left",
+          truncate: "end",
+          label: stream.description,
+        }),
+      }).on("clicked", (self) => {
+        if (!self.active) return;
+
+        if (isSink) Audio.control.set_default_sink(stream.stream);
+        else Audio.control.set_default_source(stream.stream);
+      });
+      if (array1.length > 0) entry.group = array1[0];
+
+      array1.push(entry);
+    }
+
+    self.children = array1;
+  });
+
+const sliders = () =>
+  Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    hpack: "fill",
+    vpack: "fill",
+    className: "sliders",
+
+    children: [
+      audioBar(true),
+      audioBar(false),
+      RadioButton({
+        child: Widget.Label("teste"),
+      }),
+      Widget.Label("lista de saídas"),
+      streamList(true),
+      Widget.Label("lista de entradas"),
+      streamList(false),
+    ],
+  });
 
 const networkButton = () =>
   Widget.Button({
@@ -309,6 +381,7 @@ const userCenter = () => {
     children: [
       info,
       powerMenu,
+      sliders(),
       // volumeInfo(),
       controlCenter(),
     ],
@@ -318,6 +391,7 @@ const userCenter = () => {
         const array1 = [
           info,
           powerMenu,
+          sliders(),
           // volumeInfo(),
           Mpris.players.map((p) => mediaPlayer(p)),
           controlCenter(),
