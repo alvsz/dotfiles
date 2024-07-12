@@ -152,6 +152,7 @@ const mediaPlayer = (player) => {
       className: "artists",
       hexpand: true,
       hpack: "start",
+      visible: player.bind("track_artists").transform((a) => a != ""),
     }),
   });
 
