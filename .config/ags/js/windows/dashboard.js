@@ -338,3 +338,59 @@ const dashboard = () =>
   });
 
 export default dashboard;
+
+// =======
+// const streamList = (isSink) => {
+//   // let children = [];
+//
+//   return Widget.Box({
+//     className: isSink ? "sinkList" : "sourceList",
+//     vertical: true,
+//     homogeneous: false,
+//     children: Audio.bind(isSink ? "speakers" : "microphones").as((a) => {
+//       print(a);
+//       print(a.name);
+//       print(a.description);
+//       print(a.id);
+//
+//       let defaultId;
+//
+//       if (isSink) defaultId = Audio.control.get_default_sink()?.id;
+//       else defaultId = Audio.control.get_default_source()?.id;
+//
+//       return RadioButton({
+//         // group: children,
+//         active: a?.stream?.id == defaultId,
+//         child: Widget.Label({
+//           hpack: "start",
+//           justification: "left",
+//           truncate: "end",
+//           label: a.description,
+//         }),
+//       }).on("clicked", (button) => {
+//         if (!button.active || !a.stream) return;
+//
+//         if (isSink) Audio.control.set_default_sink(a.stream);
+//         else Audio.control.set_default_source(a.stream);
+//       });
+//     }),
+//   });
+// };
+//
+// const sliders = () =>
+//   Widget.Box({
+//     vertical: true,
+//     homogeneous: false,
+//     hpack: "fill",
+//     vpack: "fill",
+//     className: "sliders",
+//
+// >>>>>>> 48a0ed5 (tentei fazer uma lista de outputs mas não funfou)
+
+// <<<<<<< HEAD
+// =======
+//       Widget.Label("lista de saídas"),
+//       streamList(true),
+//       // Widget.Label("lista de entradas"),
+//       // streamList(false),
+// >>>>>>> 48a0ed5 (tentei fazer uma lista de outputs mas não funfou)
