@@ -1,24 +1,25 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
-import { getDefaultSink, getDefaultSource } from "../utils.js";
-
-const audioIcon = (source) =>
+const audioIcon = (source, setup = () => {}) =>
   Widget.Icon({
     className: "audioIcon",
     vpack: "center",
+    setup: (self) => {
+      if (typeof setup == "function") setup(self);
+    },
   }).hook(
     Audio,
     (self) => {
-      if (!Audio.speaker) return;
-
       let icon;
       let stream;
 
       if (!source) {
-        stream = getDefaultSink();
+        if (!Audio.speaker.stream) return;
+        stream = Audio.speaker;
       } else {
-        stream = getDefaultSource();
+        if (!Audio.microphone.stream) return;
+        stream = Audio.microphone;
       }
 
       if (stream.stream.isMuted) {

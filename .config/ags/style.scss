@@ -25,11 +25,11 @@
     // margin: 0;
   }
 
-  & > * {
+  &>* {
     @extend .horizontalSpacer;
   }
 
-  & > .firstH {
+  &>.firstH {
     margin: 0;
   }
 }
@@ -386,6 +386,7 @@ window {
   }
 
   .notification {
+
     // min-width: 30em;
     .test {
       margin-top: 0.4em;
@@ -516,37 +517,9 @@ window {
   }
 }
 
-.userCenter {
-  @extend .basewindow;
-
-  background-color: css("@window_bg_color");
-  border: 0.1em solid css("@headerbar_border_color");
-  padding: 1em;
-
-  & > * {
-    @extend .verticalSpacer;
-  }
-
-  .first {
-    margin: 0em;
-  }
-
-  .userImage {
-    font-size: 4.5em;
-  }
-
-  .powerMenu {
-    & > * {
-      @extend .verticalSpacer;
-    }
-  }
-
-  .audioIcon,
-  .backlightIcon {
-    font-size: 1.5em;
-    padding: 0 0.2em;
-    -gtk-icon-shadow: 1px 1px $background;
-  }
+.sliders {
+  background-color: css("@headerbar_border_color");
+  padding: 0.3em;
 
   scale {
     margin: 0.2em 0;
@@ -563,6 +536,39 @@ window {
         all: unset;
       }
     }
+  }
+}
+
+.userCenter {
+  @extend .basewindow;
+
+  background-color: css("@window_bg_color");
+  border: 0.1em solid css("@headerbar_border_color");
+  padding: 1em;
+
+  &>* {
+    @extend .verticalSpacer;
+  }
+
+  .first {
+    margin: 0em;
+  }
+
+  .userImage {
+    font-size: 4.5em;
+  }
+
+  .powerMenu {
+    &>* {
+      @extend .verticalSpacer;
+    }
+  }
+
+  .audioIcon,
+  .backlightIcon {
+    font-size: 1.5em;
+    padding: 0 0.2em;
+    -gtk-icon-shadow: 1px 1px $background;
   }
 
   .volumeInfo {
@@ -599,7 +605,7 @@ window {
   }
 
   .info {
-    & > * {
+    &>* {
       @extend .horizontalSpacer;
     }
 
@@ -626,17 +632,14 @@ window {
 .controlCenter {
   margin: 0;
   padding: 0;
+  min-width: 23em;
 
-  & > * {
+  &>* {
     padding: 0.2em;
   }
 
   .active {
     background-color: css("@accent_bg_color");
-    // image {
-    //   color: css("@accent_color");
-    // }
-    // color: css("@accent_color");
   }
 
   .networkName,
@@ -648,7 +651,6 @@ window {
     margin: 0;
 
     @extend .fancyButton;
-    // background-color: css("@headerbar_border_color");
   }
 
   .networkButton,
@@ -726,11 +728,9 @@ window {
       background-image 0ms;
     animation: ripple 225ms cubic-bezier(0, 0, 0.2, 1) forwards;
     box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.10)");
-    background-image: radial-gradient(
-      circle,
-      css("alpha(currentColor, 0.12)") 10%,
-      transparent 0%
-    );
+    background-image: radial-gradient(circle,
+        css("alpha(currentColor, 0.12)") 10%,
+        transparent 0%);
     background-size: 0% 0%;
     color: white;
   }
