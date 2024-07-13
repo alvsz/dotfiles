@@ -311,8 +311,10 @@ const userCenter = () => {
 };
 
 const stack = Widget.Stack({
-  transition: "slide_down",
+  transition: "slide_up_down",
   vpack: "start",
+  homogeneous: false,
+
   children: {
     networkPopup: networkPopup,
     userCenter: userCenter(),
