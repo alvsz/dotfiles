@@ -17,60 +17,60 @@ const RadioButton = Widget.subclass(Gtk.RadioButton);
 import { iconFile, realName } from "../misc/User.js";
 import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
-import scrollable from "../misc/bouncingText.js";
+// import scrollable from "../misc/bouncingText.js";
 import mediaPlayer from "../misc/mediaPlayer.js";
 // import audioBar from "../misc/audioBar.js";
 
-const streamList = (isSink) =>
-  Widget.Box({
-    className: isSink ? "sinkList" : "sourceList",
-    vertical: true,
-    homogeneous: false,
-  }).hook(Audio, (self) => {
-    self.children = [];
-    let array1 = [];
-
-    let streams;
-    let defaultId;
-
-    if (isSink) {
-      streams = Audio.speakers;
-      defaultId = Audio.control.get_default_sink()?.id;
-    } else {
-      streams = Audio.microphones;
-      defaultId = Audio.control.get_default_source()?.id;
-    }
-
-    if (streams.length == 0) {
-      self.visible = false;
-      return;
-    }
-
-    self.visible = true;
-
-    for (const stream of streams) {
-      const entry = RadioButton({
-        active: stream.stream.id == defaultId,
-
-        child: Widget.Label({
-          hpack: "start",
-          justification: "left",
-          truncate: "end",
-          label: stream.description,
-        }),
-      }).on("clicked", (self) => {
-        if (!self.active) return;
-
-        if (isSink) Audio.control.set_default_sink(stream.stream);
-        else Audio.control.set_default_source(stream.stream);
-      });
-      if (array1.length > 0) entry.group = array1[0];
-
-      array1.push(entry);
-    }
-
-    self.children = array1;
-  });
+// const streamList = (isSink) =>
+//   Widget.Box({
+//     className: isSink ? "sinkList" : "sourceList",
+//     vertical: true,
+//     homogeneous: false,
+// }).hook(Audio, (self) => {
+//   self.children = [];
+//   let array1 = [];
+//
+//   let streams;
+//   let defaultId;
+//
+//   if (isSink) {
+//     streams = Audio.speakers;
+//     defaultId = Audio.control.get_default_sink()?.id;
+//   } else {
+//     streams = Audio.microphones;
+//     defaultId = Audio.control.get_default_source()?.id;
+//   }
+//
+//   if (streams.length == 0) {
+//     self.visible = false;
+//     return;
+//   }
+//
+//   self.visible = true;
+//
+//   for (const stream of streams) {
+//     const entry = RadioButton({
+//       active: stream.stream.id == defaultId,
+//
+//       child: Widget.Label({
+//         hpack: "start",
+//         justification: "left",
+//         truncate: "end",
+//         label: stream.description,
+//       }),
+//     }).on("clicked", (self) => {
+//       if (!self.active) return;
+//
+//       if (isSink) Audio.control.set_default_sink(stream.stream);
+//       else Audio.control.set_default_source(stream.stream);
+//     });
+//     if (array1.length > 0) entry.group = array1[0];
+//
+//     array1.push(entry);
+//   }
+//
+//   self.children = array1;
+// });
 
 const sliders = Widget.Box({
   vertical: true,
@@ -80,164 +80,97 @@ const sliders = Widget.Box({
   className: "sliders",
 
   children: [
-    // audioBar(true),
-    // audioBar(false),
     RadioButton({
       child: Widget.Label("teste"),
     }),
-    // Widget.Label("lista de saídas"),
-    // streamList(true),
-    // Widget.Label("lista de entradas"),
-    // streamList(false),
   ],
 });
 
-const networkButton = () =>
-  Widget.Button({
-    className: "networkButton",
+const networkButton = Widget.Button({
+  className: "networkButton",
 
-    onPrimaryClick: () => {
-      Network.toggleWifi();
-    },
+  onClicked: () => {
+    Network.toggleWifi();
+  },
 
-    child: Widget.Box({
-      vertical: false,
-      homogeneous: false,
-      spacing: 0,
-      children: [
-        networkIndicator(),
+  child: Widget.Box({
+    vertical: false,
+    homogeneous: false,
+    spacing: 0,
+    children: [
+      networkIndicator(),
+      Widget.Label({
+        className: "networkType",
+        justification: "left",
+        hpack: "start",
+        wrap: false,
+        truncate: "end",
+      }).hook(Network, (self) => {
+        let active = true;
 
-        Widget.Box({
-          vertical: true,
-          homogeneous: false,
-          hpack: "fill",
-          vpack: "center",
-          hexpand: true,
-          children: [
-            Widget.Label({
-              className: "networkType",
-              justification: "left",
-              hpack: "start",
-              wrap: false,
-              truncate: "end",
-            }).hook(Network, (self) => {
-              let active = true;
+        switch (Network.primary) {
+          case "wifi":
+            self.label = "Rede sem fio";
+            break;
+          case "wired":
+            self.label = "Rede cabeada";
+            break;
+          default:
+            active = false;
+            self.label = "Offline";
+        }
+        self.parent.parent.toggleClassName("active", active);
+      }),
+    ],
+  }),
+});
 
-              switch (Network.primary) {
-                case "wifi":
-                  self.label = "Rede sem fio";
-                  break;
-                case "wired":
-                  self.label = "Rede cabeada";
-                  break;
-                default:
-                  active = false;
-                  self.label = "Offline";
-              }
-              self.parent.parent.parent.toggleClassName("active", active);
-            }),
+const bluetoothButton = Widget.Button({
+  className: "bluetoothButton",
 
-            scrollable({
-              child: Widget.Label({
-                className: "networkName",
-                justification: "left",
-                hpack: "start",
-              }).hook(Network, (self) => {
-                self.label = Network.wifi.ssid;
-                self.parent.visible =
-                  Network.primary === "wifi" && Network.wifi.ssid.length > 0;
-              }),
-            }),
-          ],
-        }),
-      ],
-    }),
-    // onClicked: (self) => {
-    //   self.parent.visible = false;
-    // },
-  });
+  onPrimaryClick: () => {
+    Bluetooth.toggle();
+  },
 
-const bluetoothButton = () =>
-  Widget.Button({
-    className: "bluetoothButton",
+  child: Widget.Box({
+    vertical: false,
+    homogeneous: false,
+    spacing: 0,
+    children: [
+      bluetoothIcon(),
+      Widget.Label({
+        className: "bluetoothStatus",
+        justification: "left",
+        hpack: "start",
+        label: "Bluetooth",
+      }).hook(Bluetooth, (self) => {
+        let active = false;
 
-    onPrimaryClick: () => {
-      Bluetooth.toggle();
-    },
+        for (const dev of Bluetooth.connectedDevices) {
+          if (dev.connected) {
+            active = true;
+            break;
+          }
+        }
 
-    child: Widget.Box({
-      vertical: false,
-      homogeneous: false,
-      spacing: 0,
-      children: [
-        bluetoothIcon(),
+        self.parent.parent.toggleClassName("active", active);
+      }),
+    ],
+  }),
+});
 
-        Widget.Box({
-          vertical: true,
-          homogeneous: false,
-          hpack: "fill",
-          vpack: "center",
-          hexpand: true,
-          children: [
-            Widget.Label({
-              className: "bluetoothStatus",
-              justification: "left",
-              hpack: "start",
-              label: "Bluetooth",
-            }),
+const flowBox = Widget.FlowBox({
+  maxChildrenPerLine: 2,
+  minChildrenPerLine: 2,
+  selectionMode: 0,
+  homogeneous: true,
 
-            scrollable({
-              child: Widget.Label({
-                className: "bluetoothDevice",
-                justification: "left",
-                hpack: "start",
-              }).hook(Bluetooth, (self) => {
-                let active = false;
-
-                for (const dev of Bluetooth.connectedDevices) {
-                  if (dev.connected) {
-                    self.label = dev.alias;
-                    active = true;
-                    break;
-                  }
-                }
-
-                self.parent.visible = active;
-                self.parent.parent.parent.parent.parent.toggleClassName(
-                  "active",
-                  active,
-                );
-              }),
-            }),
-          ],
-        }),
-      ],
-    }),
-  });
-
-const controlCenter = () => {
-  const flowBox = Widget.FlowBox({
-    maxChildrenPerLine: 2,
-    minChildrenPerLine: 2,
-    selectionMode: 0,
-    homogeneous: true,
-
-    className: "controlCenter",
-  });
-
-  flowBox.add(networkButton());
-  flowBox.add(bluetoothButton());
-
-  const stack = Widget.Stack({
-    transition: "slide_down",
-    children: {
-      flowbox: flowBox,
-    },
-    shown: "flowbox",
-  });
-
-  return stack;
-};
+  className: "controlCenter",
+  setup: (self) => {
+    self.add(networkButton);
+    self.add(bluetoothButton);
+  },
+});
 
 const userCenter = () => {
   const userImage = Widget.Icon({
@@ -386,7 +319,7 @@ const userCenter = () => {
       powerMenu,
       sliders,
       // volumeInfo(),
-      controlCenter(),
+      flowBox,
     ],
 
     setup: (self) => {
@@ -397,7 +330,7 @@ const userCenter = () => {
           sliders,
           // volumeInfo(),
           Mpris.players.map((p) => mediaPlayer(p)),
-          controlCenter(),
+          flowBox,
         ].flat(1);
 
         self.children = array1;

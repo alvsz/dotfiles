@@ -637,8 +637,6 @@ window {
 }
 
 .controlCenter {
-  margin: 0;
-  padding: 0;
   min-width: 23em;
 
   &>* {
@@ -649,19 +647,11 @@ window {
     background-color: css("@accent_bg_color");
   }
 
-  .networkName,
-  .bluetoothDevice {
-    font-weight: lighter;
-  }
-
   button {
     margin: 0;
 
     @extend .fancyButton;
-  }
 
-  .networkButton,
-  .bluetoothButton {
     image {
       margin: 0.2em;
     }
