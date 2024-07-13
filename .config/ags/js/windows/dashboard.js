@@ -56,7 +56,8 @@ const networkButton = Widget.Button({
   className: "networkButton",
 
   onClicked: () => {
-    networkPopup.reveal_child = true;
+    stack.shown = "networkPopup";
+    // networkPopup.reveal_child = true;
     Network?._device?.request_scan_async();
     // Network.toggleWifi();
   },
@@ -289,6 +290,7 @@ const userCenter = () => {
           sliders,
           Mpris.players.map((p) => mediaPlayer(p)),
           flowBox,
+          // networkPopup,
         ].flat(1);
 
         self.children = array1;
@@ -308,6 +310,16 @@ const userCenter = () => {
   });
 };
 
+const stack = Widget.Stack({
+  transition: "slide_down",
+  vpack: "start",
+  children: {
+    networkPopup: networkPopup,
+    userCenter: userCenter(),
+  },
+  shown: "userCenter",
+});
+
 const dashboard = () =>
   Widget.Window({
     name: "dashboard",
@@ -317,16 +329,7 @@ const dashboard = () =>
 
     child: Widget.Box({
       className: "dashboard",
-
-      children: [
-        Widget.Overlay({
-          child: userCenter(),
-          overlays: [
-            //
-            networkPopup,
-          ],
-        }),
-      ],
+      children: [stack],
     }),
   });
 
