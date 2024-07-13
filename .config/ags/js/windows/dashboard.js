@@ -2,12 +2,15 @@ import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
+import powerProfiles from "resource:///com/github/Aylur/ags/service/powerprofiles.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
+
+globalThis.powerprofiles = powerProfiles;
 
 const RadioButton = Widget.subclass(Gtk.RadioButton);
 
@@ -69,26 +72,25 @@ const streamList = (isSink) =>
     self.children = array1;
   });
 
-const sliders = () =>
-  Widget.Box({
-    vertical: true,
-    homogeneous: false,
-    hpack: "fill",
-    vpack: "fill",
-    className: "sliders",
+const sliders = Widget.Box({
+  vertical: true,
+  homogeneous: false,
+  hpack: "fill",
+  vpack: "fill",
+  className: "sliders",
 
-    children: [
-      // audioBar(true),
-      // audioBar(false),
-      RadioButton({
-        child: Widget.Label("teste"),
-      }),
-      Widget.Label("lista de saídas"),
-      streamList(true),
-      Widget.Label("lista de entradas"),
-      streamList(false),
-    ],
-  });
+  children: [
+    // audioBar(true),
+    // audioBar(false),
+    RadioButton({
+      child: Widget.Label("teste"),
+    }),
+    // Widget.Label("lista de saídas"),
+    // streamList(true),
+    // Widget.Label("lista de entradas"),
+    // streamList(false),
+  ],
+});
 
 const networkButton = () =>
   Widget.Button({
@@ -116,7 +118,8 @@ const networkButton = () =>
               className: "networkType",
               justification: "left",
               hpack: "start",
-              wrap: true,
+              wrap: false,
+              truncate: "end",
             }).hook(Network, (self) => {
               let active = true;
 
@@ -381,7 +384,7 @@ const userCenter = () => {
     children: [
       info,
       powerMenu,
-      sliders(),
+      sliders,
       // volumeInfo(),
       controlCenter(),
     ],
@@ -391,7 +394,7 @@ const userCenter = () => {
         const array1 = [
           info,
           powerMenu,
-          sliders(),
+          sliders,
           // volumeInfo(),
           Mpris.players.map((p) => mediaPlayer(p)),
           controlCenter(),

@@ -13,7 +13,7 @@ swayidle timeout 420 'dpms off' resume 'dpms on' &
 
 swww init
 
-pgrep spotify_player || spotify_player -d
+# pgrep spotify_player || spotify_player -d
 
 kdeconnectd &
 

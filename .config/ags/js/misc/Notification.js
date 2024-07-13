@@ -99,6 +99,7 @@ const Notification = (n, popup) => {
     vertical: true,
     homogeneous: false,
     hexpand: true,
+    attribute: { id: n.id },
     // hpack: "fill",
     // vpack: "fill",
 
