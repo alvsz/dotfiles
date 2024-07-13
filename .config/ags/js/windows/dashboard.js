@@ -16,7 +16,7 @@ import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
 import scrollable from "../misc/bouncingText.js";
 import mediaPlayer from "../misc/mediaPlayer.js";
-import audioBar from "../misc/audioBar.js";
+// import audioBar from "../misc/audioBar.js";
 
 const streamList = (isSink) =>
   Widget.Box({
@@ -78,8 +78,8 @@ const sliders = () =>
     className: "sliders",
 
     children: [
-      audioBar(true),
-      audioBar(false),
+      // audioBar(true),
+      // audioBar(false),
       RadioButton({
         child: Widget.Label("teste"),
       }),

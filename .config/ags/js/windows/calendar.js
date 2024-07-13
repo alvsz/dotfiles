@@ -1,35 +1,18 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
-import { Notification, Placeholder } from "../notification.js";
+import { Placeholder } from "../notification.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+import Notification from "../misc/Notification.js";
 
 import GLib from "gi://GLib";
 
 const Calendar = () => {
   const cal = Widget.Calendar({
-    // showDetails: false,
     showHeading: false,
     show_day_names: false,
     detail_height_rows: 0,
-    // detail_width_chars: 10,
 
     vpack: "start",
     hpack: "fill",
-
-    setup: (self) => {
-      // const parent_window = self.get_parent_window();
-      // if (parent_window) {
-      //   parent_window.on("show", () => {
-      //     self.select_day();
-      //   });
-      // }
-
-      self.set_detail_func((self, year, month, day) => {
-        // return "";
-        if (day % 2 === 0) {
-          return "par\nteste";
-        } else return "ímpar";
-      });
-    },
   });
 
   const monthName = Widget.Label({
@@ -41,18 +24,8 @@ const Calendar = () => {
     (self) => {
       const [y, m, d] = cal.get_date();
 
-      // if (!cal.get_day_is_marked(d)) cal.mark_day(d);
-      // else cal.unmark_day(d);
-
-      // const iso8601 = `${y}-${m + 1}-${d}`;
-      // print(iso8601);
-
-      // const time = GLib.DateTime.new_from_iso8601(iso8601, null);
-
       const time = GLib.DateTime.new_utc(y, m + 1, d, 0, 0, 0);
 
-      // print(time);
-      // print(time);
       self.label = time.format("%B %Y");
     },
     "day-selected",
@@ -78,9 +51,7 @@ const notificationList = () => {
     vpack: "start",
     vexpand: true,
     visible: true,
-  });
-
-  list.hook(Notifications, (self) => {
+  }).hook(Notifications, (self) => {
     self.children = Notifications.notifications.reverse().map(Notification);
 
     if (self.children.length > 0) {
@@ -93,6 +64,7 @@ const notificationList = () => {
   return Widget.Scrollable({
     className: "scroll",
     hexpand: true,
+    vexpand: true,
     hscroll: "never",
     vscroll: "automatic",
     child: list,
