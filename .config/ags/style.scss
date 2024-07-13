@@ -102,13 +102,9 @@
 
 .trayMenu menuitem {
   min-width: 7em;
-  // margin: 0.1em;
 
   border-radius: 0.5em;
   transition: 0.1s;
-
-  // &:hover {
-  // }
 
   &:disabled {
     border: 0em;
@@ -120,17 +116,11 @@
   }
 }
 
-// .primeiromenu {
-//   margin-top: 1em;
-// }
-
 .sysTray {
   font-size: 1.2em;
   margin-right: 0.4em;
 
   .trayItem {
-    // margin: 0;
-    // font-size: 0.5em;
     @extend .horizontalSpacer;
   }
 
@@ -147,15 +137,12 @@
   @extend .basewindow;
   background-color: css("@window_bg_color");
   border: 0.1em solid css("@headerbar_border_color");
-  // @extend .transparentWindow;
   min-width: 40em;
   min-height: 30em;
   padding: 1em;
   padding-bottom: 0.2em;
-  // margin: 1em;
 
   .scroll {
-    // padding: 1.4em;
     padding-top: 0em;
 
     .placeholder {
@@ -202,11 +189,9 @@
 window {
   background-color: transparent;
   font: 11pt Inter;
-  // color: $foreground;
 }
 
 .lockscreen {
-  // background-color: $background;
   margin: 10em;
 }
 
@@ -222,9 +207,7 @@ window {
 
   border-radius: 0.6em;
   margin: 10px;
-  // font: 11pt FiraCode Nerd Font;
   font: 11pt Inter;
-  // color: gtk("@window_fg_color");
 }
 
 .scroll {
@@ -266,26 +249,6 @@ window {
   }
 }
 
-/* .notification { */
-/*   .test { */
-/*     padding: 0.5em; */
-/*     background-color: lighten($background, 4%); */
-/*     border-radius: 0.5em; */
-/*     border-width: 0.1em; */
-/*     border-style: solid; */
-/*     border-color: lighten($background, 15%); */
-/*     margin-top: 0.4em; */
-/*   } */
-/**/
-/*   .time { */
-/*     margin-right: 0.5em; */
-/*   } */
-/**/
-/*   .progress { */
-/*     margin: 0.5em; */
-/*   } */
-/* } */
-
 .popupList {
   @extend .basewindow;
   min-width: 25em;
@@ -305,37 +268,18 @@ window {
   border-color: red;
 }
 
-.first {
-  .test {
-    margin-top: 0em;
-  }
-
-  // margin-top: 0;
-}
-
 .actionButton {
   margin-left: 0.4em;
 }
 
-.firstH {
-  // margin-left: 0em;
-}
-
-.icon {
-  padding: 0.4em;
-  min-width: 4em;
-  min-height: 4em;
-  // .appIcon {
-  //   font-size: 4em;
-  // }
-}
+/* .icon { */
+/*   padding: 0.4em; */
+/*   min-width: 4em; */
+/*   min-height: 4em; */
+/* } */
 
 .img {
   background-clip: content-box;
-  // min-width: 5em;
-  // min-height: 5em;
-  // padding: 0.4em;
-  // background-
 }
 
 .archDash {
@@ -385,12 +329,8 @@ window {
 
   .notification {
     @extend .verticalSpacer;
-    /* background-color: css("@headerbar_border_color"); */
-    /* padding: 0.3em; */
-    /* border-radius: 0.6em; */
 
     padding: 0.3em;
-    /* border: 0.1em solid css("@headerbar_border_color"); */
     border-radius: 0.6em;
     background-color: css("alpha(currentColor, 0.04)");
 
@@ -422,7 +362,6 @@ window {
   }
 
   .calendarBox {
-    /* background-color: css("@headerbar_border_color"); */
     background-color: css("alpha(currentColor, 0.04)");
     padding: 0.3em;
     border-radius: 0.6em;
@@ -546,11 +485,16 @@ window {
   }
 }
 
-.userCenter {
+.dashboard {
   @extend .basewindow;
 
   background-color: css("@window_bg_color");
   border: 0.1em solid css("@headerbar_border_color");
+  padding: 0.1em;
+  border-radius: 0.6em;
+}
+
+.userCenter {
   padding: 1em;
 
   &>* {
@@ -637,7 +581,7 @@ window {
 }
 
 .controlCenter {
-  min-width: 23em;
+  min-width: 28em;
 
   &>* {
     padding: 0.2em;
@@ -735,7 +679,61 @@ window {
   }
 
   &:hover {
-    // background-color: css("alpha(currentColor, 0.08)");
     box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.10)");
   }
+}
+
+.networkPopup {
+  padding: 0.1em;
+  /* background-color: purple; */
+  /* background-color: css("@window_bg_color"); */
+  /* border-radius: 0.6em; */
+  /* min-height: 1000em; */
+  /* border: 0.1em solid css("@headerbar_border_color"); */
+
+  .header {
+    border-top-right-radius: 0.6em;
+    border-top-left-radius: 0.6em;
+
+    background-color: css("@headerbar_bg_color");
+    padding: 0.5em;
+  }
+
+  .wifiList {
+    background-color: green;
+    border-bottom-right-radius: 2em;
+    border-bottom-left-radius: 2em;
+
+    /* background-color: css("@window_bg_color"); */
+  }
+
+  .title {
+    font-weight: bolder;
+  }
+
+  .networkButton {
+    .icon {
+      font-size: 1.5em;
+    }
+  }
+
+  .wifiList {
+    padding: 1em;
+
+    &>* {
+      @extend .verticalSpacer;
+    }
+
+    &>.first {
+      margin-top: 0;
+    }
+  }
+
+  /* background-color: purple; */
+  /* color: yellow; */
+  /* font-size: 5em; */
+  /**/
+  /* label { */
+  /*   background-color: green; */
+  /* } */
 }

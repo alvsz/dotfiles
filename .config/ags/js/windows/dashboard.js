@@ -1,5 +1,4 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
-import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import powerProfiles from "resource:///com/github/Aylur/ags/service/powerprofiles.js";
@@ -10,67 +9,19 @@ import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
 
+import { iconFile, realName } from "../misc/User.js";
+import networkIndicator from "../misc/networkIcon.js";
+import bluetoothIcon from "../misc/bluetoothIcon.js";
+import mediaPlayer from "../misc/mediaPlayer.js";
+import networkInfo from "../misc/networkInfo.js";
+
 globalThis.powerprofiles = powerProfiles;
 
 const RadioButton = Widget.subclass(Gtk.RadioButton);
 
-import { iconFile, realName } from "../misc/User.js";
-import networkIndicator from "../misc/networkIcon.js";
-import bluetoothIcon from "../misc/bluetoothIcon.js";
-// import scrollable from "../misc/bouncingText.js";
-import mediaPlayer from "../misc/mediaPlayer.js";
-// import audioBar from "../misc/audioBar.js";
+const networkPopup = networkInfo();
 
-// const streamList = (isSink) =>
-//   Widget.Box({
-//     className: isSink ? "sinkList" : "sourceList",
-//     vertical: true,
-//     homogeneous: false,
-// }).hook(Audio, (self) => {
-//   self.children = [];
-//   let array1 = [];
-//
-//   let streams;
-//   let defaultId;
-//
-//   if (isSink) {
-//     streams = Audio.speakers;
-//     defaultId = Audio.control.get_default_sink()?.id;
-//   } else {
-//     streams = Audio.microphones;
-//     defaultId = Audio.control.get_default_source()?.id;
-//   }
-//
-//   if (streams.length == 0) {
-//     self.visible = false;
-//     return;
-//   }
-//
-//   self.visible = true;
-//
-//   for (const stream of streams) {
-//     const entry = RadioButton({
-//       active: stream.stream.id == defaultId,
-//
-//       child: Widget.Label({
-//         hpack: "start",
-//         justification: "left",
-//         truncate: "end",
-//         label: stream.description,
-//       }),
-//     }).on("clicked", (self) => {
-//       if (!self.active) return;
-//
-//       if (isSink) Audio.control.set_default_sink(stream.stream);
-//       else Audio.control.set_default_source(stream.stream);
-//     });
-//     if (array1.length > 0) entry.group = array1[0];
-//
-//     array1.push(entry);
-//   }
-//
-//   self.children = array1;
-// });
+// import audioBar from "../misc/audioBar.js";
 
 const sliders = Widget.Box({
   vertical: true,
@@ -83,6 +34,21 @@ const sliders = Widget.Box({
     RadioButton({
       child: Widget.Label("teste"),
     }),
+    RadioButton({
+      child: Widget.Label("teste"),
+    }),
+    RadioButton({
+      child: Widget.Label("teste"),
+    }),
+    RadioButton({
+      child: Widget.Label("teste"),
+    }),
+    RadioButton({
+      child: Widget.Label("teste"),
+    }),
+    RadioButton({
+      child: Widget.Label("teste"),
+    }),
   ],
 });
 
@@ -90,7 +56,9 @@ const networkButton = Widget.Button({
   className: "networkButton",
 
   onClicked: () => {
-    Network.toggleWifi();
+    networkPopup.reveal_child = true;
+    Network?._device?.request_scan_async();
+    // Network.toggleWifi();
   },
 
   child: Widget.Box({
@@ -143,20 +111,11 @@ const bluetoothButton = Widget.Button({
         justification: "left",
         hpack: "start",
         label: "Bluetooth",
-      }).hook(Bluetooth, (self) => {
-        let active = false;
-
-        for (const dev of Bluetooth.connectedDevices) {
-          if (dev.connected) {
-            active = true;
-            break;
-          }
-        }
-
-        self.parent.parent.toggleClassName("active", active);
       }),
     ],
   }),
+}).hook(Bluetooth, (self) => {
+  self.toggleClassName("active", Bluetooth.enabled);
 });
 
 const flowBox = Widget.FlowBox({
@@ -328,7 +287,6 @@ const userCenter = () => {
           info,
           powerMenu,
           sliders,
-          // volumeInfo(),
           Mpris.players.map((p) => mediaPlayer(p)),
           flowBox,
         ].flat(1);
@@ -356,7 +314,20 @@ const dashboard = () =>
     layer: "overlay",
     anchor: ["top", "right"],
     visible: false,
-    child: userCenter(),
+
+    child: Widget.Box({
+      className: "dashboard",
+
+      children: [
+        Widget.Overlay({
+          child: userCenter(),
+          overlays: [
+            //
+            networkPopup,
+          ],
+        }),
+      ],
+    }),
   });
 
 export default dashboard;
