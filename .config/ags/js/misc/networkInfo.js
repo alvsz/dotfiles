@@ -4,35 +4,6 @@ import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import NM from "gi://NM";
 
-const _STRENGTH_ICONS = [
-  { value: 80, icon: "network-wireless-signal-excellent-symbolic" },
-  { value: 60, icon: "network-wireless-signal-good-symbolic" },
-  { value: 40, icon: "network-wireless-signal-ok-symbolic" },
-  { value: 20, icon: "network-wireless-signal-weak-symbolic" },
-  { value: 0, icon: "network-wireless-signal-none-symbolic" },
-];
-
-const get_access_points = () => {
-  return Network.wifi._device
-    .get_access_points()
-    .map((ap) => ({
-      bssid: ap.bssid,
-      address: ap.hw_address,
-      lastSeen: ap.last_seen,
-      ssid: ap.ssid
-        ? NM.utils_ssid_to_utf8(ap.ssid.get_data() || new Uint8Array())
-        : ap.bssid,
-      active: ap === Network.wifi._ap,
-      rsn: ap.rsn_flags,
-      strength: ap.strength,
-      frequency: ap.frequency,
-      iconName: _STRENGTH_ICONS.find(({ value }) => value <= ap.strength)?.icon,
-    }))
-    .sort((b, a) => {
-      return a.strength - b.strength;
-    });
-};
-
 const knownSSIDs = () => {
   let knownSSIDs = new Set();
   const connections = Network._client.get_connections();
@@ -47,10 +18,8 @@ const knownSSIDs = () => {
   return knownSSIDs;
 };
 
-const wiredButton = (conn) => {
-  const active = Network.primary === "wired";
-
-  return Widget.Button({
+const wiredButton = (conn) =>
+  Widget.Button({
     className: "networkButton",
 
     child: Widget.Box({
@@ -60,7 +29,7 @@ const wiredButton = (conn) => {
       children: [
         Widget.Icon({
           className: "icon",
-          icon: conn.iconName,
+          icon: conn.bind("iconName"),
         }),
 
         Widget.Label({
@@ -73,11 +42,13 @@ const wiredButton = (conn) => {
           label: "Rede cabeada",
         }),
 
-        active ? Widget.Icon("object-select-symbolic") : null,
+        Widget.Icon({
+          icon: "object-select-symbolic",
+          visible: Network.bind("primary").as((p) => p == "wired"),
+        }),
       ],
     }),
   });
-};
 
 const wifiButton = (ap, known) =>
   Widget.Button({
@@ -85,7 +56,6 @@ const wifiButton = (ap, known) =>
     onClicked: () => {
       if (known) {
         Utils.execAsync(`nmcli dev wifi connect "${ap.ssid}"`);
-        print(ap.ssid);
       }
     },
 
@@ -106,7 +76,7 @@ const wifiButton = (ap, known) =>
           wrap: false,
           truncate: "end",
           hexpand: true,
-          label: ap.ssid,
+          label: ap._ap.ssid ? ap.ssid : ap.bssid,
         }),
 
         ap.active
@@ -114,31 +84,13 @@ const wifiButton = (ap, known) =>
             ? Widget.Icon("object-select-symbolic")
             : Widget.Spinner()
           : null,
-        ap.rsn > 0 ? Widget.Icon("channel-secure-symbolic") : null,
+
+        ap._ap.rsn_flags > 0 || ap._ap.wpa_flags > 0
+          ? Widget.Icon("channel-secure-symbolic")
+          : null,
       ],
     }),
   });
-
-const networkList = () => {
-  const SSIDs = knownSSIDs();
-  let knownNetworks = [];
-  let unknownNetworks = [];
-
-  const aps = get_access_points();
-
-  for (const ap of aps) {
-    const ssid = ap.ssid;
-
-    if (ssid)
-      if (SSIDs.has(ssid)) {
-        knownNetworks.push(wifiButton(ap, true));
-      } else {
-        unknownNetworks.push(wifiButton(ap, false));
-      }
-  }
-
-  return [knownNetworks, unknownNetworks];
-};
 
 const info = () => {
   const header = Widget.Box({
@@ -192,41 +144,73 @@ const info = () => {
           Widget.Box({
             vertical: true,
             className: "known",
-          }).hook(Network, (self) => {
-            const [knownNetworks, _] = networkList();
 
-            self.children = [
+            children: [
               Widget.Label({
                 label: "Minhas redes",
                 className: "title",
+                vpack: "center",
                 hpack: "start",
               }),
               Widget.Separator({ vertical: true }),
               wiredButton(Network.wired),
-              knownNetworks,
-            ].flat(1);
+
+              Widget.Box({
+                vertical: true,
+                homogeneous: true,
+              }).hook(Network, (self) => {
+                const SSIDs = knownSSIDs();
+
+                const children = Network.wifi.access_points
+                  .filter((ap) => SSIDs.has(ap.ssid))
+                  .sort((b, a) => {
+                    return a.strength - b.strength;
+                  })
+                  .map((ap) => wifiButton(ap, true));
+
+                if (children.length < 1) self.children = [];
+                else self.children = children;
+              }),
+            ],
           }),
 
           Widget.Box({
             className: "unknown",
             vertical: true,
-          }).hook(Network, (self) => {
-            const [_, unknownNetworks] = networkList();
-
-            self.children = [
+            children: [
               Widget.Label({
                 label: "Outras redes",
                 className: "title",
+                vpack: "center",
                 hpack: "start",
               }),
 
               Widget.Separator({
                 vertical: true,
               }),
-              unknownNetworks.slice(0, 8),
-            ].flat(1);
 
-            self.visible = unknownNetworks.length > 0;
+              Widget.Box({
+                vertical: true,
+                homogeneous: true,
+              }).hook(Network, (self) => {
+                const SSIDs = knownSSIDs();
+
+                const children = Network.wifi.access_points
+                  .filter((ap) => !SSIDs.has(ap.ssid))
+                  .sort((b, a) => {
+                    return a.strength - b.strength;
+                  })
+                  .map((ap) => wifiButton(ap, true));
+
+                if (children.length < 1) {
+                  self.children = [];
+                  self.parent.visible = false;
+                } else {
+                  self.children = children.slice(0, 8);
+                  self.parent.visible = true;
+                }
+              }),
+            ],
           }),
         ],
       }),
