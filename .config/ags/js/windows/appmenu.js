@@ -1,6 +1,7 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import icons from "../icons.js";
 
 globalThis.apps = Applications;
@@ -8,24 +9,24 @@ globalThis.apps = Applications;
 const WINDOW_NAME = "applauncher";
 
 const AppItem = (app) => {
-  const icon = app.app.get_icon();
-  let iconName = null;
-
-  let iconWidget = (iconName) =>
+  const iconWidget = (name) =>
     Widget.Icon({
       className: "appIcon",
-      icon: iconName,
+      icon: name,
       halign: "center",
     });
 
-  if (app.iconName === "") {
-    if (icon && icon.get_file) {
-      iconName = icon.get_file().get_path();
+  let iconName = app.iconName;
+
+  if (!Utils.lookUpIcon(iconName)) {
+    const icon = app.app.get_icon();
+
+    if (icon) {
+      iconName = icon.to_string();
+      if (!Utils.lookUpIcon(iconName)) iconName = "applications-other";
     } else {
-      iconName = "nwergojnervojneorj";
+      iconName = "applications-other";
     }
-  } else {
-    iconName = app.iconName;
   }
 
   return Widget.Button({
@@ -73,7 +74,7 @@ export const Applauncher = () => {
   const list = Widget.Box({ vertical: true });
 
   const placeholder = Widget.Label({
-    label: " Sem resultados",
+    label: "  Sem resultados",
     className: "placeholder",
   });
 

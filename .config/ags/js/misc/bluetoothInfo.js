@@ -6,7 +6,6 @@ const devButton = (dev) =>
   Widget.Button({
     className: "deviceButton",
     onClicked: () => {
-      print(dev.alias);
       dev.setConnection(!dev.connected);
     },
 
@@ -17,7 +16,9 @@ const devButton = (dev) =>
       children: [
         Widget.Icon({
           className: "icon",
-          icon: dev.iconName,
+          icon: Utils.lookUpIcon(dev.iconName)
+            ? dev.iconName
+            : "bluetooth-active",
         }),
 
         Widget.Label({
@@ -28,6 +29,16 @@ const devButton = (dev) =>
           hexpand: true,
           label: dev.alias,
         }),
+
+        dev.connected && dev._device.battery_type != 0
+          ? Widget.Icon({
+              visible: true,
+              setup: (self) => {
+                const level = Math.floor(dev.battery_percentage / 10) * 10;
+                self.icon = `battery-level-${level}-symbolic`;
+              },
+            })
+          : null,
 
         dev.connected ? Widget.Icon("object-select-symbolic") : null,
       ],

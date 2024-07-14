@@ -69,7 +69,7 @@ const Notification = (n, popup) => {
     onClicked: () => {
       if (n.popup) n.dismiss();
       // else n.close.bind(n);
-      else print(n.close());
+      else n.close();
     },
   });
 

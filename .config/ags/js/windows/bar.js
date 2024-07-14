@@ -112,7 +112,7 @@ const clientIcon = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
 
-    self.icon = mon.appid;
+    self.icon = Utils.lookUpIcon(mon.appid) ? mon.appid : "applications-other";
   });
 
 const client = (monitorId) =>
