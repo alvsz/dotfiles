@@ -14,12 +14,14 @@ import networkIndicator from "../misc/networkIcon.js";
 import bluetoothIcon from "../misc/bluetoothIcon.js";
 import mediaPlayer from "../misc/mediaPlayer.js";
 import networkInfo from "../misc/networkInfo.js";
+import bluetoothInfo from "../misc/bluetoothInfo.js";
 
 globalThis.powerprofiles = powerProfiles;
 
 const RadioButton = Widget.subclass(Gtk.RadioButton);
 
 const networkPopup = networkInfo();
+const bluetoothPopup = bluetoothInfo();
 
 // import audioBar from "../misc/audioBar.js";
 
@@ -96,7 +98,8 @@ const bluetoothButton = Widget.Button({
   className: "bluetoothButton",
 
   onPrimaryClick: () => {
-    Bluetooth.toggle();
+    stack.shown = "bluetoothPopup";
+    // if (Bluetooth.enabled) Bluetooth._client.default_adapter_setup_mode = true;
   },
 
   child: Widget.Box({
@@ -315,6 +318,7 @@ const stack = Widget.Stack({
 
   children: {
     networkPopup: networkPopup,
+    bluetoothPopup: bluetoothPopup,
     userCenter: userCenter(),
   },
   shown: "userCenter",

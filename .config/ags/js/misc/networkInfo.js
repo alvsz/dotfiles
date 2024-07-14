@@ -92,7 +92,7 @@ const wifiButton = (ap, known) =>
     }),
   });
 
-const info = () => {
+const networkInfo = () => {
   const header = Widget.Box({
     vertical: false,
     homogeneous: false,
@@ -220,4 +220,4 @@ const info = () => {
   return body;
 };
 
-export default info;
+export default networkInfo;
