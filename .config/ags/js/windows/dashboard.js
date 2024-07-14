@@ -57,9 +57,7 @@ const networkButton = Widget.Button({
 
   onClicked: () => {
     stack.shown = "networkPopup";
-    // networkPopup.reveal_child = true;
     Network?._device?.request_scan_async();
-    // Network.toggleWifi();
   },
 
   child: Widget.Box({
