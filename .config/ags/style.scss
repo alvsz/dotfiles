@@ -684,12 +684,22 @@ window {
   .wifiList {
     padding: 1em;
 
-    &>* {
-      @extend .verticalSpacer;
+    .known {
+      separator {
+        margin: 0.3em 0;
+      }
+
+      &>* {
+        @extend .verticalSpacer;
+      }
+
+      &>.first {
+        margin-top: 0;
+      }
     }
 
-    &>.first {
-      margin-top: 0;
+    .unknown {
+      @extend .known;
     }
   }
 

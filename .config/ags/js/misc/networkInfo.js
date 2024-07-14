@@ -1,5 +1,6 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import NM from "gi://NM";
 
@@ -38,7 +39,10 @@ const knownSSIDs = () => {
 
   for (const connection of connections) {
     const wireless = connection.get_setting_wireless();
-    if (wireless) knownSSIDs.add(wireless.get_ssid().get_data());
+    if (wireless)
+      knownSSIDs.add(
+        NM.utils_ssid_to_utf8(wireless.ssid.get_data() || new Uint8Array()),
+      );
   }
   return knownSSIDs;
 };
@@ -69,19 +73,21 @@ const wiredButton = (conn) => {
           label: "Rede cabeada",
         }),
 
-        active
-          ? Widget.Icon({
-              icon: "object-select-symbolic",
-            })
-          : null,
+        active ? Widget.Icon("object-select-symbolic") : null,
       ],
     }),
   });
 };
 
-const wifiButton = (ap) =>
+const wifiButton = (ap, known) =>
   Widget.Button({
     className: "networkButton",
+    onClicked: () => {
+      if (known) {
+        Utils.execAsync(`nmcli dev wifi connect "${ap.ssid}"`);
+        print(ap.ssid);
+      }
+    },
 
     child: Widget.Box({
       vertical: false,
@@ -104,10 +110,11 @@ const wifiButton = (ap) =>
         }),
 
         ap.active
-          ? Widget.Icon({
-              icon: "object-select-symbolic",
-            })
+          ? Network.wifi.state == "activated"
+            ? Widget.Icon("object-select-symbolic")
+            : Widget.Spinner()
           : null,
+        ap.rsn > 0 ? Widget.Icon("channel-secure-symbolic") : null,
       ],
     }),
   });
@@ -124,9 +131,9 @@ const networkList = () => {
 
     if (ssid)
       if (SSIDs.has(ssid)) {
-        knownNetworks.push(wifiButton(ap));
+        knownNetworks.push(wifiButton(ap, true));
       } else {
-        unknownNetworks.push(wifiButton(ap));
+        unknownNetworks.push(wifiButton(ap, false));
       }
   }
 
@@ -180,34 +187,53 @@ const info = () => {
       Widget.Box({
         vertical: true,
         className: "wifiList",
-      }).hook(Network.wifi, (self) => {
-        const [knownNetworks, unknownNetworks] = networkList();
 
-        self.children = [
-          Widget.Label({
-            label: "Minhas redes",
-            className: "title",
-            hpack: "start",
-          }),
-          Widget.Separator({ vertical: true }),
-          wiredButton(Network.wired),
-          knownNetworks,
-
-          Widget.Label({
-            label: "Outras redes",
-            className: "title",
-            hpack: "start",
-            visible: unknownNetworks.length > 0,
-          }),
-          Widget.Separator({
+        children: [
+          Widget.Box({
             vertical: true,
-            visible: unknownNetworks.length > 0,
-          }),
-          unknownNetworks,
-        ].flat(1);
+            className: "known",
+          }).hook(Network, (self) => {
+            const [knownNetworks, _] = networkList();
 
-        if (self.children.length > 0)
-          self.children[0].toggleClassName("first", true);
+            self.children = [
+              Widget.Label({
+                label: "Minhas redes",
+                className: "title",
+                hpack: "start",
+              }),
+              Widget.Separator({ vertical: true }),
+              wiredButton(Network.wired),
+              knownNetworks,
+            ].flat(1);
+
+            self.children[2].toggleClassName("first", true);
+          }),
+
+          Widget.Box({
+            className: "unknown",
+            vertical: true,
+          }).hook(Network, (self) => {
+            const [_, unknownNetworks] = networkList();
+
+            self.children = [
+              Widget.Label({
+                label: "Outras redes",
+                className: "title",
+                hpack: "start",
+              }),
+
+              Widget.Separator({
+                vertical: true,
+              }),
+              unknownNetworks.slice(0, 8),
+            ].flat(1);
+
+            self.visible = unknownNetworks.length > 0;
+
+            if (self.children.length > 2)
+              self.children[2].toggleClassName("first", true);
+          }),
+        ],
       }),
     ],
   });
