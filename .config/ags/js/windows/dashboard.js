@@ -57,7 +57,7 @@ const networkButton = Widget.Button({
 
   onClicked: () => {
     stack.shown = "networkPopup";
-    Network.wifi.scan();
+    if (Network.wifi.enabled) Network.wifi.scan();
   },
 
   child: Widget.Box({
