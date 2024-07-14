@@ -16,6 +16,7 @@ import mediaPlayer from "../misc/mediaPlayer.js";
 import networkInfo from "../misc/networkInfo.js";
 import bluetoothInfo from "../misc/bluetoothInfo.js";
 
+<<<<<<< HEAD
 globalThis.powerprofiles = powerProfiles;
 
 const RadioButton = Widget.subclass(Gtk.RadioButton);
@@ -53,6 +54,38 @@ const sliders = Widget.Box({
     }),
   ],
 });
+=======
+const streamList = (isSink) =>
+  Widget.Box({
+    className: isSink ? "sinkList" : "sourceList",
+    vertical: true,
+    homogeneous: false,
+    children: Audio.bind(isSink ? "speakers" : "microphones").transform((s) =>
+      s.map((a) => {
+        let defaultId;
+
+        if (isSink) defaultId = Audio.control.get_default_sink()?.id;
+        else defaultId = Audio.control.get_default_source()?.id;
+
+        return RadioButton({
+          // group: self.children,
+          active: a.stream.id == defaultId,
+          child: Widget.Label({
+            hpack: "start",
+            justification: "left",
+            truncate: "end",
+            label: a.description,
+          }),
+        }).on("clicked", (button) => {
+          if (!button.active || !a.stream) return;
+
+          if (isSink) Audio.control.set_default_sink(a.stream);
+          else Audio.control.set_default_source(a.stream);
+        });
+      }),
+    ),
+  });
+>>>>>>> 4091508 (não lembro)
 
 const networkButton = Widget.Button({
   className: "networkButton",
