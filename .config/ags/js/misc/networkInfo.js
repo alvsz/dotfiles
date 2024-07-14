@@ -205,8 +205,6 @@ const info = () => {
               wiredButton(Network.wired),
               knownNetworks,
             ].flat(1);
-
-            self.children[2].toggleClassName("first", true);
           }),
 
           Widget.Box({
@@ -229,9 +227,6 @@ const info = () => {
             ].flat(1);
 
             self.visible = unknownNetworks.length > 0;
-
-            if (self.children.length > 2)
-              self.children[2].toggleClassName("first", true);
           }),
         ],
       }),
