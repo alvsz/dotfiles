@@ -677,14 +677,14 @@ window {
       margin-left: 0.4em;
     }
 
-    .icon {
-      font-size: 1.5em;
-      /* margin: 0.1em; */
-      padding: 0.1em 0em;
+    image {
+      padding: 0em 0.2em;
     }
 
-    image {
-      padding: 0.2em 0em;
+    .icon,
+    .password,
+    .battery {
+      font-size: 1.5em;
     }
   }
 

@@ -32,11 +32,8 @@ const devButton = (dev) =>
 
         dev.connected && dev._device.battery_type != 0
           ? Widget.Icon({
-              visible: true,
-              setup: (self) => {
-                const level = Math.floor(dev.battery_percentage / 10) * 10;
-                self.icon = `battery-level-${level}-symbolic`;
-              },
+              icon: `battery-level-${Math.floor(dev.battery_percentage / 10) * 10}-symbolic`,
+              className: "battery",
             })
           : null,
 

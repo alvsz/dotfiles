@@ -86,7 +86,10 @@ const wifiButton = (ap, known) =>
           : null,
 
         ap._ap.rsn_flags > 0 || ap._ap.wpa_flags > 0
-          ? Widget.Icon("dialog-password-symbolic")
+          ? Widget.Icon({
+              icon: "dialog-password",
+              className: "password",
+            })
           : null,
       ],
     }),
