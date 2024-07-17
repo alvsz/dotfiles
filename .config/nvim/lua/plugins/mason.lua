@@ -7,9 +7,9 @@ return {
     opts = {
       ensure_installed = {
         "clangd",
-        "css-lsp",
-        "debugpy",
-        "jedi-language-server",
+        -- "css-lsp",
+        -- "debugpy",
+        -- "jedi-language-server",
         "lua_ls",
         "tsserver",
         -- add more arguments for adding more language servers
