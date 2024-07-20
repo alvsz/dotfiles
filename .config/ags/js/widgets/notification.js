@@ -74,7 +74,7 @@ const notification = (n) => {
     vertical: true,
     homogeneous: false,
     hexpand: true,
-    attribute: { id: n.id },
+    // attribute: { id: n.id },
     // hpack: "fill",
     // vpack: "fill",
 
