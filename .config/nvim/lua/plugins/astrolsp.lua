@@ -38,6 +38,17 @@ return {
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
     config = {
+      arduino_language_server = {
+        cmd = {
+          "arduino-language-server",
+          "-cli",
+          "/bin/arduino-cli",
+          "-cli-config",
+          ("%s/arduino-cli/arduino-cli.yaml"):format(vim.fn.getenv "XDG_DATA_HOME"),
+          -- [[-clangd clangd]],
+        },
+        filetypes = { "arduino" },
+      },
       -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
     },
     -- customize how language servers are attached

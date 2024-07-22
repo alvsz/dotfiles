@@ -57,6 +57,10 @@ vim.cmd [[
   autocmd FileType c nnoremap <F10> :lua vim.fn.termopen(vim.fn.expand('%:p<')) <CR> :startinsert <CR>
   nnoremap <leader>rl :call luaeval('RGB_to_hex_in_line()')<CR>
   nnoremap <leader>ra :call luaeval('RGBA_to_hex_in_line()')<CR>
+
+  let g:arduino_args = '--config-file /home/mamba/.config/arduino-cli/arduino-cli.yaml'
+  let g:arduino_dir = $XDG_DATA_HOME . "/arduino-cli/packages/arduino"
+  let g:arduino_home_dir = $XDG_DATA_HOME . "/arduino-cli"
 ]]
 
 if vim.g.neovide then vim.o.guifont = "FiraCode Nerd Font,Symbols Nerd Font:h11" end

@@ -51,7 +51,8 @@ return {
     setup = function()
       vim.cmd [[
         let g:arduino_args = '--config-file /home/mamba/.config/arduino-cli/arduino-cli.yaml'
-        let g:arduino_home_dir = $XDG_DATA_HOME . "arduino-cli"
+        let g:arduino_dir = $XDG_DATA_HOME . "/arduino-cli/packages/arduino"
+        let g:arduino_home_dir = $XDG_DATA_HOME . "/arduino-cli"
       ]]
     end,
   },
