@@ -9,6 +9,7 @@ import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
+import Gdk from "gi://Gdk";
 
 import Weather from "../services/weather.js";
 
@@ -30,6 +31,7 @@ globalThis.network = Network;
 globalThis.mpris = Mpris;
 globalThis.weather = Weather;
 globalThis.utils = Utils;
+globalThis.gdk = Gdk;
 
 import { dwlIpc } from "../vars.js";
 
@@ -65,9 +67,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }

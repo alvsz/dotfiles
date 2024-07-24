@@ -285,6 +285,40 @@ window {
   @extend .module;
 }
 
+.notification {
+  @extend .verticalSpacer;
+
+  padding: 0.3em;
+  border-radius: 0.6em;
+  background-color: css("alpha(currentColor, 0.04)");
+
+  .title {
+    font-weight: bolder;
+  }
+
+  .appIcon {
+    font-size: 3em;
+  }
+
+  .close-button {
+    padding: 0.2em;
+  }
+
+  .actions {
+    &>* {
+      @extend .horizontalSpacer;
+    }
+
+    &>.firstH {
+      margin-left: 0em;
+    }
+
+    .actionButton {
+      padding: 0.2em;
+    }
+  }
+}
+
 .calendar {
   @extend .basewindow;
 
@@ -300,40 +334,6 @@ window {
 
   .first {
     margin-top: 0;
-  }
-
-  .notification {
-    @extend .verticalSpacer;
-
-    padding: 0.3em;
-    border-radius: 0.6em;
-    background-color: css("alpha(currentColor, 0.04)");
-
-    .title {
-      font-weight: bolder;
-    }
-
-    .appIcon {
-      font-size: 3em;
-    }
-
-    .close-button {
-      padding: 0.2em;
-    }
-
-    .actions {
-      &>* {
-        @extend .horizontalSpacer;
-      }
-
-      &>.firstH {
-        margin-left: 0em;
-      }
-
-      .actionButton {
-        padding: 0.2em;
-      }
-    }
   }
 
   .calendarBox {
@@ -375,64 +375,71 @@ window {
 }
 
 .backdrop {
-  margin-top: 7em;
+  background-image: url("/usr/share/backgrounds/gnome/blobs-d.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 
-  .spacer1 {
-    min-height: 2em;
-  }
+  // .vertical {
+  //   margin-bottom: 2em;
+  //   margin-top: 5em;
+  // }
 
-  .time {
+  // padding-top: 5em;
+  // margin-bottom: 10em;
+  // background-color: green;
+  // min-width: 60em;
+  // min-height: 50em;
+  // margin-top: 7em;
+
+  &>.time {
     @extend .glow;
     font-weight: bold;
     font-size: 9em;
   }
 
-  .date {
+  &>.date {
     @extend .glow;
     font-size: 2.5em;
   }
 
-  .albumArt {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: green;
+  .mediaPlayer {
+    background-color: css("alpha(currentColor, 0.1)");
 
-    min-height: 25em;
+    .albumArt {
+      // padding: 25em;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      // background-color: green;
 
-    border-radius: 10px;
+      min-height: 25em;
+      min-width: 25em;
+
+      border-radius: 6px;
+    }
+
+    button {
+      // font-size: 2em;
+      padding: 0.2em;
+    }
   }
 
-  .playerBox {
-    padding: 1.5em;
-    background-color: transparentize($background, 0.5);
-    border-radius: 20px;
-    font-size: 1.1em;
+  .notificationList {
+    padding: 2em;
+    // background-color: purple;
 
-    .title {
-      font-weight: bold;
-    }
+    // .first {
+    //   margin: 0em;
+    // }
 
-    .playerTime {
-      padding: 0.5em;
+    .notification {
+      min-width: 25em;
+      background-color: css("alpha(currentColor, 0.1)");
 
-      .length {
-        background-color: purple;
+      .appIcon {
+        padding: 0.2em;
       }
-
-      .position {
-        background-color: turquoise;
-      }
-
-      .progress {
-        min-width: 10em;
-        margin-left: 1em;
-        margin-right: 1em;
-      }
-    }
-
-    .controls {
-      font-size: 1.5em;
     }
   }
 }
