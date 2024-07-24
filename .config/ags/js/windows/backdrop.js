@@ -1,9 +1,12 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import GLib from "gi://GLib";
+import { Placeholder } from "../notification.js";
+import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+import Notification from "../widgets/Notification.js";
 
 // import Spacer from "../misc/Spacer.js";
-import icons from "../icons.js";
+// import icons from "../icons.js";
 
 const clock = () =>
   Widget.Label({
@@ -74,6 +77,33 @@ const playerInfo = () =>
     }
   });
 
+const notificationList = () =>
+  Widget.Box({
+    vertical: true,
+    // homogeneous: true,
+    // hpack: "fill",
+    // vpack: "fill",
+    // vexpand: true,
+  }).hook(Notifications, (self) => {
+    self.children = Notifications.notifications.reverse().map(Notification);
+
+    if (self.children.length > 0) {
+      self.children[0].toggleClassName("first", true);
+    } else self.children = [Placeholder()];
+  });
+
+const notifs = () =>
+  Widget.Scrollable({
+    className: "scroll",
+    hscroll: "never",
+    vscroll: "automatic",
+    child: Widget.Box({
+      vertical: true,
+      homogeneous: false,
+      children: [albumArt(), playerInfo(), notificationList()],
+    }),
+  });
+
 const Backdrop = ({ monitor } = {}) =>
   Widget.Window({
     name: `backdrop-${monitor}`,
@@ -87,13 +117,10 @@ const Backdrop = ({ monitor } = {}) =>
       vertical: true,
       homogeneous: false,
       children: [
-        // clock(),
         date(),
         clock(),
+
         // Spacer("spacer1"),
-        albumArt(),
-        // Spacer("spacer1"),
-        playerInfo(),
       ],
     }),
   });
