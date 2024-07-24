@@ -38,6 +38,7 @@ bindkey -e
 
 source "$ZDOTDIR/aliasrc"
 source "$ZDOTDIR/zsh-window-title.zsh"
+source "$ZDOTDIR/arduino-cli-completion.zsh"
 # source "$ZDOTDIR/nix-zsh-completions/nix-zsh-completions.plugin.zsh"
 
 #source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh 2>/dev/null

@@ -41,15 +41,22 @@ return {
       arduino_language_server = {
         cmd = {
           "arduino-language-server",
-          "-cli",
-          "/bin/arduino-cli",
+          -- "-cli",
+          -- "/bin/arduino-cli",
           "-cli-config",
-          ("%s/arduino-cli/arduino-cli.yaml"):format(vim.fn.getenv "XDG_DATA_HOME"),
+          ("%s/arduino-cli/arduino-cli.yaml"):format(vim.fn.getenv "XDG_CONFIG_HOME"),
           -- [[-clangd clangd]],
         },
         filetypes = { "arduino" },
       },
-      -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
+      -- clangd = {
+      -- filetypes = {
+      --   "c",
+      --   -- "arduino",
+      --   "cpp",
+      -- },
+      -- -- capabilities = { offsetEncoding = "utf-8" }
+      -- },
     },
     -- customize how language servers are attached
     handlers = {
