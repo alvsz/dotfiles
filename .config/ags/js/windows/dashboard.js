@@ -165,6 +165,29 @@ const flowBox = Widget.FlowBox({
   },
 });
 
+const mpris = () =>
+  Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    className: "mpris",
+    setup: (self) => {
+      const update = () => {
+        self.children = Mpris.players.map((p) => mediaPlayer(p));
+      };
+
+      Mpris.connect("player-closed", () => {
+        update();
+      });
+
+      Mpris.connect("player-added", () => {
+        update();
+      });
+
+      self.children.length > 0 &&
+        self.children[0].toggleClassName("first", true);
+    },
+  });
+
 const userCenter = () => {
   const userImage = Widget.Icon({
     className: "userImage",
@@ -312,35 +335,10 @@ const userCenter = () => {
       info,
       powerMenu,
       sliders,
+      mpris(),
       // volumeInfo(),
       flowBox,
     ],
-
-    setup: (self) => {
-      const update = () => {
-        const array1 = [
-          info,
-          powerMenu,
-          sliders,
-          Mpris.players.map((p) => mediaPlayer(p)),
-          flowBox,
-          // networkPopup,
-        ].flat(1);
-
-        self.children = array1;
-      };
-
-      Mpris.connect("player-closed", () => {
-        update();
-      });
-
-      Mpris.connect("player-added", () => {
-        update();
-      });
-
-      self.children.length > 0 &&
-        self.children[0].toggleClassName("first", true);
-    },
   });
 };
 
