@@ -176,11 +176,8 @@ const mpris = (player) => {
   });
 };
 
-const player = () =>
-  Widget.Box({
-    hpack: "center",
-    vpack: "center",
-  }).hook(Mpris, (self) => {
+const player = () => {
+  const update = (self) => {
     if (Mpris.players.length > 0) {
       self.visible = true;
       self.children = [mpris(Mpris.players[0])];
@@ -188,7 +185,27 @@ const player = () =>
       self.visible = false;
       self.children = [];
     }
-  });
+  };
+
+  return Widget.Box({
+    hpack: "center",
+    vpack: "center",
+  })
+    .hook(
+      Mpris,
+      (self) => {
+        update(self);
+      },
+      "player-closed",
+    )
+    .hook(
+      Mpris,
+      ((self) => {
+        update(self);
+      },
+      "player-added"),
+    );
+};
 
 const NotificationIcon = ({ appEntry, appIcon, image }) => {
   let icon = "dialog-information-symbolic";
