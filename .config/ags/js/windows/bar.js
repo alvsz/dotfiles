@@ -12,10 +12,10 @@ import Gtk from "gi://Gtk";
 
 import Weather from "../services/weather.js";
 
-import revealOnClick from "../misc/revealOnClick.js";
-import audioIcon from "../misc/audioIcon.js";
-import networkIndicator from "../misc/networkIcon.js";
-import bluetoothIcon from "../misc/bluetoothIcon.js";
+import revealOnClick from "../widgets/revealOnClick.js";
+import audioIcon from "../widgets/audioIcon.js";
+import networkIndicator from "../widgets/networkIcon.js";
+import bluetoothIcon from "../widgets/bluetoothIcon.js";
 
 import * as User from "../misc/User.js";
 

@@ -5,8 +5,8 @@ import {
   PopupList,
 } from "../notifWidgets.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
-import App from "resource:///com/github/Aylur/ags/app.js";
-import { execAsync, timeout } from "resource:///com/github/Aylur/ags/utils.js";
+// import App from "resource:///com/github/Aylur/ags/app.js";
+// import { execAsync, timeout } from "resource:///com/github/Aylur/ags/utils.js";
 
 const Header = () =>
   Widget.Box({

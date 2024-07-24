@@ -10,11 +10,11 @@ import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
 
 import { iconFile, realName } from "../misc/User.js";
-import networkIndicator from "../misc/networkIcon.js";
-import bluetoothIcon from "../misc/bluetoothIcon.js";
-import mediaPlayer from "../misc/mediaPlayer.js";
-import networkInfo from "../misc/networkInfo.js";
-import bluetoothInfo from "../misc/bluetoothInfo.js";
+import networkIndicator from "../widgets/networkIcon.js";
+import bluetoothIcon from "../widgets/bluetoothIcon.js";
+import mediaPlayer from "../widgets/mediaPlayer.js";
+import networkInfo from "../widgets/networkInfo.js";
+import bluetoothInfo from "../widgets/bluetoothInfo.js";
 
 globalThis.powerprofiles = powerProfiles;
 
