@@ -17,6 +17,7 @@ import audioIcon from "../widgets/audioIcon.js";
 import networkIndicator from "../widgets/networkIcon.js";
 import bluetoothIcon from "../widgets/bluetoothIcon.js";
 
+import icons from "../icons.js";
 import * as User from "../misc/User.js";
 
 globalThis.gtk = Gtk;
@@ -64,9 +65,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -112,7 +113,7 @@ const clientIcon = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
 
-    self.icon = Utils.lookUpIcon(mon.appid) ? mon.appid : "applications-other";
+    self.icon = Utils.lookUpIcon(mon.appid) ? mon.appid : icons.apps.fallback;
   });
 
 const client = (monitorId) =>
@@ -266,7 +267,7 @@ const Right = (monitorId) =>
     className: "rightBar",
     children: [
       revealOnClick({
-        shown: Widget.Icon("go-first"),
+        shown: Widget.Icon(icons.ui.arrow.right),
         hidden: SysTray(),
       }).hook(dwlIpc, (self) => {
         self.visible = dwlIpc.value[monitorId].active;

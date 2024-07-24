@@ -23,9 +23,9 @@ const AppItem = (app) => {
 
     if (icon) {
       iconName = icon.to_string();
-      if (!Utils.lookUpIcon(iconName)) iconName = "applications-other";
+      if (!Utils.lookUpIcon(iconName)) iconName = icons.apps.fallback;
     } else {
-      iconName = "applications-other";
+      iconName = icons.apps.fallback;
     }
   }
 
@@ -84,7 +84,7 @@ export const Applauncher = () => {
     text: "-",
     placeholderText: "Pesquisar",
     primary_icon_name: icons.apps.search,
-    secondary_icon_name: "view-refresh-symbolic",
+    secondary_icon_name: icons.apps.refresh,
     // primary_icon_sensitive: false,
     onAccept: ({ text }) => {
       const query = Applications.query(text);

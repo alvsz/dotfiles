@@ -9,6 +9,7 @@ import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
 
+import icons from "../icons.js";
 import { iconFile, realName } from "../misc/User.js";
 import networkIndicator from "../widgets/networkIcon.js";
 import bluetoothIcon from "../widgets/bluetoothIcon.js";
@@ -237,7 +238,7 @@ const userCenter = () => {
   });
 
   const powerButton = Widget.Button({
-    child: Widget.Icon("system-shutdown-symbolic"),
+    child: Widget.Icon(icons.powermenu.shutdown),
     vpack: "center",
     hpack: "end",
     onClicked: (_) => {

@@ -35,8 +35,10 @@ export default {
         },
     },
     apps: {
+        fallback: "applications-other",
         apps: "view-app-grid-symbolic",
         search: "folder-saved-search-symbolic",
+        refresh: "view-refresh-symbolic",
     },
     battery: {
         charging: "󱐋",
@@ -76,18 +78,18 @@ export default {
             track: "media-playlist-repeat-song-symbolic",
             playlist: "media-playlist-repeat-symbolic",
         },
-        playing: "media-playback-pause-symbolic",
-        paused: "media-playback-start-symbolic",
-        stopped: "media-playback-start-symbolic",
+        play: "media-playback-pause-symbolic",
+        pause: "media-playback-start-symbolic",
+        stop: "media-playback-stop-symbolic",
         prev: "media-skip-backward-symbolic",
         next: "media-skip-forward-symbolic",
     },
     ui: {
         arrow: {
-            right: "pan-end-symbolic",
-            left: "pan-start-symbolic",
-            down: "pan-down-symbolic",
-            up: "pan-up-symbolic",
+            right: "go-next",
+            left: "go-previous",
+            down: "go-down",
+            up: "go-up",
         },
     },
     system: {

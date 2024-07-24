@@ -1,13 +1,8 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
-import scrollable from "../misc/bouncingText.js";
-
-const FALLBACK_ICON = "audio-x-generic-symbolic";
-const PLAY_ICON = "media-playback-start-symbolic";
-const PAUSE_ICON = "media-playback-pause-symbolic";
-const PREV_ICON = "media-skip-backward-symbolic";
-const NEXT_ICON = "media-skip-forward-symbolic";
+import scrollable from "./bouncingText.js";
+import icons from "../icons.js";
 
 const lengthStr = (length) => {
   const min = Math.floor(length / 60);
@@ -80,10 +75,10 @@ const mediaPlayer = (player) => {
       icon: player.bind("play_back_status").transform((s) => {
         switch (s) {
           case "Playing":
-            return PAUSE_ICON;
+            return icons.mpris.pause;
           case "Paused":
           case "Stopped":
-            return PLAY_ICON;
+            return icons.mpris.play;
         }
       }),
     }),
@@ -92,13 +87,13 @@ const mediaPlayer = (player) => {
   const prev = Widget.Button({
     on_clicked: () => player.previous(),
     visible: player.bind("can_go_prev"),
-    child: Widget.Icon(PREV_ICON),
+    child: Widget.Icon(icons.mpris.prev),
   });
 
   const next = Widget.Button({
     on_clicked: () => player.next(),
     visible: player.bind("can_go_next"),
-    child: Widget.Icon(NEXT_ICON),
+    child: Widget.Icon(icons.mpris.next),
   });
 
   const albumCover = Widget.Icon({
@@ -141,7 +136,7 @@ const mediaPlayer = (player) => {
         }
 
         if (icon) self.icon = icon;
-        else self.icon = FALLBACK_ICON;
+        else self.icon = icons.mpris.fallback;
       }),
     ],
   });

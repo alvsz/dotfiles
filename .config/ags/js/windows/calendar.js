@@ -1,7 +1,7 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { Placeholder } from "../notification.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-import Notification from "../misc/Notification.js";
+import Notification from "../widgets/Notification.js";
 
 import GLib from "gi://GLib";
 
