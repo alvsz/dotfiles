@@ -9,7 +9,7 @@ systemctl --user start gammastep-indicator
 
 org.gnome.Geary --gapplication-service &
 
-swayidle timeout 420 'dpms off' resume 'dpms on' &
+swayidle timeout 420 'dpms off' resume 'dpms on' lock 'bloqueador' &
 
 swww init
 
