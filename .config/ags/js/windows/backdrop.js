@@ -1,7 +1,6 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import GLib from "gi://GLib";
-import { Placeholder } from "../notification.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import { lookUpIcon } from "resource:///com/github/Aylur/ags/utils.js";
 import icons from "../icons.js";
@@ -143,8 +142,10 @@ const mpris = (player) => {
   return Widget.Box({
     vertical: true,
     homogeneous: false,
-    hexpand: true,
     hpack: "center",
+    vpack: "end",
+    hexpand: true,
+    vexpand: true,
     className: "mediaPlayer",
     children: [
       albumCover,
@@ -189,7 +190,8 @@ const player = () => {
 
   return Widget.Box({
     hpack: "center",
-    vpack: "center",
+    vpack: "end",
+    // vexpand: true,
   })
     .hook(
       Mpris,
@@ -267,16 +269,17 @@ const notificationList = () =>
     vertical: true,
     // homogeneous: true,
     hpack: "center",
-    vpack: "start",
+    vpack: "end",
     className: "notificationList",
-    vexpand: true,
+    // vexpand: true,
     visible: true,
   }).hook(Notifications, (self) => {
     self.children = Notifications.notifications.reverse().map(Notification);
 
     if (self.children.length > 0) {
+      self.visible = true;
       self.children[0].toggleClassName("first", true);
-    } else self.children = [Placeholder()];
+    } else self.visible = false;
   });
 
 const Backdrop = ({ monitor } = {}) => {
@@ -316,6 +319,8 @@ const Backdrop = ({ monitor } = {}) => {
           child: Widget.Box({
             vertical: true,
             vexpand: true,
+            vpack: "end",
+            homogeneous: false,
             children: [
               // albumArt(),
               player(),

@@ -269,7 +269,7 @@ const Right = (monitorId) =>
     className: "rightBar",
     children: [
       revealOnClick({
-        shown: Widget.Icon(icons.ui.arrow.right),
+        shown: Widget.Icon(icons.ui.arrow.left),
         hidden: SysTray(),
       }).hook(dwlIpc, (self) => {
         self.visible = dwlIpc.value[monitorId].active;
