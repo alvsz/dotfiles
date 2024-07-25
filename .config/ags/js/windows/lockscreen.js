@@ -3,6 +3,7 @@ import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
 // import App from "resource:///com/github/Aylur/ags/app.js";
 
 import NotificationIcon from "../widgets/notificationIcon.js";
@@ -149,6 +150,7 @@ const lockscreen = (monitor, display, lock) => {
           onClicked: () => {
             lock.unlock_and_destroy();
             display.sync();
+            App.quit();
             // quit()
 
             // const window = App.getWindow(WINDOW_NAME);
