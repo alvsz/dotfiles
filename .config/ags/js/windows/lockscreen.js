@@ -1,8 +1,9 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import GLib from "gi://GLib";
+import Gtk from "gi://Gtk";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-import App from "resource:///com/github/Aylur/ags/app.js";
+// import App from "resource:///com/github/Aylur/ags/app.js";
 
 import NotificationIcon from "../widgets/notificationIcon.js";
 import mpris from "../widgets/mediaPlayerVertical.js";
@@ -97,16 +98,20 @@ const notificationList = () =>
     } else self.visible = false;
   });
 
-const lockscreen = ({ monitor } = {}) => {
-  const WINDOW_NAME = `backdrop-${monitor}`;
+const lockscreen = (monitor, display, lock) => {
+  const geometry = monitor.get_geometry();
+  // const WINDOW_NAME = `backdrop-${monitor}`;
 
-  return Widget.Window({
-    name: WINDOW_NAME,
-    monitor: monitor,
-    layer: "background",
-    exclusivity: "ignore",
+  return new Gtk.Window({
+    // name: WINDOW_NAME,
+    // gdkmonitor: monitor,
+    // monitor: monitor,
+    // layer: "background",
+    // exclusivity: "ignore",
     visible: true,
-    anchor: [],
+    default_width: geometry.width,
+    default_height: geometry.height,
+    // anchor: [],
     // anchor: ["top", "bottom", "left", "right"],
     child: Widget.Box({
       className: "backdrop",
@@ -116,7 +121,7 @@ const lockscreen = ({ monitor } = {}) => {
       vexpand: true,
       vertical: true,
       homogeneous: false,
-      css: `min-width: 1920px; min-height: 1080px`,
+      // css: `min-width: ${geometry.width}px; min-height: ${geometry.height}px`,
 
       children: [
         date(),
@@ -142,10 +147,14 @@ const lockscreen = ({ monitor } = {}) => {
 
         Widget.Button({
           onClicked: () => {
-            const window = App.getWindow(WINDOW_NAME);
+            lock.unlock_and_destroy();
+            display.sync();
+            // quit()
 
-            App.closeWindow(WINDOW_NAME);
-            App.removeWindow(window);
+            // const window = App.getWindow(WINDOW_NAME);
+            //
+            // App.closeWindow(WINDOW_NAME);
+            // App.removeWindow(window);
           },
           child: Widget.Label("destruir"),
         }),
