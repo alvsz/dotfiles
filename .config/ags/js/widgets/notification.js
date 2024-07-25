@@ -1,28 +1,9 @@
 import GLib from "gi://GLib";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
-import { lookUpIcon } from "resource:///com/github/Aylur/ags/utils.js";
 
-const NotificationIcon = ({ appEntry, appIcon, image }) => {
-  let icon = "dialog-information-symbolic";
+import NotificationIcon from "./notificationIcon.js";
 
-  if (image) {
-    icon = image;
-  } else if (lookUpIcon(appIcon)) {
-    icon = appIcon;
-  } else if (lookUpIcon(appEntry)) {
-    icon = appEntry;
-  }
-
-  return Widget.Icon({
-    icon,
-    hpack: "start",
-    vpack: "start",
-    vexpand: true,
-    className: "appIcon",
-  });
-};
-
-const Notification = (n) => {
+const notification = (n) => {
   const summary = Widget.Label({
     className: "title",
     vpack: "fill",
@@ -136,4 +117,4 @@ const Notification = (n) => {
   });
 };
 
-export default Notification;
+export default notification;

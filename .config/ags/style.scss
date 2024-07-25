@@ -401,12 +401,15 @@ window {
   &>.date {
     @extend .glow;
     font-size: 2.5em;
+    margin-top: 2em;
   }
 
   .mediaPlayer {
+    // padding: 1em;
     background-color: css("alpha(currentColor, 0.1)");
 
     .albumArt {
+      margin: 1em;
       // padding: 25em;
       background-size: contain;
       background-repeat: no-repeat;
@@ -427,11 +430,6 @@ window {
 
   .notificationList {
     padding: 2em;
-    // background-color: purple;
-
-    // .first {
-    //   margin: 0em;
-    // }
 
     .notification {
       min-width: 25em;

@@ -1,7 +1,7 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { Placeholder } from "../notification.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-import Notification from "../widgets/Notification.js";
+import notification from "../widgets/notification.js";
 
 import GLib from "gi://GLib";
 
@@ -52,7 +52,7 @@ const notificationList = () => {
     vexpand: true,
     visible: true,
   }).hook(Notifications, (self) => {
-    self.children = Notifications.notifications.reverse().map(Notification);
+    self.children = Notifications.notifications.reverse().map(notification);
 
     if (self.children.length > 0) {
       self.children[0].toggleClassName("first", true);
