@@ -4,8 +4,8 @@ import Calendar from "./js/windows/calendar.js";
 // import Backdrop from "./js/windows/backdrop.js";
 import Dashboard from "./js/windows/dashboard.js";
 
-import Lock from "./js/misc/Lock.js";
-globalThis.lock = Lock;
+// import Lock from "./js/misc/Lock.js";
+// globalThis.lock = Lock;
 
 import Weather from "./js/services/weather.js";
 
