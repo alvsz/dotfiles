@@ -8,8 +8,10 @@ import Dashboard from "./js/windows/dashboard.js";
 // globalThis.lock = Lock;
 
 import Weather from "./js/services/weather.js";
+import polkitAgent from "./js/services/polkitAgent.js";
 
 globalThis.weather = Weather;
+globalThis.polkit = polkitAgent;
 
 import App from "resource:///com/github/Aylur/ags/app.js";
 

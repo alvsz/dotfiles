@@ -1,5 +1,6 @@
 import GLib from "gi://GLib";
 import PolkitAgent from "gi://PolkitAgent";
+import AccountsService from "gi://AccountsService";
 import Polkit from "gi://Polkit";
 import GjsPolkit from "gi://GjsPolkit";
 import Service from "resource:///com/github/Aylur/ags/service.js";
@@ -12,7 +13,7 @@ class AuthenticationDialog extends Service {
         done: ["boolean"],
         request: ["string", "boolean"],
         error: ["string"],
-        info: ["info"],
+        info: ["string"],
       },
       {
         ["echo-on"]: ["boolean", "r"],
@@ -24,6 +25,8 @@ class AuthenticationDialog extends Service {
   }
 
   constructor(actionId, message, iconName, cookie, userNames) {
+    super();
+
     this._actionId = actionId;
     this._message = message;
     this._iconName = iconName;
@@ -33,39 +36,41 @@ class AuthenticationDialog extends Service {
     if (userNames.length > 1) {
       print(
         `polkitAuthenticationAgent: Received ${userNames.length} ` +
-        "identities that can be used for authentication. Only " +
-        "considering one.",
+          "identities that can be used for authentication. Only " +
+          "considering one.",
       );
     }
 
-    let userName = GLib.get_user_name();
+    const userName = GLib.get_user_name();
+
+    print("username: " + userName);
 
     if (!userNames.includes(userName)) userName = "root";
     if (!userNames.includes(userName)) userName = userNames[0];
 
     this._user = AccountsService.UserManager.get_default().get_user(userName);
 
-    this._doneEmitted = false;
+    print("realname: " + this._user.get_real_name());
+
     this._identityToAuth = Polkit.UnixUser.new_for_name(userName);
-    this._completed = false;
 
     this._startSession();
   }
 
   _startSession() {
     this._session = null;
+
     this._session = new PolkitAgent.Session({
       identity: this._identityToAuth,
       cookie: this._cookie,
     });
 
-    this._session.connect("completed", (_, success) => {
-      this._completed = true;
+    print("nova sessão " + this._session.toString());
 
+    this._session.connect("completed", (_, success) => {
       if (success) {
         print("completou com sucesso");
-        this.emit("done", true);
-        this._doneEmitted = true;
+        this.emit("done", false);
       } else {
         print("completou sem sucesso");
         this._startSession();
@@ -73,7 +78,9 @@ class AuthenticationDialog extends Service {
     });
 
     this._session.connect("request", (_, request, echoOn) => {
-      print("nova request");
+      print("nova request:  " + request);
+      print("novo echoon: " + echoOn.toString());
+
       this._request = request;
       this.changed("request");
       this._echoOn = echoOn;
@@ -83,7 +90,8 @@ class AuthenticationDialog extends Service {
     });
 
     this._session.connect("show-error", (_, error) => {
-      print("novo erro");
+      print("novo erro: " + error);
+
       this._error = error;
       this.changed("error");
 
@@ -91,12 +99,15 @@ class AuthenticationDialog extends Service {
     });
 
     this._session.connect("show-info", (_, info) => {
-      print("novo info");
+      print("novo info: " + info);
+
       this._info = info;
       this.changed("info");
 
       this.emit("info", info);
     });
+
+    this._session.initiate();
   }
 
   authenticate(password) {
@@ -125,7 +136,7 @@ class AuthenticationAgent extends Service {
 
   enable() {
     try {
-      this.register();
+      this._nativeAgent.register();
     } catch (e) {
       log("Failed to register AuthenticationAgent");
     }
@@ -133,13 +144,15 @@ class AuthenticationAgent extends Service {
 
   disable() {
     try {
-      this.unregister();
+      this._nativeAgent.unregister();
     } catch (e) {
       log("Failed to unregister AuthenticationAgent");
     }
   }
 
   _onInitiate(_, actionId, message, iconName, cookie, userNames) {
+    print("nova autenticação iniciada");
+
     this._currentDialog = new AuthenticationDialog(
       actionId,
       message,
@@ -161,7 +174,8 @@ class AuthenticationAgent extends Service {
   }
 
   _completeRequest(dismissed) {
-    this._currentDialog.close();
+    print("autenticação terminada com status " + dismissed.toString());
+    // this._currentDialog.close();
     this._currentDialog = null;
 
     this._nativeAgent.complete(dismissed);
