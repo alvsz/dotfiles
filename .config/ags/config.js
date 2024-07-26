@@ -1,31 +1,33 @@
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+
 import Bar from "./js/windows/bar.js";
 import AppMenu from "./js/windows/appmenu.js";
 import Calendar from "./js/windows/calendar.js";
-// import Backdrop from "./js/windows/backdrop.js";
 import Dashboard from "./js/windows/dashboard.js";
-
-// import Lock from "./js/misc/Lock.js";
-// globalThis.lock = Lock;
+import Polkit from "./js/windows/polkit.js";
 
 import Weather from "./js/services/weather.js";
 import polkitAgent from "./js/services/polkitAgent.js";
 
-globalThis.weather = Weather;
-globalThis.polkit = polkitAgent;
-
-import App from "resource:///com/github/Aylur/ags/app.js";
-
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
-import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
-globalThis.utils = Utils;
+// import Lock from "./js/misc/Lock.js";
+// globalThis.lock = Lock;
 
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+globalThis.weather = Weather;
+globalThis.polkit = polkitAgent;
+globalThis.utils = Utils;
 
 Notifications.popupTimeout = 3000;
 Notifications.cacheActions = true;
 
 scssWatcher();
+
+polkitAgent.connect("initiate", () => {
+  App.addWindow(Polkit(polkitAgent._currentDialog));
+});
 
 const windows = [
   ...forMonitors(Bar),

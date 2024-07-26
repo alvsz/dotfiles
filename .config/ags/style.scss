@@ -488,6 +488,8 @@ window {
 
   .powerMenu,
   .mpris {
+    @extend .first;
+
     &>* {
       @extend .verticalSpacer;
     }
@@ -716,5 +718,28 @@ window {
         @extend .verticalSpacer;
       }
     }
+  }
+}
+
+.polkit {
+  @extend .basewindow;
+  padding: 1em;
+  min-width: 18em;
+
+  .userImage {
+    font-size: 10em;
+  }
+
+  .userName {
+    font-weight: bold;
+    margin: 0.5em;
+  }
+
+  entry {
+    margin: 0.5em;
+  }
+
+  .message {
+    font-style: italic;
   }
 }

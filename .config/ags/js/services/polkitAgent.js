@@ -5,6 +5,8 @@ import Polkit from "gi://Polkit";
 import GjsPolkit from "gi://GjsPolkit";
 import Service from "resource:///com/github/Aylur/ags/service.js";
 
+const FALLBACK_ICON = "avatar-default-symbolic";
+
 class AuthenticationDialog extends Service {
   static {
     Service.register(
@@ -40,14 +42,28 @@ class AuthenticationDialog extends Service {
     this._iconName = iconName;
     this.changed("icon-name");
 
+    this._echoOn = null;
+    this.changed("echo-on");
+    this._request = null;
+    this.changed("request");
+    this._error = null;
+    this.changed("error");
+    this._info = null;
+    this.changed("info");
+
+    this._userName = null;
+    this.changed("user-name");
+    this._realName = null;
+    this.changed("real-name");
+    this._userImage = FALLBACK_ICON;
+    this.changed("user-image");
+
     this._cookie = cookie;
     this._userNames = userNames;
 
     if (userNames.length > 1) {
       print(
-        `polkitAuthenticationAgent: Received ${userNames.length} ` +
-        "identities that can be used for authentication. Only " +
-        "considering one.",
+        `polkitAuthenticationAgent: Received ${userNames.length} identities that can be used for authentication. Only considering one.`,
       );
     }
 
@@ -59,6 +75,8 @@ class AuthenticationDialog extends Service {
     if (!userNames.includes(userName)) userName = userNames[0];
 
     this._user = AccountsService.UserManager.get_default().get_user(userName);
+    this._user.connect("notify::is-loaded", this._onUserChanged.bind(this));
+    this._user.connect("changed", this._onUserChanged.bind(this));
 
     print("realname: " + this._user.get_real_name());
 
@@ -66,8 +84,6 @@ class AuthenticationDialog extends Service {
 
     this._startSession();
 
-    this._user.connect("notify::is-loaded", this._onUserChanged.bind(this));
-    this._user.connect("changed", this._onUserChanged.bind(this));
     this._onUserChanged();
   }
 
@@ -126,12 +142,24 @@ class AuthenticationDialog extends Service {
 
   _onUserChanged() {
     if (!this._user.is_loaded) return;
-    this._userName = this._user.get_user_name();
-    this.changed("user-name");
-    this._realName = this._user.get_real_name();
-    this.changed("real-name");
-    this._userImage = this._user.get_icon_file();
-    this.changed("user-image");
+
+    const userName = this._user.get_user_name();
+    if (userName) {
+      this._userName = userName;
+      this.changed("user-name");
+    }
+
+    const realName = this._user.get_real_name();
+    if (realName) {
+      this._realName = realName;
+      this.changed("real-name");
+    }
+
+    const iconFile = this._user.get_icon_file();
+    if (iconFile) {
+      this._userImage = iconFile;
+      this.changed("user-image");
+    }
   }
 
   authenticate(password) {
@@ -180,7 +208,14 @@ class AuthenticationAgent extends Service {
     // the class itself
     // an object defining the signals
     // an object defining its properties
-    Service.register(this, { initiate: [] }, {});
+    Service.register(
+      this,
+      {
+        initiate: [],
+        done: [],
+      },
+      {},
+    );
   }
 
   constructor() {
@@ -234,10 +269,10 @@ class AuthenticationAgent extends Service {
 
   _completeRequest(dismissed) {
     print("autenticação terminada com status " + dismissed.toString());
-    // this._currentDialog.close();
     this._currentDialog = null;
 
     this._nativeAgent.complete(dismissed);
+    this.emit("done");
   }
 }
 
