@@ -47,6 +47,8 @@ const polkit = (dialog) => {
     hpack: "center",
     wrap: true,
     justification: "center",
+    // label:
+    //   "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
   }).hook(dialog, (self) => {
     if (dialog.info) {
       self.visible = true;
@@ -55,7 +57,9 @@ const polkit = (dialog) => {
   });
 
   const password = Widget.Entry({
-    hpack: "center",
+    // hpack: "center",
+    hpack: "fill",
+    hexpand: true,
     placeholderText: "Senha",
     visibility: dialog.bind("echo-on"),
     onAccept: ({ text }) => {
@@ -68,6 +72,8 @@ const polkit = (dialog) => {
     hpack: "center",
     wrap: true,
     justification: "center",
+    // label:
+    // "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
   }).hook(dialog, (self) => {
     if (dialog.error) {
       self.visible = true;
