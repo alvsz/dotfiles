@@ -25,11 +25,11 @@
     // margin: 0;
   }
 
-  & > * {
+  &>* {
     @extend .horizontalSpacer;
   }
 
-  & > .firstH {
+  &>.firstH {
     margin: 0;
   }
 }
@@ -305,11 +305,11 @@ window {
   }
 
   .actions {
-    & > * {
+    &>* {
       @extend .horizontalSpacer;
     }
 
-    & > .firstH {
+    &>.firstH {
       margin-left: 0em;
     }
 
@@ -392,13 +392,13 @@ window {
   // min-height: 50em;
   // margin-top: 7em;
 
-  & > .time {
+  &>.time {
     @extend .glow;
     font-weight: bold;
     font-size: 9em;
   }
 
-  & > .date {
+  &>.date {
     @extend .glow;
     font-size: 2.5em;
     margin-top: 2em;
@@ -474,7 +474,7 @@ window {
 .userCenter {
   padding: 1em;
 
-  & > * {
+  &>* {
     @extend .verticalSpacer;
   }
 
@@ -490,7 +490,7 @@ window {
   .mpris {
     @extend .first;
 
-    & > * {
+    &>* {
       @extend .verticalSpacer;
     }
   }
@@ -536,7 +536,7 @@ window {
   }
 
   .info {
-    & > * {
+    &>* {
       @extend .horizontalSpacer;
     }
 
@@ -561,7 +561,7 @@ window {
 }
 
 .controlCenter {
-  & > * {
+  &>* {
     padding: 0.2em;
   }
 
@@ -649,11 +649,9 @@ window {
       background-image 0ms;
     animation: ripple 225ms cubic-bezier(0, 0, 0.2, 1) forwards;
     box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.10)");
-    background-image: radial-gradient(
-      circle,
-      css("alpha(currentColor, 0.12)") 10%,
-      transparent 0%
-    );
+    background-image: radial-gradient(circle,
+        css("alpha(currentColor, 0.12)") 10%,
+        transparent 0%);
     background-size: 0% 0%;
     color: white;
   }
@@ -716,7 +714,7 @@ window {
     .unknown {
       @extend .known;
 
-      & > label {
+      &>label {
         @extend .verticalSpacer;
       }
     }
@@ -725,29 +723,41 @@ window {
 
 .polkit {
   @extend .basewindow;
-  // padding: 1em;
+  padding: 1em;
   min-width: 18em;
 
   .userImage {
-    font-size: 10em;
-    margin-top: 0.1em;
+    font-size: 5em;
+    // margin-top: 0.1em;
+  }
+
+  .title {
+    font-weight: bold;
+    // margin-bottom: 1em;
+    // margin: 0em 1em;
+    margin: 1em 1em 1em 1em;
+    font-size: 1.1em;
   }
 
   label {
     margin: 0em 1em;
   }
 
+  .message {
+    margin-bottom: 1em;
+  }
+
   .userName {
-    font-weight: bold;
     margin: 0.5em;
   }
 
   entry {
-    margin: 1em 2em 0em 2em;
+    min-width: 18em;
+    margin: 0em 1em;
   }
 
   .error {
-    margin-top: 1em;
+    margin-top: 0.5em;
   }
 
   .info {
@@ -755,7 +765,7 @@ window {
   }
 
   .horizontal {
-    margin: 1em;
+    margin-top: 1em;
   }
 
   .cancelButton {

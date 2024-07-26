@@ -12,8 +12,14 @@ const polkit = (dialog) => {
   };
   const cancel = () => {
     dialog.cancel();
-    close();
+    // close();
   };
+
+  const title = Widget.Label({
+    className: "title",
+    hpack: "center",
+    label: "Autenticação necessária",
+  });
 
   const userImage = Widget.Icon({
     className: "userImage",
@@ -49,12 +55,16 @@ const polkit = (dialog) => {
     justification: "center",
     // label:
     //   "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  }).hook(dialog, (self) => {
-    if (dialog.info) {
-      self.visible = true;
-      self.label = dialog.info;
-    } else self.visible = false;
-  });
+  }).hook(
+    dialog,
+    (self) => {
+      if (dialog.info) {
+        self.visible = true;
+        self.label = dialog.info;
+      } else self.visible = false;
+    },
+    "info",
+  );
 
   const password = Widget.Entry({
     // hpack: "center",
@@ -62,8 +72,15 @@ const polkit = (dialog) => {
     hexpand: true,
     placeholderText: "Senha",
     visibility: dialog.bind("echo-on"),
+    onChange: ({ text }) => {
+      authButton.sensitive = text.length > 0;
+    },
     onAccept: ({ text }) => {
-      dialog.authenticate(text);
+      if (text.length > 0) {
+        dialog.authenticate(text);
+        password.sensitive = false;
+        authButton.sensitive = false;
+      }
     },
   });
 
@@ -73,13 +90,17 @@ const polkit = (dialog) => {
     wrap: true,
     justification: "center",
     // label:
-    // "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
-  }).hook(dialog, (self) => {
-    if (dialog.error) {
-      self.visible = true;
-      self.label = dialog.error;
-    } else self.visible = false;
-  });
+    //   "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
+  }).hook(
+    dialog,
+    (self) => {
+      if (dialog.error) {
+        self.visible = true;
+        self.label = dialog.error;
+      } else self.visible = false;
+    },
+    "error",
+  );
 
   const cancelButton = Widget.Button({
     className: "cancelButton",
@@ -92,16 +113,30 @@ const polkit = (dialog) => {
     className: "authButton",
     hpack: "fill",
     child: Widget.Label("Autenticar"),
+    sensitive: false,
     onClicked: () => {
       const response = password.get_text();
 
       if (response.length === 0) return;
 
       dialog.authenticate(response);
+      password.sensitive = false;
+      authButton.sensitive = false;
     },
   });
 
   polkitAgent.connect("done", () => close());
+  dialog.connect("success", (_, success) => {
+    if (!success) {
+      error.visible = true;
+      error.label = "não funcionou, tente novamente";
+      authButton.sensitive = true;
+
+      password.sensitive = true;
+      password.text = "";
+      password.grab_focus();
+    }
+  });
 
   return Widget.Window({
     name: WINDOW_NAME,
@@ -114,11 +149,12 @@ const polkit = (dialog) => {
       homogeneous: false,
       className: "polkit",
       children: [
+        title,
+        message,
         userImage,
         userName,
-        message,
-        info,
         password,
+        info,
         error,
         Widget.Box({
           homogeneous: true,

@@ -4,6 +4,7 @@ import AccountsService from "gi://AccountsService";
 import Polkit from "gi://Polkit";
 import GjsPolkit from "gi://GjsPolkit";
 import Service from "resource:///com/github/Aylur/ags/service.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
 
 const FALLBACK_ICON = "avatar-default-symbolic";
 
@@ -13,6 +14,7 @@ class AuthenticationDialog extends Service {
       this,
       {
         done: ["boolean"],
+        success: ["boolean"],
         request: ["string", "boolean"],
         error: ["string"],
         info: ["string"],
@@ -91,6 +93,7 @@ class AuthenticationDialog extends Service {
     });
 
     this._session.connect("completed", (_, success) => {
+      this.emit("success", success);
       if (success) {
         this.emit("done", false);
       } else {
@@ -217,7 +220,8 @@ class AuthenticationAgent extends Service {
     try {
       this._nativeAgent.register();
     } catch (e) {
-      log("Failed to register AuthenticationAgent");
+      print("Failed to register AuthenticationAgent");
+      App.quit();
     }
   }
 
@@ -225,7 +229,8 @@ class AuthenticationAgent extends Service {
     try {
       this._nativeAgent.unregister();
     } catch (e) {
-      log("Failed to unregister AuthenticationAgent");
+      print("Failed to unregister AuthenticationAgent");
+      App.quit();
     }
   }
 
@@ -239,7 +244,6 @@ class AuthenticationAgent extends Service {
     );
     this._currentDialog.connect("done", this._onDialogDone.bind(this));
     this.emit("initiate");
-    // this.changed("initiate");
   }
 
   _onCancel(_) {
@@ -251,9 +255,9 @@ class AuthenticationAgent extends Service {
   }
 
   _completeRequest(dismissed) {
-    this._currentDialog = null;
-
     this._nativeAgent.complete(dismissed);
+
+    this._currentDialog = null;
     this.emit("done");
   }
 }
