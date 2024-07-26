@@ -16,10 +16,16 @@ class AuthenticationDialog extends Service {
         info: ["string"],
       },
       {
+        ["action-id"]: ["string", "r"],
+        ["message"]: ["string", "r"],
+        ["icon-name"]: ["string", "r"],
         ["echo-on"]: ["boolean", "r"],
         ["request"]: ["string", "r"],
         ["error"]: ["string", "r"],
         ["info"]: ["string", "r"],
+        ["user-name"]: ["string", "r"],
+        ["real-name"]: ["string", "r"],
+        ["user-image"]: ["string", "r"],
       },
     );
   }
@@ -28,8 +34,12 @@ class AuthenticationDialog extends Service {
     super();
 
     this._actionId = actionId;
+    this.changed("action-id");
     this._message = message;
+    this.changed("message");
     this._iconName = iconName;
+    this.changed("icon-name");
+
     this._cookie = cookie;
     this._userNames = userNames;
 
@@ -41,7 +51,7 @@ class AuthenticationDialog extends Service {
       );
     }
 
-    const userName = GLib.get_user_name();
+    let userName = GLib.get_user_name();
 
     print("username: " + userName);
 
@@ -55,6 +65,10 @@ class AuthenticationDialog extends Service {
     this._identityToAuth = Polkit.UnixUser.new_for_name(userName);
 
     this._startSession();
+
+    this._user.connect("notify::is-loaded", this._onUserChanged.bind(this));
+    this._user.connect("changed", this._onUserChanged.bind(this));
+    this._onUserChanged();
   }
 
   _startSession() {
@@ -110,12 +124,53 @@ class AuthenticationDialog extends Service {
     this._session.initiate();
   }
 
+  _onUserChanged() {
+    if (!this._user.is_loaded) return;
+    this._userName = this._user.get_user_name();
+    this.changed("user-name");
+    this._realName = this._user.get_real_name();
+    this.changed("real-name");
+    this._userImage = this._user.get_icon_file();
+    this.changed("user-image");
+  }
+
   authenticate(password) {
     this?._session?.response(password);
   }
 
   cancel() {
     this.emit("done", true);
+  }
+
+  get action_id() {
+    return this._actionId;
+  }
+  get message() {
+    return this._message;
+  }
+  get icon_name() {
+    return this._iconName;
+  }
+  get echo_on() {
+    return this._echoOn;
+  }
+  get request() {
+    return this._request;
+  }
+  get error() {
+    return this._error;
+  }
+  get info() {
+    return this._info;
+  }
+  get user_name() {
+    return this._userName;
+  }
+  get real_name() {
+    return this._realName;
+  }
+  get user_image() {
+    return this._userImage;
   }
 }
 

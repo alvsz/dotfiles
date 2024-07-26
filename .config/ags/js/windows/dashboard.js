@@ -175,8 +175,8 @@ const mpris = () =>
       const update = () => {
         self.children = Mpris.players.map((p) => mediaPlayer(p));
 
-        self.children.length > 0 &&
-          self.children[0].toggleClassName("first", true);
+        // if (self.children.length > 0)
+        //   self.children[0].toggleClassName("first", true);
       };
 
       Mpris.connect("player-closed", () => {

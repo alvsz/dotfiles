@@ -24,7 +24,7 @@ const notification = (n) => {
     hpack: "start",
     useMarkup: true,
     justification: "left",
-    truncate: "end",
+    // truncate: "end",
     wrap: true,
     label: n.body.replaceAll("&", "&amp;"),
   });
