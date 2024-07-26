@@ -69,8 +69,6 @@ class AuthenticationDialog extends Service {
 
     let userName = GLib.get_user_name();
 
-    print("username: " + userName);
-
     if (!userNames.includes(userName)) userName = "root";
     if (!userNames.includes(userName)) userName = userNames[0];
 
@@ -78,12 +76,9 @@ class AuthenticationDialog extends Service {
     this._user.connect("notify::is-loaded", this._onUserChanged.bind(this));
     this._user.connect("changed", this._onUserChanged.bind(this));
 
-    print("realname: " + this._user.get_real_name());
-
     this._identityToAuth = Polkit.UnixUser.new_for_name(userName);
 
     this._startSession();
-
     this._onUserChanged();
   }
 
@@ -95,24 +90,18 @@ class AuthenticationDialog extends Service {
       cookie: this._cookie,
     });
 
-    print("nova sessão " + this._session.toString());
-
     this._session.connect("completed", (_, success) => {
       if (success) {
-        print("completou com sucesso");
         this.emit("done", false);
       } else {
-        print("completou sem sucesso");
         this._startSession();
       }
     });
 
     this._session.connect("request", (_, request, echoOn) => {
-      print("nova request:  " + request);
-      print("novo echoon: " + echoOn.toString());
-
       this._request = request;
       this.changed("request");
+
       this._echoOn = echoOn;
       this.changed("echo-on");
 
@@ -120,8 +109,6 @@ class AuthenticationDialog extends Service {
     });
 
     this._session.connect("show-error", (_, error) => {
-      print("novo erro: " + error);
-
       this._error = error;
       this.changed("error");
 
@@ -129,8 +116,6 @@ class AuthenticationDialog extends Service {
     });
 
     this._session.connect("show-info", (_, info) => {
-      print("novo info: " + info);
-
       this._info = info;
       this.changed("info");
 
@@ -245,8 +230,6 @@ class AuthenticationAgent extends Service {
   }
 
   _onInitiate(_, actionId, message, iconName, cookie, userNames) {
-    print("nova autenticação iniciada");
-
     this._currentDialog = new AuthenticationDialog(
       actionId,
       message,
@@ -268,7 +251,6 @@ class AuthenticationAgent extends Service {
   }
 
   _completeRequest(dismissed) {
-    print("autenticação terminada com status " + dismissed.toString());
     this._currentDialog = null;
 
     this._nativeAgent.complete(dismissed);
