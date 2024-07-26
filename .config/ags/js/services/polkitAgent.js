@@ -36,8 +36,8 @@ class AuthenticationDialog extends Service {
     if (userNames.length > 1) {
       print(
         `polkitAuthenticationAgent: Received ${userNames.length} ` +
-          "identities that can be used for authentication. Only " +
-          "considering one.",
+        "identities that can be used for authentication. Only " +
+        "considering one.",
       );
     }
 
@@ -113,6 +113,10 @@ class AuthenticationDialog extends Service {
   authenticate(password) {
     this?._session?.response(password);
   }
+
+  cancel() {
+    this.emit("done", true);
+  }
 }
 
 class AuthenticationAgent extends Service {
@@ -183,5 +187,6 @@ class AuthenticationAgent extends Service {
 }
 
 const service = new AuthenticationAgent();
+service.enable();
 
 export default service;
