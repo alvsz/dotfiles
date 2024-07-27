@@ -14,6 +14,15 @@ const polkit = (dialog) => {
     dialog.cancel();
     // close();
   };
+  const response = (text) => {
+    if (text.length > 0) {
+      error.visible = false;
+      info.visible = false;
+      dialog.authenticate(text);
+      password.sensitive = false;
+      authButton.sensitive = false;
+    } else return;
+  };
 
   const title = Widget.Label({
     className: "title",
@@ -76,11 +85,7 @@ const polkit = (dialog) => {
       authButton.sensitive = text.length > 0;
     },
     onAccept: ({ text }) => {
-      if (text.length > 0) {
-        dialog.authenticate(text);
-        password.sensitive = false;
-        authButton.sensitive = false;
-      }
+      response(text);
     },
   });
 
@@ -115,13 +120,8 @@ const polkit = (dialog) => {
     child: Widget.Label("Autenticar"),
     sensitive: false,
     onClicked: () => {
-      const response = password.get_text();
-
-      if (response.length === 0) return;
-
-      dialog.authenticate(response);
-      password.sensitive = false;
-      authButton.sensitive = false;
+      const text = password.get_text();
+      response(text);
     },
   });
 
