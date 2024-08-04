@@ -13,6 +13,9 @@ import polkitAgent from "./js/services/polkitAgent.js";
 
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
+// import ecal from "./js/ecal.js";
+// ecal();
+
 // import Lock from "./js/misc/Lock.js";
 // globalThis.lock = Lock;
 
