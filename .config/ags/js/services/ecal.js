@@ -24,6 +24,12 @@ const main = () => {
         20,
         null,
         (_, res) => {
+          // const calendar = source.get_extension("Calendar");
+          // print("calendar: " + calendar);
+          // print("backend: " + calendar.get_backend_name());
+          // print("color: " + calendar.get_color());
+          // print("order: " + calendar.get_order());
+          // print("selected: " + calendar.get_selected());
           const client = ECal.Client.connect_finish(res);
           // print(client);
 
@@ -35,6 +41,9 @@ const main = () => {
 
           const tz_location = zone.get_location();
 
+          print(start);
+          print(end);
+
           const sexp = `(occur-in-time-range? (make-time "${start}") (make-time "${end}") "${tz_location}")`;
 
           client.get_object_list_as_comps(sexp, null, (_, res2) => {
@@ -42,6 +51,7 @@ const main = () => {
             if (!ok) return;
             print(source.display_name);
             print("tem eventos");
+            // #9fe1e7
 
             for (const event of events) {
               event.commit_sequence();

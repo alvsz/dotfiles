@@ -67,9 +67,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -151,24 +151,19 @@ const dwl = (monitorId) =>
     // vexpand: true,
     className: "dwl",
     children: [dwlTags(monitorId), layoutIcon(monitorId), client(monitorId)],
-    setup: (self) => {
-      self.children.length > 0 &&
-        self.children[0].toggleClassName("firstH", true);
-    },
   });
 
 const archDash = () =>
   Widget.Button({
     child: Widget.Label({
       label: "",
-      className: "archDash",
     }),
+    className: "archDash",
     hpack: "start",
     vpack: "fill",
     onPrimaryClick: () => {
       utils.execAsync(["echo", "Hi Mom"]);
     },
-    className: "module",
   });
 
 const Media = () =>
@@ -217,9 +212,6 @@ const SysTray = () =>
         tooltipText: item.bind("tooltip-markup"),
       }),
     );
-
-    self.children.length > 0 &&
-      self.children[0].toggleClassName("firstH", true);
   });
 
 const batteryIcon = () =>
@@ -254,10 +246,6 @@ const Center = () =>
     vpack: "fill",
     children: [Media()],
     className: "centerBar",
-    setup: (self) => {
-      self.children.length > 0 &&
-        self.children[0].toggleClassName("firstH", true);
-    },
   });
 
 const Right = (monitorId) =>
@@ -281,11 +269,6 @@ const Right = (monitorId) =>
       // batteryBox(),
       Clock(),
     ],
-
-    setup: (self) => {
-      self.children.length > 0 &&
-        self.children[0].toggleClassName("firstH", true);
-    },
   });
 
 const Bar = ({ monitor } = {}) =>

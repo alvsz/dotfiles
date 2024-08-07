@@ -63,10 +63,6 @@ const notification = (n) => {
         child: Widget.Label(label),
       }),
     ),
-    setup: (self) => {
-      self.children.length > 0 &&
-        self.children[0].toggleClassName("firstH", true);
-    },
   });
 
   return Widget.Box({

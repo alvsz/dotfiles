@@ -174,9 +174,6 @@ const mpris = () =>
     setup: (self) => {
       const update = () => {
         self.children = Mpris.players.map((p) => mediaPlayer(p));
-
-        // if (self.children.length > 0)
-        //   self.children[0].toggleClassName("first", true);
       };
 
       Mpris.connect("player-closed", () => {
@@ -318,11 +315,6 @@ const userCenter = () => {
 
       powerButton,
     ],
-
-    setup: (self) => {
-      self.children.length > 0 &&
-        self.children[0].toggleClassName("firstH", true);
-    },
   });
 
   return Widget.Box({

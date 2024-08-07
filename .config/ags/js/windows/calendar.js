@@ -54,9 +54,7 @@ const notificationList = () => {
   }).hook(Notifications, (self) => {
     self.children = Notifications.notifications.reverse().map(notification);
 
-    if (self.children.length > 0) {
-      self.children[0].toggleClassName("first", true);
-    } else self.children = [Placeholder()];
+    if (!self.children.length === 0) self.children = [Placeholder()];
   });
 
   // return list;
