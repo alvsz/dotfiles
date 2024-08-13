@@ -1,7 +1,8 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
-import { Placeholder } from "../notification.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import notification from "../widgets/notification.js";
+import { Placeholder } from "../notification.js";
+import calendarServer from "../services/ecal.js";
 
 import GLib from "gi://GLib";
 
@@ -31,13 +32,57 @@ const Calendar = () => {
     "day-selected",
   );
 
-  return Widget.Box({
+  const calendarBox = Widget.Box({
     vertical: true,
     homogeneous: false,
     className: "calendarBox",
-    vpack: "fill",
+    vpack: "start",
     hpack: "fill",
     children: [monthName, cal],
+  });
+
+  const events = Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    className: "events",
+    vpack: "fill",
+    hpack: "fill",
+    // children:
+  }).hook(
+    cal,
+    (self) => {
+      const [y, m, d] = cal.get_date();
+      const events = calendarServer.getEvents(y, m + 1, d);
+      events.then((results) => {
+        self.children = results.map((event) => {
+          event.commit_sequence();
+
+          // print(event.summary);
+          // print(event.description);
+          // print(event.get_as_string());
+          // print(event.get_summary().get_value());
+          //
+          // const descriptions = event
+          //   .get_descriptions()
+          //   .map((d) => d.get_value());
+          // const description = descriptions.join(" - ");
+          // print(description);
+          return Widget.Label({
+            label: event.get_summary().get_value(),
+          });
+        });
+      });
+    },
+    "day-selected",
+  );
+
+  return Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    className: "events",
+    vpack: "fill",
+    hpack: "fill",
+    children: [calendarBox, events],
   });
 
   // return cal;

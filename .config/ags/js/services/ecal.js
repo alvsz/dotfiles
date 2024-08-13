@@ -64,27 +64,23 @@ class CalendarServer extends Service {
     });
   }
 
-  getEvents() {
+  getEvents(y, m, d) {
     if (!this._gotClients) return;
 
     return new Promise((res, _) => {
       const promises = this.clients.map(
         (client) =>
           new Promise((resolve, _) => {
-            // setTimeout(() => {
-            //   resolve("Dados simulados");
-            //   // ou rejeitar para testar o catch: reject("Falha na operação");
-            // }, 1000);
-            const start_date = GLib.DateTime.new_now_local().add_days(-1);
-            const end_date = GLib.DateTime.new_now_local().add_days(7);
+            const start_date = GLib.DateTime.new_local(y, m, d, 0, 0, 0);
+            const end_date = start_date.add_days(1);
 
             const start = ECal.isodate_from_time_t(start_date.to_unix());
             const end = ECal.isodate_from_time_t(end_date.to_unix());
 
             const tz_location = this._zone.get_location();
 
-            print(start);
-            print(end);
+            // print(start);
+            // print(end);
 
             const sexp = `(occur-in-time-range? (make-time "${start}") (make-time "${end}") "${tz_location}")`;
 
@@ -102,8 +98,6 @@ class CalendarServer extends Service {
       );
 
       Promise.all(promises).then((results) => {
-        // print(results);
-        // return results.flat().filter((item) => item);
         res(results.flat().filter((item) => item));
         // results.flat().filter((item) => item);
       });
