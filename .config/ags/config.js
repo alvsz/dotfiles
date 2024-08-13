@@ -13,10 +13,8 @@ import polkitAgent from "./js/services/polkitAgent.js";
 
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
-import ecal from "./js/services/ecal.js";
-ecal().then((results) => {
-  print("Todos os resultados:", results);
-});
+import calendarServer from "./js/services/ecal.js";
+globalThis.calendarserver = calendarServer;
 
 // import Lock from "./js/misc/Lock.js";
 // globalThis.lock = Lock;

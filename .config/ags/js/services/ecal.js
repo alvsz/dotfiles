@@ -2,81 +2,118 @@ import ECal from "gi://ECal";
 import EDataServer from "gi://EDataServer";
 import GLib from "gi://GLib";
 import ICalGLib from "gi://ICalGLib";
+import Service from "resource:///com/github/Aylur/ags/service.js";
 
 globalThis.ical = ICalGLib;
 globalThis.ecal = ECal;
 globalThis.edataserver = EDataServer;
 
-const main = () => {
-  const registry = EDataServer.SourceRegistry.new_sync(null);
-  const sources = registry.list_enabled(null);
+class CalendarServer extends Service {
+  static {
+    Service.register(
+      this,
+      {},
+      {
+        ["got-clients"]: ["boolean", "r"],
+      },
+    );
+  }
 
-  const location = ECal.system_timezone_get_location();
+  constructor() {
+    super();
 
-  const zone = location
-    ? ICalGLib.Timezone.get_builtin_timezone(location)
-    : ICalGLib.Timezone.get_utc_timezone();
+    this._registry = EDataServer.SourceRegistry.new_sync(null);
+    this._sources = this._registry.list_enabled(null);
+    this._gotClients = false;
 
-  const promises = sources.map((source) => {
-    if (source.has_extension("Calendar")) {
-      const promise = new Promise((resolve, reject) => {
-        ECal.Client.connect(
-          source,
-          ECal.ClientSourceType.EVENTS,
-          20,
-          null,
-          (_, res) => {
-            const client = ECal.Client.connect_finish(res);
-            // print(client);
+    this._location = ECal.system_timezone_get_location();
 
-            if (client) {
-              const start_date = GLib.DateTime.new_now_local().add_days(-1);
-              const end_date = GLib.DateTime.new_now_local().add_days(7);
+    this._zone = this._location
+      ? ICalGLib.Timezone.get_builtin_timezone(this._location)
+      : ICalGLib.Timezone.get_utc_timezone();
 
-              const start = ECal.isodate_from_time_t(start_date.to_unix());
-              const end = ECal.isodate_from_time_t(end_date.to_unix());
+    const promises = this._sources.map((source) => {
+      if (source.has_extension("Calendar")) {
+        const promise = new Promise((resolve, reject) => {
+          ECal.Client.connect(
+            source,
+            ECal.ClientSourceType.EVENTS,
+            20,
+            null,
+            (_, res) => {
+              const client = ECal.Client.connect_finish(res);
 
-              const tz_location = zone.get_location();
+              if (client) {
+                resolve(client);
+              } else {
+                resolve();
+                return;
+              }
+            },
+          );
+        });
+        return promise;
+      }
+    });
 
-              // print(start);
-              // print(end);
+    Promise.all(promises).then((results) => {
+      this._gotClients = true;
+      this.changed("got-clients", this._gotClients);
+      print("got clients");
+      this.clients = results.flat().filter((item) => item);
+    });
+  }
 
-              const sexp = `(occur-in-time-range? (make-time "${start}") (make-time "${end}") "${tz_location}")`;
+  getEvents() {
+    if (!this._gotClients) return;
 
-              client.get_object_list_as_comps(sexp, null, (_, res2) => {
-                const [ok, events] =
-                  client.get_object_list_as_comps_finish(res2);
-                if (!ok) {
-                  resolve();
-                  // print("not ok ", client);
-                  // reject();
-                  return;
-                }
-                // print(events);
-                resolve(events);
-              });
-            } else {
-              // print("não conectou no cliente ", source.display_name);
-              resolve();
-              // reject();
-              return;
-            }
-          },
-        );
+    return new Promise((res, _) => {
+      const promises = this.clients.map(
+        (client) =>
+          new Promise((resolve, _) => {
+            // setTimeout(() => {
+            //   resolve("Dados simulados");
+            //   // ou rejeitar para testar o catch: reject("Falha na operação");
+            // }, 1000);
+            const start_date = GLib.DateTime.new_now_local().add_days(-1);
+            const end_date = GLib.DateTime.new_now_local().add_days(7);
+
+            const start = ECal.isodate_from_time_t(start_date.to_unix());
+            const end = ECal.isodate_from_time_t(end_date.to_unix());
+
+            const tz_location = this._zone.get_location();
+
+            print(start);
+            print(end);
+
+            const sexp = `(occur-in-time-range? (make-time "${start}") (make-time "${end}") "${tz_location}")`;
+
+            client.get_object_list_as_comps(sexp, null, (_, res) => {
+              const [ok, events] = client.get_object_list_as_comps_finish(res);
+
+              if (!ok) {
+                resolve();
+                return;
+              }
+
+              resolve(events);
+            });
+          }),
+      );
+
+      Promise.all(promises).then((results) => {
+        // print(results);
+        // return results.flat().filter((item) => item);
+        res(results.flat().filter((item) => item));
+        // results.flat().filter((item) => item);
       });
-      // print(promise);
-      return promise;
-    }
-  });
+    });
+  }
+}
 
-  return Promise.all(promises).then((results) => {
-    // print("terminou", results.flat());
-    return results.flat().filter((item) => item);
-    // .filter((item) => item !== null && item !== undefined);
-  });
-};
+const service = new CalendarServer();
 
-export default main;
+export default service;
 
 // print(source.display_name);
 // print("tem eventos");
