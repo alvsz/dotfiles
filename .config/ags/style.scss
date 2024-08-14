@@ -347,6 +347,16 @@ window {
     }
   }
 
+  &>*:first-child {
+    &>* {
+      @extend .verticalSpacer;
+    }
+
+    &>*:first-child {
+      margin-top: 0em;
+    }
+  }
+
   .calendarBox {
     background-color: css("alpha(currentColor, 0.04)");
     padding: 0.3em;
@@ -376,6 +386,12 @@ window {
         border-radius: 10px;
       }
     }
+  }
+
+  .events {
+    background-color: css("alpha(currentColor, 0.04)");
+    padding: 0.3em;
+    border-radius: 0.6em;
   }
 }
 

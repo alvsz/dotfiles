@@ -79,7 +79,6 @@ const Calendar = () => {
   return Widget.Box({
     vertical: true,
     homogeneous: false,
-    className: "events",
     vpack: "fill",
     hpack: "fill",
     children: [calendarBox, events],

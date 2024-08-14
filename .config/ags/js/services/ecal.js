@@ -65,9 +65,9 @@ class CalendarServer extends Service {
   }
 
   getEvents(y, m, d) {
-    if (!this._gotClients) return;
-
     return new Promise((res, _) => {
+      if (!this._gotClients) return;
+
       const promises = this.clients.map(
         (client) =>
           new Promise((resolve, _) => {
