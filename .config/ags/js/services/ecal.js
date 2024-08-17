@@ -15,6 +15,7 @@ class CalendarServer extends Service {
       {},
       {
         ["got-clients"]: ["boolean", "r"],
+        ["events"]: ["jsobject", "r"],
       },
     );
   }
@@ -32,9 +33,11 @@ class CalendarServer extends Service {
       ? ICalGLib.Timezone.get_builtin_timezone(this._location)
       : ICalGLib.Timezone.get_utc_timezone();
 
+    this._events = [];
+
     const promises = this._sources.map((source) => {
       if (source.has_extension("Calendar")) {
-        const promise = new Promise((resolve, reject) => {
+        const promise = new Promise((resolve, _) => {
           ECal.Client.connect(
             source,
             ECal.ClientSourceType.EVENTS,
@@ -57,16 +60,17 @@ class CalendarServer extends Service {
     });
 
     Promise.all(promises).then((results) => {
-      this._gotClients = true;
-      this.changed("got-clients", this._gotClients);
       print("got clients");
+      this._gotClients = true;
       this.clients = results.flat().filter((item) => item);
+      this.changed("got-clients", this._gotClients);
     });
   }
 
   getEvents(y, m, d) {
     return new Promise((res, _) => {
-      if (!this._gotClients) return;
+      // print("teste");
+      // print(this.clients);
 
       const promises = this.clients.map(
         (client) =>
@@ -78,9 +82,6 @@ class CalendarServer extends Service {
             const end = ECal.isodate_from_time_t(end_date.to_unix());
 
             const tz_location = this._zone.get_location();
-
-            // print(start);
-            // print(end);
 
             const sexp = `(occur-in-time-range? (make-time "${start}") (make-time "${end}") "${tz_location}")`;
 
@@ -102,6 +103,42 @@ class CalendarServer extends Service {
         // results.flat().filter((item) => item);
       });
     });
+  }
+
+  setDate(y, m, d) {
+    const update = () => {
+      this.getEvents(y, m, d)
+        .then((e) => {
+          this._events = e;
+          this.changed("events", this._events);
+        })
+        .catch((e) => print(e));
+    };
+
+    if (!this._gotClients) {
+      print("não tem clients");
+      new Promise((resolve) => {
+        let id;
+        id = this.connect("notify::got-clients", () => {
+          print("teve clients");
+          this.disconnect(id);
+          update();
+          resolve();
+        });
+      })
+        .then(() => {
+          print("terminou clientes");
+        })
+        .catch((e) => print(e));
+      return;
+    }
+    // print("teste");
+
+    update();
+  }
+
+  get events() {
+    return this._events;
   }
 }
 

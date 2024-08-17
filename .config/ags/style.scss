@@ -333,8 +333,8 @@ window {
 
   padding: 1em;
 
-  min-width: 50em;
-  min-height: 30em;
+  // min-width: 50em;
+  min-height: 26em;
 
   .scroll {
     margin: 0;
@@ -358,6 +358,7 @@ window {
   }
 
   .calendarBox {
+    min-width: 25em;
     background-color: css("alpha(currentColor, 0.04)");
     padding: 0.3em;
     border-radius: 0.6em;

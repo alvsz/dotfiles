@@ -6,6 +6,8 @@ import calendarServer from "../services/ecal.js";
 
 import GLib from "gi://GLib";
 
+const WINDOW_NAME = "calendar";
+
 const Calendar = () => {
   const cal = Widget.Calendar({
     showHeading: false,
@@ -14,6 +16,9 @@ const Calendar = () => {
 
     vpack: "start",
     hpack: "fill",
+  }).on("day-selected", (self) => {
+    const [y, m, d] = self.get_date();
+    calendarServer.setDate(y, m + 1, d);
   });
 
   const monthName = Widget.Label({
@@ -47,34 +52,56 @@ const Calendar = () => {
     className: "events",
     vpack: "fill",
     hpack: "fill",
-    // children:
-  }).hook(
-    cal,
-    (self) => {
-      const [y, m, d] = cal.get_date();
-      const events = calendarServer.getEvents(y, m + 1, d);
-      events.then((results) => {
-        self.children = results.map((event) => {
-          event.commit_sequence();
+    children: calendarServer.bind("events").as((e) =>
+      e.map((event) => {
+        event.commit_sequence();
 
-          // print(event.summary);
-          // print(event.description);
-          // print(event.get_as_string());
-          // print(event.get_summary().get_value());
-          //
-          // const descriptions = event
-          //   .get_descriptions()
-          //   .map((d) => d.get_value());
-          // const description = descriptions.join(" - ");
-          // print(description);
-          return Widget.Label({
-            label: event.get_summary().get_value(),
-          });
+        // print(event.summary);
+        // print(event.description);
+        // print(event.get_as_string());
+        // print(event.get_summary().get_value());
+        //
+        // const descriptions = event
+        //   .get_descriptions()
+        //   .map((d) => d.get_value());
+        // const description = descriptions.join(" - ");
+        // print(description);
+        return Widget.Label({
+          label: event.get_summary().get_value(),
         });
-      });
-    },
-    "day-selected",
-  );
+      }),
+    ),
+    // children:
+  });
+  //   .hook(
+  //   cal,
+  //   (self) => {
+  //     const [y, m, d] = cal.get_date();
+  //     calendarServer.setDate(y,m,d)
+  //     // const events = calendarServer.getEvents(y, m + 1, d);
+  //     // if (events)
+  //     //   events.then((results) => {
+  //     //     self.children = results.map((event) => {
+  //     //       event.commit_sequence();
+  //     //
+  //     //       // print(event.summary);
+  //     //       // print(event.description);
+  //     //       // print(event.get_as_string());
+  //     //       // print(event.get_summary().get_value());
+  //     //       //
+  //     //       // const descriptions = event
+  //     //       //   .get_descriptions()
+  //     //       //   .map((d) => d.get_value());
+  //     //       // const description = descriptions.join(" - ");
+  //     //       // print(description);
+  //     //       return Widget.Label({
+  //     //         label: event.get_summary().get_value(),
+  //     //       });
+  //     //     });
+  //     //   });
+  //   },
+  //   "day-selected",
+  // );
 
   return Widget.Box({
     vertical: true,
@@ -115,7 +142,7 @@ const notificationList = () => {
 
 const controlCenter = () =>
   Widget.Window({
-    name: "calendar",
+    name: WINDOW_NAME,
     layer: "overlay",
     anchor: ["top"],
     visible: false,
