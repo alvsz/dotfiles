@@ -13,17 +13,17 @@ case "${XDG_SESSION_TYPE}" in
 	;;
 "wayland")
 	monitors=$(wlr-randr --json | jq -r '.[].name')
-	# case "$1" in
-	# on)
-	# 	for monitor in $monitors; do
-	# 		wlr-randr --output "${monitor}" --on
-	# 	done
-	# 	;;
-	# off)
-	# 	for monitor in $monitors; do
-	# 		wlr-randr --output "${monitor}" --off
-	# 	done
-	# 	;;
-	# esac
+	case "$1" in
+	on)
+		for monitor in $monitors; do
+			wlr-randr --output "${monitor}" --on
+		done
+		;;
+	off)
+		for monitor in $monitors; do
+			wlr-randr --output "${monitor}" --off
+		done
+		;;
+	esac
 	;;
 esac
