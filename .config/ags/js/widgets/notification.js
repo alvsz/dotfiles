@@ -60,7 +60,10 @@ const notification = (n) => {
         className: "actionButton",
         onClicked: () => n.invoke(id),
         hexpand: true,
-        child: Widget.Label(label),
+        child: Widget.Label({
+          label: label,
+          truncate: "middle",
+        }),
       }),
     ),
   });
