@@ -372,20 +372,15 @@ window {
       background-color: transparent;
       border: 0 solid transparent;
 
-      label {
-        padding: 0.2em;
-        border: 1px solid turquoise;
-        border-radius: 50%;
-      }
-
-      label.today {
-        color: green;
-      }
-
       &:selected {
-        background-color: transparentize($color9, 0.7);
-        border-radius: 10px;
+        background-color: css("@accent_bg_color");
+        // border-radius: 10px;
       }
+    }
+
+    .weekDays {
+      font-weight: bolder;
+      color: css("@accent_color");
     }
   }
 
@@ -393,6 +388,31 @@ window {
     background-color: css("alpha(currentColor, 0.04)");
     padding: 0.3em;
     border-radius: 0.6em;
+
+    &>* {
+      @extend .verticalSpacer;
+    }
+
+    &>*:first-child {
+      margin-top: 0em;
+    }
+
+    .event {
+      border-color: css("currentColor");
+      border-left-width: 0.2em;
+      border-left-style: solid;
+      padding-left: 0.5em;
+      background-color: css("alpha(currentColor, 0.05)");
+      border-radius: 0.5em;
+
+      label {
+        color: css("@theme_fg_color");
+      }
+
+      .summary {
+        font-weight: bolder;
+      }
+    }
   }
 }
 

@@ -8,10 +8,10 @@ export const cssPath = `${App.configDir}/style.css`;
 export const scssPath = `${App.configDir}/style.scss`;
 
 const reloadTheme = () => {
-  console.log("scss reloaded");
   Utils.exec(`sassc ${scssPath} ${cssPath}`);
   App.resetCss();
   App.applyCss(cssPath);
+  console.log("scss reloaded");
 };
 
 export const scssWatcher = () => {

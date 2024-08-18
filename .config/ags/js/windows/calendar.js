@@ -37,13 +37,31 @@ const Calendar = () => {
     "day-selected",
   );
 
+  const weekDays = Widget.Box({
+    hpack: "fill",
+    vpack: "center",
+    hexpand: true,
+    vertical: false,
+    homogeneous: true,
+    className: "weekDays",
+    children: [
+      Widget.Label("dom"),
+      Widget.Label("seg"),
+      Widget.Label("ter"),
+      Widget.Label("qua"),
+      Widget.Label("qui"),
+      Widget.Label("sex"),
+      Widget.Label("sáb"),
+    ],
+  });
+
   const calendarBox = Widget.Box({
     vertical: true,
     homogeneous: false,
     className: "calendarBox",
     vpack: "start",
     hpack: "fill",
-    children: [monthName, cal],
+    children: [monthName, weekDays, cal],
   });
 
   const events = Widget.Box({
@@ -53,55 +71,66 @@ const Calendar = () => {
     vpack: "fill",
     hpack: "fill",
     children: calendarServer.bind("events").as((e) =>
-      e.map((event) => {
-        event.commit_sequence();
+      e
+        .sort((a, b) => a.start - b.start)
+        .map((event) => {
+          // print(event.color);
 
-        // print(event.summary);
-        // print(event.description);
-        // print(event.get_as_string());
-        // print(event.get_summary().get_value());
-        //
-        // const descriptions = event
-        //   .get_descriptions()
-        //   .map((d) => d.get_value());
-        // const description = descriptions.join(" - ");
-        // print(description);
-        return Widget.Label({
-          label: event.get_summary().get_value(),
-        });
-      }),
+          const time = Widget.Label({
+            className: "time",
+            hpack: "start",
+            justification: "left",
+            wrap: true,
+          });
+
+          const start = GLib.DateTime.new_from_unix_utc(event.start);
+
+          if (event.whole_day) {
+            if (event.single_day) time.label = "O dia inteiro";
+            else {
+              const end = GLib.DateTime.new_from_unix_utc(event.end - 1);
+              time.label = `${start.format("%a %d")} - ${end.format("%a %d")}`;
+            }
+          } else {
+            const end = GLib.DateTime.new_from_unix_utc(event.end);
+            if (event.single_day)
+              time.label = `${start.format("%R")} - ${end.format("%R")}`;
+            else
+              time.label = `${start.format("%a %d, %R")} - ${end.format("%a %d, %R")}`;
+          }
+
+          return Widget.Box({
+            vertical: true,
+            homogeneous: false,
+            hpack: "fill",
+            vpack: "fill",
+            className: "event",
+            css: event.color ? `color: ${event.color};` : null,
+            children: [
+              Widget.Label({
+                className: "summary",
+                label: event.summary ? event.summary : "",
+                hpack: "start",
+                justification: "left",
+                wrap: true,
+                visible: event.summary ? event.summary.length > 0 : false,
+              }),
+              time,
+              event.location?.length > 0
+                ? Widget.Label({
+                  className: "location",
+                  label: event.location,
+                  hpack: "start",
+                  justification: "left",
+                  wrap: true,
+                })
+                : null,
+            ],
+          });
+        }),
     ),
-    // children:
+    visible: calendarServer.bind("events").as((e) => e.length > 0),
   });
-  //   .hook(
-  //   cal,
-  //   (self) => {
-  //     const [y, m, d] = cal.get_date();
-  //     calendarServer.setDate(y,m,d)
-  //     // const events = calendarServer.getEvents(y, m + 1, d);
-  //     // if (events)
-  //     //   events.then((results) => {
-  //     //     self.children = results.map((event) => {
-  //     //       event.commit_sequence();
-  //     //
-  //     //       // print(event.summary);
-  //     //       // print(event.description);
-  //     //       // print(event.get_as_string());
-  //     //       // print(event.get_summary().get_value());
-  //     //       //
-  //     //       // const descriptions = event
-  //     //       //   .get_descriptions()
-  //     //       //   .map((d) => d.get_value());
-  //     //       // const description = descriptions.join(" - ");
-  //     //       // print(description);
-  //     //       return Widget.Label({
-  //     //         label: event.get_summary().get_value(),
-  //     //       });
-  //     //     });
-  //     //   });
-  //   },
-  //   "day-selected",
-  // );
 
   return Widget.Box({
     vertical: true,
