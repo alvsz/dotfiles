@@ -8,7 +8,6 @@ import Calendar from "./js/windows/calendar.js";
 import Dashboard from "./js/windows/dashboard.js";
 import Polkit from "./js/windows/polkit.js";
 
-import Weather from "./js/services/weather.js";
 import polkitAgent from "./js/services/polkitAgent.js";
 
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
@@ -19,7 +18,6 @@ globalThis.calendarserver = calendarServer;
 // import Lock from "./js/misc/Lock.js";
 // globalThis.lock = Lock;
 
-globalThis.weather = Weather;
 globalThis.polkit = polkitAgent;
 globalThis.utils = Utils;
 

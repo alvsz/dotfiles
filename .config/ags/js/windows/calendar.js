@@ -1,10 +1,15 @@
+import GLib from "gi://GLib";
+
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+
+import calendarServer from "../services/ecal.js";
+import Weather from "../services/weather.js";
+
 import notification from "../widgets/notification.js";
 import { Placeholder } from "../notification.js";
-import calendarServer from "../services/ecal.js";
 
-import GLib from "gi://GLib";
+globalThis.weather = Weather;
 
 const WINDOW_NAME = "calendar";
 
@@ -118,12 +123,12 @@ const Calendar = () => {
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                  className: "location",
-                  label: event.location,
-                  hpack: "start",
-                  justification: "left",
-                  wrap: true,
-                })
+                    className: "location",
+                    label: event.location,
+                    hpack: "start",
+                    justification: "left",
+                    wrap: true,
+                  })
                 : null,
             ],
           });
@@ -132,12 +137,41 @@ const Calendar = () => {
     visible: calendarServer.bind("events").as((e) => e.length > 0),
   });
 
+  const weather = Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    className: "weather",
+    vpack: "fill",
+    hpack: "fill",
+    visible: Weather.bind("available"),
+    children: [
+      Widget.Label({
+        label: Weather.bind("city-name"),
+      }),
+      Widget.Icon({
+        icon: Weather.bind("icon-name"),
+      }),
+      Widget.Label({
+        label: Weather.bind("temp"),
+      }),
+      Widget.Label({
+        label: Weather.bind("wind"),
+      }),
+      Widget.Label({
+        label: Weather.bind("sunrise"),
+      }),
+      Widget.Label({
+        label: Weather.bind("sunset"),
+      }),
+    ],
+  });
+
   return Widget.Box({
     vertical: true,
     homogeneous: false,
     vpack: "fill",
     hpack: "fill",
-    children: [calendarBox, events],
+    children: [calendarBox, events, weather],
   });
 
   // return cal;
@@ -150,14 +184,12 @@ const notificationList = () => {
     hpack: "fill",
     vpack: "start",
     vexpand: true,
-    visible: true,
+    // visible: true,
   }).hook(Notifications, (self) => {
     self.children = Notifications.notifications.reverse().map(notification);
 
     if (!self.children.length === 0) self.children = [Placeholder()];
   });
-
-  // return list;
 
   return Widget.Scrollable({
     className: "scroll",
@@ -166,6 +198,7 @@ const notificationList = () => {
     hscroll: "never",
     vscroll: "automatic",
     child: list,
+    // visible: Notifications.bind("notifications").as((n) => n.length > 0),
   });
 };
 
