@@ -33,6 +33,7 @@ class Weather extends Service {
         ["sunset"]: ["string", "r"],
         ["icon-name"]: ["string", "r"],
         ["humidity"]: ["string", "r"],
+        ["pressure"]: ["string", "r"],
       },
     );
   }
@@ -103,6 +104,9 @@ class Weather extends Service {
 
     this._humidity = info.get_humidity();
     this.changed("humidity");
+
+    this._pressure = info.get_pressure();
+    this.changed("pressure");
   }
 
   constructor() {
@@ -126,9 +130,19 @@ class Weather extends Service {
     this._sunset = "";
     this._icon_name = "";
     this._humidity = "";
+    this._pressure = "";
 
-    this._info = new GWeather.Info();
-    this._info.set_contact_info("joao.aac@disroot.org");
+    const providers =
+      GWeather.Provider.METAR |
+      GWeather.Provider.MET_NO |
+      GWeather.Provider.OWM;
+
+    this._info = new GWeather.Info({
+      application_id: app.application_id,
+      contact_info: "joao.aac@disroot.org",
+      enabled_providers: providers,
+    });
+    // this._info.set_contact_info();
 
     this._info.connect("updated", this._onWeatherUpdate.bind(this));
 
@@ -209,6 +223,10 @@ class Weather extends Service {
 
   get humidity() {
     return this._humidity;
+  }
+
+  get pressure() {
+    return this._pressure;
   }
 }
 

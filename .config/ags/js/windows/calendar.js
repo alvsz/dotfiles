@@ -123,12 +123,12 @@ const Calendar = () => {
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                    className: "location",
-                    label: event.location,
-                    hpack: "start",
-                    justification: "left",
-                    wrap: true,
-                  })
+                  className: "location",
+                  label: event.location,
+                  hpack: "start",
+                  justification: "left",
+                  wrap: true,
+                })
                 : null,
             ],
           });
@@ -138,30 +138,133 @@ const Calendar = () => {
   });
 
   const weather = Widget.Box({
+    className: "weather",
     vertical: true,
     homogeneous: false,
-    className: "weather",
     vpack: "fill",
     hpack: "fill",
     visible: Weather.bind("available"),
     children: [
-      Widget.Label({
-        label: Weather.bind("city-name"),
+      Widget.Box({
+        vertical: false,
+        homogeneous: false,
+        vpack: "fill",
+        hpack: "fill",
+        children: [
+          Widget.Icon({
+            className: "mainIcon",
+            icon: Weather.bind("icon-name"),
+          }),
+          Widget.Label({
+            className: "temp",
+            vpack: "center",
+            hpack: "start",
+            justification: "left",
+            hexpand: true,
+            label: Weather.bind("temp"),
+          }),
+          Widget.Box({
+            vertical: true,
+            homogeneous: false,
+            vpack: "center",
+            hpack: "end",
+            children: [
+              Widget.Label({
+                className: "city-name",
+                hpack: "end",
+                justification: "right",
+                label: Weather.bind("city-name"),
+              }),
+              Widget.Label({
+                className: "sky",
+                hpack: "end",
+                justification: "right",
+                label: Weather.bind("sky"),
+              }),
+            ],
+          }),
+        ],
       }),
-      Widget.Icon({
-        icon: Weather.bind("icon-name"),
+
+      Widget.Box({
+        vertical: false,
+        homogeneous: false,
+        vpack: "center",
+        hpack: "center",
+        className: "humidity",
+        children: [
+          Widget.Icon("raindrop-symbolic"),
+          Widget.Label({
+            vpack: "center",
+            label: Weather.bind("humidity"),
+          }),
+        ],
       }),
-      Widget.Label({
-        label: Weather.bind("temp"),
+
+      Widget.Box({
+        vertical: false,
+        homogeneous: false,
+        vpack: "center",
+        hpack: "center",
+        className: "daytime",
+        children: [
+          Widget.Icon({
+            icon: Weather.bind("is-daytime").as((d) =>
+              d ? "daytime-sunset-symbolic" : "daytime-sunrise-symbolic",
+            ),
+          }),
+
+          Widget.Label({
+            vpack: "center",
+          }).hook(
+            Weather,
+            (self) => {
+              const sunset = Weather._info.get_sunset();
+              const sunrise = Weather._info.get_sunrise();
+
+              self.label = Weather.is_daytime
+                ? `${sunset} - ${sunrise}`
+                : `${sunrise} - ${sunset}`;
+            },
+            "weather-updated",
+          ),
+
+          Widget.Icon({
+            icon: Weather.bind("is-daytime").as((d) =>
+              d ? "daytime-sunrise-symbolic" : "daytime-sunset-symbolic",
+            ),
+          }),
+        ],
       }),
-      Widget.Label({
-        label: Weather.bind("wind"),
+
+      Widget.Box({
+        vertical: false,
+        homogeneous: false,
+        vpack: "center",
+        hpack: "center",
+        className: "pressure",
+        children: [
+          Widget.Icon("speedometer-symbolic"),
+          Widget.Label({
+            vpack: "center",
+            label: Weather.bind("pressure"),
+          }),
+        ],
       }),
-      Widget.Label({
-        label: Weather.bind("sunrise"),
-      }),
-      Widget.Label({
-        label: Weather.bind("sunset"),
+
+      Widget.Box({
+        vertical: false,
+        homogeneous: false,
+        vpack: "center",
+        hpack: "center",
+        className: "wind",
+        children: [
+          Widget.Icon("weather-windy-symbolic"),
+          Widget.Label({
+            vpack: "center",
+            label: Weather.bind("wind"),
+          }),
+        ],
       }),
     ],
   });

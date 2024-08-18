@@ -25,7 +25,7 @@
     // margin: 0;
   }
 
-  & > * {
+  &>* {
     @extend .horizontalSpacer;
   }
 }
@@ -35,7 +35,7 @@
 
   @extend .horizontalSpacer;
 
-  & > *:first-child {
+  &>*:first-child {
     // background-color: red;
     margin-left: 0em;
   }
@@ -125,7 +125,7 @@
     @extend .horizontalSpacer;
   }
 
-  & > *:first-child {
+  &>*:first-child {
     margin-left: 0em;
   }
 }
@@ -280,7 +280,7 @@ window {
     color: $color4;
   }
 
-  & > *:first-child {
+  &>*:first-child {
     margin-left: 0em;
   }
 }
@@ -289,7 +289,7 @@ window {
   margin: 3px 10px 0px 10px;
   @extend .module;
 
-  & > *:first-child {
+  &>*:first-child {
     margin-left: 0em;
   }
 }
@@ -314,11 +314,11 @@ window {
   }
 
   .actions {
-    & > * {
+    &>* {
       @extend .horizontalSpacer;
     }
 
-    & > *:first-child {
+    &>*:first-child {
       margin-left: 0em;
     }
 
@@ -341,18 +341,18 @@ window {
     padding: 0;
 
     box {
-      & > *:first-child {
+      &>*:first-child {
         margin-top: 0em;
       }
     }
   }
 
-  & > *:first-child {
-    & > * {
+  &>*:first-child {
+    &>* {
       @extend .verticalSpacer;
     }
 
-    & > *:first-child {
+    &>*:first-child {
       margin-top: 0em;
     }
   }
@@ -389,11 +389,11 @@ window {
     padding: 0.3em;
     border-radius: 0.6em;
 
-    & > * {
+    &>* {
       @extend .verticalSpacer;
     }
 
-    & > *:first-child {
+    &>*:first-child {
       // border-radius: 0.5em 0.5em 0 0;
       margin-top: 0em;
     }
@@ -422,20 +422,51 @@ window {
 
   .weather {
     background-color: css("alpha(currentColor, 0.04)");
-    padding: 0.3em;
+    padding: 0.8em;
     border-radius: 0.6em;
 
-    // & > * {
-    //   @extend .verticalSpacer;
-    // }
-    //
-    // & > *:first-child {
-    //   // border-radius: 0.5em 0.5em 0 0;
-    //   margin-top: 0em;
-    // }
+    &>* {
+      @extend .verticalSpacer;
+    }
 
-    image {
+    &>*:first-child {
+      margin-top: 0em;
+    }
+
+    .mainIcon {
       font-size: 3em;
+      margin-right: 0em;
+    }
+
+    .wind {
+      image {
+        font-size: 1.5em;
+        margin-right: 0.3em;
+      }
+    }
+
+    .humidity {
+      @extend .wind;
+    }
+
+    .pressure {
+      @extend .wind;
+    }
+
+    .daytime {
+      image {
+        font-size: 1.5em;
+        margin: 0em 0.3em;
+      }
+    }
+
+    .city-name {
+      font-weight: bolder;
+    }
+
+    .temp {
+      font-size: 2em;
+      font-weight: bolder;
     }
   }
 }
@@ -464,13 +495,13 @@ window {
   // min-height: 50em;
   // margin-top: 7em;
 
-  & > .time {
+  &>.time {
     @extend .glow;
     font-weight: bold;
     font-size: 9em;
   }
 
-  & > .date {
+  &>.date {
     @extend .glow;
     font-size: 2.5em;
     margin-top: 2em;
@@ -546,7 +577,7 @@ window {
 .userCenter {
   padding: 1em;
 
-  & > * {
+  &>* {
     @extend .verticalSpacer;
   }
 
@@ -558,7 +589,7 @@ window {
   .mpris {
     margin: 0em;
 
-    & > * {
+    &>* {
       @extend .verticalSpacer;
     }
   }
@@ -604,11 +635,11 @@ window {
   }
 
   .info {
-    & > * {
+    &>* {
       @extend .horizontalSpacer;
     }
 
-    & > *:first-child {
+    &>*:first-child {
       margin-left: 0em;
     }
 
@@ -629,7 +660,7 @@ window {
 }
 
 .controlCenter {
-  & > * {
+  &>* {
     padding: 0.2em;
   }
 
@@ -717,11 +748,9 @@ window {
       background-image 0ms;
     animation: ripple 225ms cubic-bezier(0, 0, 0.2, 1) forwards;
     box-shadow: inset 0 0 0 9999px css("alpha(currentColor, 0.10)");
-    background-image: radial-gradient(
-      circle,
-      css("alpha(currentColor, 0.12)") 10%,
-      transparent 0%
-    );
+    background-image: radial-gradient(circle,
+        css("alpha(currentColor, 0.12)") 10%,
+        transparent 0%);
     background-size: 0% 0%;
     color: white;
   }
@@ -784,7 +813,7 @@ window {
     .unknown {
       @extend .known;
 
-      & > label {
+      &>label {
         @extend .verticalSpacer;
       }
     }
