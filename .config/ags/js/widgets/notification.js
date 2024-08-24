@@ -21,9 +21,9 @@ const notification = (n) => {
     className: "description",
     hexpand: true,
     vexpand: true,
-    hpack: "start",
+    hpack: "fill",
     useMarkup: true,
-    justification: "left",
+    justification: "fill",
     // truncate: "end",
     wrap: true,
     label: n.body.replaceAll("&", "&amp;"),
@@ -57,12 +57,17 @@ const notification = (n) => {
 
     children: n.actions.map(({ id, label }) =>
       Widget.Button({
+        hpack: "fill",
+        vpack: "fill",
         className: "actionButton",
         onClicked: () => n.invoke(id),
         hexpand: true,
         child: Widget.Label({
+          justification: "center",
+          hpack: "center",
           label: label,
-          truncate: "middle",
+          wrap: true,
+          // truncate: "middle",
         }),
       }),
     ),
