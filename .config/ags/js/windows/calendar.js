@@ -123,12 +123,12 @@ const Calendar = () => {
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                  className: "location",
-                  label: event.location,
-                  hpack: "start",
-                  justification: "left",
-                  wrap: true,
-                })
+                    className: "location",
+                    label: event.location,
+                    hpack: "start",
+                    justification: "left",
+                    wrap: true,
+                  })
                 : null,
             ],
           });
@@ -226,7 +226,7 @@ const Calendar = () => {
                 ? `${sunset} - ${sunrise}`
                 : `${sunrise} - ${sunset}`;
             },
-            "weather-updated",
+            "notify::is-daytime",
           ),
 
           Widget.Icon({
