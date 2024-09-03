@@ -17,7 +17,6 @@ const Calendar = () => {
   const cal = Widget.Calendar({
     showHeading: false,
     show_day_names: false,
-    detail_height_rows: 0,
 
     vpack: "start",
     hpack: "fill",
@@ -123,12 +122,12 @@ const Calendar = () => {
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                    className: "location",
-                    label: event.location,
-                    hpack: "start",
-                    justification: "left",
-                    wrap: true,
-                  })
+                  className: "location",
+                  label: event.location,
+                  hpack: "start",
+                  justification: "left",
+                  wrap: true,
+                })
                 : null,
             ],
           });

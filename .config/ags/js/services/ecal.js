@@ -66,6 +66,64 @@ class CalendarServer extends Service {
     });
   }
 
+  eventToObject(event) {
+    event.event.commit_sequence();
+
+    const ical = event.event.get_icalcomponent();
+    const source = event.client.get_source();
+    const calendar = source.get_extension("Calendar");
+
+    const summary = event.event.get_summary()?.get_value();
+    const location = event.event.get_location();
+    const dtstart = event.event.get_dtstart().get_value();
+    const dtend = event.event.get_dtend().get_value();
+
+    const start_y = dtstart.get_year();
+    const start_m = dtstart.get_month();
+    const start_d = dtstart.get_day();
+    const start_h = dtstart.get_hour();
+    const start_min = dtstart.get_minute();
+    const start_sec = dtstart.get_second();
+
+    const end_y = dtend.get_year();
+    const end_m = dtend.get_month();
+    const end_d = dtend.get_day();
+    const end_h = dtend.get_hour();
+    const end_min = dtend.get_minute();
+    const end_sec = dtend.get_second();
+
+    const start = dtstart.as_timet();
+    const end = dtend.as_timet();
+
+    const color = ical.get_first_property(118)?.get_value_as_string();
+    const source_color = calendar.color;
+
+    const whole_day =
+      start_h === 0 &&
+      end_h === 0 &&
+      start_min === 0 &&
+      end_min === 0 &&
+      start_sec === 0 &&
+      end_sec === 0;
+
+    const single_day = whole_day
+      ? end - start === 86400
+      : start_y === end_y && start_m === end_m && start_d === end_d;
+
+    return {
+      summary: summary,
+      location: location,
+      start: start,
+      end: end,
+      single_day: single_day,
+      whole_day: whole_day,
+      color: color ? color : source_color,
+      _event: event.event,
+      _source: source,
+      _calendar: calendar,
+    };
+  }
+
   getEvents(y, m, d) {
     return new Promise((res, _) => {
       const start_date = GLib.DateTime.new_utc(y, m, d, 0, 0, 0);
@@ -117,63 +175,7 @@ class CalendarServer extends Service {
     const update = () => {
       this.getEvents(y, m, d)
         .then((e) => {
-          this._events = e.map((event) => {
-            event.event.commit_sequence();
-
-            const ical = event.event.get_icalcomponent();
-            const source = event.client.get_source();
-            const calendar = source.get_extension("Calendar");
-
-            const summary = event.event.get_summary()?.get_value();
-            const location = event.event.get_location();
-            const dtstart = event.event.get_dtstart().get_value();
-            const dtend = event.event.get_dtend().get_value();
-
-            const start_y = dtstart.get_year();
-            const start_m = dtstart.get_month();
-            const start_d = dtstart.get_day();
-            const start_h = dtstart.get_hour();
-            const start_min = dtstart.get_minute();
-            const start_sec = dtstart.get_second();
-
-            const end_y = dtend.get_year();
-            const end_m = dtend.get_month();
-            const end_d = dtend.get_day();
-            const end_h = dtend.get_hour();
-            const end_min = dtend.get_minute();
-            const end_sec = dtend.get_second();
-
-            const start = dtstart.as_timet();
-            const end = dtend.as_timet();
-
-            const color = ical.get_first_property(118)?.get_value_as_string();
-            const source_color = calendar.color;
-
-            const whole_day =
-              start_h === 0 &&
-              end_h === 0 &&
-              start_min === 0 &&
-              end_min === 0 &&
-              start_sec === 0 &&
-              end_sec === 0;
-
-            const single_day = whole_day
-              ? end - start === 86400
-              : start_y === end_y && start_m === end_m && start_d === end_d;
-
-            return {
-              summary: summary,
-              location: location,
-              start: start,
-              end: end,
-              single_day: single_day,
-              whole_day: whole_day,
-              color: color ? color : source_color,
-              _event: event.event,
-              _source: source,
-              _calendar: calendar,
-            };
-          });
+          this._events = e.map(this.eventToObject);
           this.changed("events");
         })
         .catch((e) => print(e));
