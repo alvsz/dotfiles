@@ -21,7 +21,7 @@ const notification = (n) => {
     className: "description",
     hexpand: true,
     vexpand: true,
-    hpack: "fill",
+    hpack: "start",
     useMarkup: true,
     justification: "fill",
     // truncate: "end",
