@@ -21,41 +21,45 @@ const Calendar = () => {
 
     vpack: "start",
     hpack: "fill",
-  })
-    .on("day-selected", (self) => {
-      const [y, m, d] = self.get_date();
-      calendarServer.setDate(y, m + 1, d);
-    })
-    .hook(
-      DateTime,
-      (self, d) => {
-        self.select_day(d);
-      },
-      "day",
-    )
-    .hook(
-      DateTime,
-      (self, m) => {
-        self.select_month(m - 1, DateTime._year);
-      },
-      "month",
-    );
+    setup: (self) => {
+      self
+        .on("day-selected", () => {
+          const [y, m, d] = self.get_date();
+          calendarServer.setDate(y, m + 1, d);
+        })
+        .hook(
+          DateTime,
+          (_, d) => {
+            self.select_day(d);
+          },
+          "day",
+        )
+        .hook(
+          DateTime,
+          (_, m) => {
+            self.select_month(m - 1, DateTime._year);
+          },
+          "month",
+        );
+    },
+  });
 
   const monthName = Widget.Label({
     className: "monthName",
     vpack: "start",
     label: "teste",
-  }).hook(
-    cal,
-    (self) => {
-      const [y, m, d] = cal.get_date();
-
-      const time = GLib.DateTime.new_utc(y, m + 1, d, 0, 0, 0);
-
-      self.label = time.format("%B %Y");
+    setup: (self) => {
+      self.hook(
+        cal,
+        (_) => {
+          const [y, m, d] = cal.get_date();
+          const time = GLib.DateTime.new_utc(y, m + 1, d, 0, 0, 0);
+          self.label = time.format("%B %Y");
+        },
+        "day-selected",
+      );
     },
-    "day-selected",
-  );
+  });
 
   const weekDays = Widget.Box({
     hpack: "fill",
@@ -94,8 +98,6 @@ const Calendar = () => {
       e
         .sort((a, b) => a.start - b.start)
         .map((event) => {
-          // print(event.color);
-
           const time = Widget.Label({
             className: "time",
             hpack: "start",
@@ -138,12 +140,12 @@ const Calendar = () => {
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                  className: "location",
-                  label: event.location,
-                  hpack: "start",
-                  justification: "left",
-                  wrap: true,
-                })
+                    className: "location",
+                    label: event.location,
+                    hpack: "start",
+                    justification: "left",
+                    wrap: true,
+                  })
                 : null,
             ],
           });
@@ -282,6 +284,11 @@ const Calendar = () => {
         ],
       }),
     ],
+    setup: (_) => {
+      DateTime.on("hour", (_) => {
+        Weather._info.update();
+      });
+    },
   });
 
   return Widget.Box({
