@@ -11,8 +11,7 @@ import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
 import Gdk from "gi://Gdk";
 
-import Weather from "../services/weather.js";
-
+import DateTime from "../services/datetime.js";
 import revealOnClick from "../widgets/revealOnClick.js";
 import audioIcon from "../widgets/audioIcon.js";
 import networkIndicator from "../widgets/networkIcon.js";
@@ -29,7 +28,6 @@ globalThis.battery = Battery;
 globalThis.notification = Notifications;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
-globalThis.weather = Weather;
 globalThis.utils = Utils;
 globalThis.gdk = Gdk;
 
@@ -225,10 +223,13 @@ const batteryIcon = () =>
 const Clock = () =>
   Widget.Label({
     vpack: "center",
-  }).poll(30000, (self) => {
-    const time = GLib.DateTime.new_from_unix_local(Date.now() / 1000);
-    self.label = time.format("%a %d, %R");
-  });
+  }).hook(
+    DateTime,
+    (self) => {
+      self.label = DateTime.format("%a %d, %R");
+    },
+    "minute",
+  );
 
 const Left = (monitorId) =>
   Widget.Box({

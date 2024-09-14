@@ -7,21 +7,17 @@ class DateTime extends Service {
     Service.register(
       this,
       {
-        year: [],
-        month: [],
-        day: [],
-        hour: [],
-        minute: [],
+        year: ["int"],
+        month: ["int"],
+        day: ["int"],
+        hour: ["int"],
+        minute: ["int"],
         second: [],
       },
       {
         ["time"]: ["number", "r"],
       },
     );
-  }
-
-  get time() {
-    return this._time;
   }
 
   constructor() {
@@ -46,19 +42,18 @@ class DateTime extends Service {
       this._old_hour = this._hour;
       this._old_minute = this._minute;
 
-      this._time = Date.now();
-      this._datetime = GLib.DateTime.new_from_unix_local(this._time);
+      this._datetime = GLib.DateTime.new_now_local();
 
       [this._year, this._month, this._day] = this._datetime.get_ymd();
 
       this._hour = this._datetime.get_hour();
       this._minute = this._datetime.get_minute();
 
-      if (this._old_year != this._year) this.emit("year");
-      if (this._old_month != this._month) this.emit("month");
-      if (this._old_day != this._day) this.emit("day");
-      if (this._old_hour != this._hour) this.emit("hour");
-      if (this._old_minute != this._minute) this.emit("minute");
+      if (this._old_year != this._year) this.emit("year", this._year);
+      if (this._old_month != this._month) this.emit("month", this._month);
+      if (this._old_day != this._day) this.emit("day", this._day);
+      if (this._old_hour != this._hour) this.emit("hour", this._hour);
+      if (this._old_minute != this._minute) this.emit("minute", this._minute);
 
       this.emit("second");
       this.changed("time");
@@ -67,6 +62,14 @@ class DateTime extends Service {
     update();
 
     const source = setInterval(update, 1000);
+  }
+
+  format(code) {
+    return this._datetime.format(code);
+  }
+
+  get time() {
+    return this._datetime.get_microsecond();
   }
 }
 

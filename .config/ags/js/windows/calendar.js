@@ -3,6 +3,7 @@ import GLib from "gi://GLib";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 
+import DateTime from "../services/datetime.js";
 import calendarServer from "../services/ecal.js";
 import Weather from "../services/weather.js";
 
@@ -20,10 +21,25 @@ const Calendar = () => {
 
     vpack: "start",
     hpack: "fill",
-  }).on("day-selected", (self) => {
-    const [y, m, d] = self.get_date();
-    calendarServer.setDate(y, m + 1, d);
-  });
+  })
+    .on("day-selected", (self) => {
+      const [y, m, d] = self.get_date();
+      calendarServer.setDate(y, m + 1, d);
+    })
+    .hook(
+      DateTime,
+      (self, d) => {
+        self.select_day(d);
+      },
+      "day",
+    )
+    .hook(
+      DateTime,
+      (self, m) => {
+        self.select_month(m - 1, DateTime._year);
+      },
+      "month",
+    );
 
   const monthName = Widget.Label({
     className: "monthName",
