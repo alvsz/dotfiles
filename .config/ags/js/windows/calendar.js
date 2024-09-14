@@ -21,45 +21,38 @@ const Calendar = () => {
 
     vpack: "start",
     hpack: "fill",
-    setup: (self) => {
-      self
-        .on("day-selected", () => {
-          const [y, m, d] = self.get_date();
-          calendarServer.setDate(y, m + 1, d);
-        })
-        .hook(
-          DateTime,
-          (_, d) => {
-            self.select_day(d);
-          },
-          "day",
-        )
-        .hook(
-          DateTime,
-          (_, m) => {
-            self.select_month(m - 1, DateTime._year);
-          },
-          "month",
-        );
-    },
-  });
+  })
+    .on("day-selected", (self) => {
+      const [y, m, d] = self.get_date();
+      calendarServer.setDate(y, m + 1, d);
+    })
+    .hook(
+      DateTime,
+      (self) => {
+        self.select_day(DateTime._day);
+      },
+      "day",
+    )
+    .hook(
+      DateTime,
+      (self) => {
+        self.select_month(DateTime._month - 1, DateTime._year);
+      },
+      "month",
+    );
 
   const monthName = Widget.Label({
     className: "monthName",
     vpack: "start",
-    label: "teste",
-    setup: (self) => {
-      self.hook(
-        cal,
-        (_) => {
-          const [y, m, d] = cal.get_date();
-          const time = GLib.DateTime.new_utc(y, m + 1, d, 0, 0, 0);
-          self.label = time.format("%B %Y");
-        },
-        "day-selected",
-      );
+  }).hook(
+    cal,
+    (self) => {
+      const [y, m, d] = cal.get_date();
+      const time = GLib.DateTime.new_utc(y, m + 1, d, 0, 0, 0);
+      self.label = time.format("%B %Y");
     },
-  });
+    "day-selected",
+  );
 
   const weekDays = Widget.Box({
     hpack: "fill",
@@ -285,7 +278,7 @@ const Calendar = () => {
       }),
     ],
     setup: (_) => {
-      DateTime.on("hour", (_) => {
+      DateTime.connect("hour", (_) => {
         Weather._info.update();
       });
     },

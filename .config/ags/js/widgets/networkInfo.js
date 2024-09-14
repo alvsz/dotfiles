@@ -55,7 +55,13 @@ const wifiButton = (ap, known) =>
     className: "networkButton",
     onClicked: () => {
       if (known) {
-        Utils.execAsync(`nmcli dev wifi connect "${ap.ssid}"`);
+        Utils.execAsync(`nmcli dev wifi connect "${ap.ssid}"`).catch((err) =>
+          Utils.notify(
+            "Erro ao conectar à rede Wi-Fi",
+            err.toString(),
+            "network-error-symbolic",
+          ),
+        );
       }
     },
 
@@ -87,9 +93,9 @@ const wifiButton = (ap, known) =>
 
         ap._ap.rsn_flags > 0 || ap._ap.wpa_flags > 0
           ? Widget.Icon({
-              icon: "dialog-password",
-              className: "password",
-            })
+            icon: "dialog-password",
+            className: "password",
+          })
           : null,
       ],
     }),
@@ -203,7 +209,7 @@ const networkInfo = () => {
                   .sort((b, a) => {
                     return a.strength - b.strength;
                   })
-                  .map((ap) => wifiButton(ap, true));
+                  .map((ap) => wifiButton(ap, false));
 
                 if (children.length < 1) {
                   self.children = [];
