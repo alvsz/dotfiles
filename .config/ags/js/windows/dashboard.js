@@ -33,26 +33,24 @@ const sliders = Widget.Box({
   vpack: "fill",
   className: "sliders",
 
-  children: [
-    RadioButton({
-      child: Widget.Label("teste"),
-    }),
-    RadioButton({
-      child: Widget.Label("teste"),
-    }),
-    RadioButton({
-      child: Widget.Label("teste"),
-    }),
-    RadioButton({
-      child: Widget.Label("teste"),
-    }),
-    RadioButton({
-      child: Widget.Label("teste"),
-    }),
-    RadioButton({
-      child: Widget.Label("teste"),
-    }),
-  ],
+  setup: (self) => {
+    const arr = [1, 2, 3];
+
+    const r1 = RadioButton({
+      child: Widget.Label("teste 0"),
+    });
+
+    let c = arr.map((n) =>
+      RadioButton({
+        group: r1,
+        child: Widget.Label("teste " + n),
+      }).on("toggled", print),
+    );
+
+    c.push(r1);
+
+    self.children = c;
+  },
 });
 // =======
 // const streamList = (isSink) =>

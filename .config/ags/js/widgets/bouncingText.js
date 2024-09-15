@@ -1,3 +1,4 @@
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
 const scrollable = ({ child, ...rest }) => {
@@ -23,7 +24,9 @@ const scrollable = ({ child, ...rest }) => {
       hAdjustment.set_value(newValue);
     })
     .on("edge-reached", () => {
-      scrollDirection *= -1;
+      Utils.timeout(1000, () => {
+        scrollDirection *= -1;
+      });
     });
 };
 

@@ -688,8 +688,16 @@ window {
   padding: 0.4em;
 
   .albumCover {
-    margin-right: 0.1em;
+    // margin-right: 0.1em;
     font-size: 5.5em;
+  }
+
+  .vertical {
+    margin-left: 0.4em;
+  }
+
+  .bouncingText {
+    margin-right: 0.4em;
   }
 
   .position {
