@@ -4,6 +4,7 @@ import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import powerProfiles from "resource:///com/github/Aylur/ags/service/powerprofiles.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
+import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import GLib from "gi://GLib";
@@ -34,22 +35,53 @@ const sliders = Widget.Box({
   className: "sliders",
 
   setup: (self) => {
-    const arr = [1, 2, 3];
+    const make_button = (stream, group) => {
+      const b = RadioButton({
+        active: Audio.bind("speaker").as((s) => s.id === stream.id),
+        child: Widget.Box({
+          children: [
+            Widget.Label({
+              hexpand: true,
+              truncate: "end",
+              hpack: "start",
+              label: stream.bind("description"),
+            }),
+            Widget.Icon({
+              hpack: "end",
+              icon: stream.bind("icon-name").as((i) => {
+                if (Utils.lookUpIcon(i)) return i;
+                else return "audio-speakers";
+              }),
+            }),
+          ],
+        }),
+      }).on("toggled", (s) => {
+        // print("clicado", stream.description);
+        if (s.active === true) Audio.control.set_default_sink(stream.stream);
+      });
 
-    const r1 = RadioButton({
-      child: Widget.Label("teste 0"),
-    });
+      if (group.length > 0) b.join_group(group[0]);
+      return b;
+    };
 
-    let c = arr.map((n) =>
-      RadioButton({
-        group: r1,
-        child: Widget.Label("teste " + n),
-      }).on("toggled", print),
-    );
+    const make_list = () => {
+      let c = new Array();
 
-    c.push(r1);
+      for (const s of Audio.speakers) {
+        c.push(make_button(s, c));
+      }
+      return c;
+    };
 
-    self.children = c;
+    const update = () => {
+      // print("algo mudou", a, b, c);
+      self.children = make_list();
+    };
+
+    self
+      // .hook(Audio, update, "speaker-changed")
+      .hook(Audio, update, "stream-added")
+      .hook(Audio, update, "stream-removed");
   },
 });
 // =======
