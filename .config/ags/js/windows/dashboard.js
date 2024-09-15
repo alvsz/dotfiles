@@ -57,50 +57,62 @@ const make_audio_list = (a, sink) => {
   return c;
 };
 
+const make_audio_info = (sink) => {
+  const revealer = Widget.Revealer({
+    transition: "slide_down",
+    child: Widget.Box({
+      vertical: true,
+      homogeneous: false,
+      children: [
+        Widget.Label({
+          label: sink ? "Dispositivos de saída" : "Dispositivos de entrada",
+        }),
+        Widget.Separator({
+          hexpand: true,
+          vertical: false,
+        }),
+        Widget.Box({
+          vertical: true,
+          homogeneous: false,
+          children: Audio.bind(sink ? "speakers" : "microphones").as((a) =>
+            make_audio_list(a, sink),
+          ),
+        }),
+      ],
+    }),
+  });
+
+  const button = Widget.ToggleButton({
+    child: Widget.Icon(icons.ui.arrow.down),
+    vpack: "center",
+    hpack: "end",
+    onToggled: ({ active }) => (revealer.revealChild = active),
+  });
+
+  return Widget.Box({
+    vertical: true,
+    homogeneous: false,
+    className: sink ? "speakers" : "microphones",
+    visible: Audio.bind(sink ? "speakers" : "microphones").as((a) =>
+      a.length > 0 ? true : false,
+    ),
+    children: [
+      Widget.Box({
+        vertical: false,
+        children: [audioBar(sink), button],
+      }),
+      revealer,
+    ],
+  });
+};
+
 const sliders = Widget.Box({
   vertical: true,
   homogeneous: false,
   hpack: "fill",
   vpack: "fill",
-  className: "sliders",
-  children: [
-    Widget.Box({
-      vertical: true,
-      homogeneous: false,
-      className: "speakers",
-      visible: Audio.bind("speakers").as((a) => (a.length > 0 ? true : false)),
-      children: [
-        audioBar(true),
-        Widget.Label({
-          label: "lista de saídas",
-        }),
-        Widget.Box({
-          vertical: true,
-          homogeneous: false,
-          children: Audio.bind("speakers").as((a) => make_audio_list(a, true)),
-        }),
-      ],
-    }),
-    Widget.Box({
-      vertical: true,
-      homogeneous: false,
-      className: "microphones",
-      visible: Audio.bind("microphones").as((a) => a.length > 0),
-      children: [
-        audioBar(false),
-        Widget.Label({
-          label: "lista de entradas",
-        }),
-        Widget.Box({
-          vertical: true,
-          homogeneous: false,
-          children: Audio.bind("microphones").as((a) =>
-            make_audio_list(a, false),
-          ),
-        }),
-      ],
-    }),
-  ],
+  className: "audioInfo",
+  children: [make_audio_info(true), make_audio_info(false)],
 });
 
 const networkButton = Widget.Button({

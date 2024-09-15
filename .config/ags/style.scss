@@ -544,20 +544,17 @@ window {
   }
 }
 
-.sliders {
+.audioInfo {
   background-color: css("@headerbar_border_color");
   padding: 0.3em;
   border-radius: 0.6em;
 
   scale {
-    margin: 0.2em 0;
     padding: 0;
-    min-width: 20em;
 
     trough {
       highlight {
-        color: turquoise;
-        padding: 0.8em 0;
+        padding: 0.8em;
       }
 
       slider {
@@ -566,14 +563,45 @@ window {
     }
   }
 
-  .speakers {
-    background-color: green;
-    padding: 3em;
+  & > * {
+    @extend .verticalSpacer;
   }
 
+  & > *:first-child {
+    margin-top: 0em;
+  }
+
+  .audioIcon {
+    font-size: 1.5em;
+    padding: 0 0.2em;
+    -gtk-icon-shadow: 1px 1px $background;
+  }
+
+  button {
+    @extend .fancyButton;
+    margin-left: 0.3em;
+    padding: 0;
+  }
+
+  .speakers,
   .microphones {
-    background-color: purple;
-    padding: 3em;
+    revealer > box > label {
+      font-weight: bold;
+    }
+
+    button {
+      background-color: css("alpha(currentColor, 0.08)");
+    }
+
+    box.vertical {
+      & > * {
+        @extend .verticalSpacer;
+      }
+
+      & > *:first-child {
+        margin-top: 0em;
+      }
+    }
   }
 }
 
@@ -600,46 +628,6 @@ window {
 
     & > * {
       @extend .verticalSpacer;
-    }
-  }
-
-  .audioIcon,
-  .backlightIcon {
-    font-size: 1.5em;
-    padding: 0 0.2em;
-    -gtk-icon-shadow: 1px 1px $background;
-  }
-
-  .volumeInfo {
-    border-radius: 6px;
-    background-color: lighten($background, 5);
-    padding: 0.2em 0.4em;
-  }
-
-  .volumeButton {
-    margin-left: 0.3em;
-    color: lighten($foreground, 10);
-  }
-
-  .volumeList {
-    .micBar {
-      padding: 0;
-    }
-
-    separator {
-      margin-top: 0.3em;
-    }
-
-    separator.first {
-      margin-top: 0.2em;
-    }
-
-    separator.last {
-      margin-bottom: 0.2em;
-    }
-
-    button {
-      margin-top: 0.3em;
     }
   }
 
