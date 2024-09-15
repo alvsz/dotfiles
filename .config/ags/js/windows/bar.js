@@ -65,9 +65,9 @@ const genTags = (monitorId) => {
       urgent: tag.state == 2,
       selected: tag.state == 1,
       occupied: tag.clients > 0,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
@@ -264,7 +264,7 @@ const Right = (monitorId) =>
         self.visible = dwlIpc.value[monitorId].active;
       }),
       networkIndicator(),
-      audioIcon(),
+      audioIcon({ source: false }),
       bluetoothIcon(),
       batteryIcon(),
       // batteryBox(),

@@ -17,6 +17,7 @@ import bluetoothIcon from "../widgets/bluetoothIcon.js";
 import mediaPlayer from "../widgets/mediaPlayer.js";
 import networkInfo from "../widgets/networkInfo.js";
 import bluetoothInfo from "../widgets/bluetoothInfo.js";
+import audioBar from "../widgets/audioBar.js";
 
 globalThis.powerprofiles = powerProfiles;
 
@@ -63,27 +64,41 @@ const sliders = Widget.Box({
   vpack: "fill",
   className: "sliders",
   children: [
-    Widget.Label({
-      label: "lista de saídas",
-      visible: Audio.bind("speakers").as((a) => a.length > 0),
-    }),
     Widget.Box({
       vertical: true,
       homogeneous: false,
       className: "speakers",
-      visible: Audio.bind("speakers").as((a) => a.length > 0),
-      children: Audio.bind("speakers").as((a) => make_audio_list(a, true)),
-    }),
-    Widget.Label({
-      label: "lista de entradas",
-      visible: Audio.bind("microphones").as((a) => a.length > 0),
+      visible: Audio.bind("speakers").as((a) => (a.length > 0 ? true : false)),
+      children: [
+        audioBar(true),
+        Widget.Label({
+          label: "lista de saídas",
+        }),
+        Widget.Box({
+          vertical: true,
+          homogeneous: false,
+          children: Audio.bind("speakers").as((a) => make_audio_list(a, true)),
+        }),
+      ],
     }),
     Widget.Box({
       vertical: true,
       homogeneous: false,
       className: "microphones",
       visible: Audio.bind("microphones").as((a) => a.length > 0),
-      children: Audio.bind("microphones").as((a) => make_audio_list(a, false)),
+      children: [
+        audioBar(false),
+        Widget.Label({
+          label: "lista de entradas",
+        }),
+        Widget.Box({
+          vertical: true,
+          homogeneous: false,
+          children: Audio.bind("microphones").as((a) =>
+            make_audio_list(a, false),
+          ),
+        }),
+      ],
     }),
   ],
 });

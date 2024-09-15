@@ -50,7 +50,12 @@ const audioBar = (isSink) =>
           self.visible = true;
         }),
     },
-    [audioIcon(!isSink, (self) => (self.hpack = "start"))],
+    [
+      audioIcon({
+        source: !isSink,
+        hpack: "start",
+      }),
+    ],
   );
 
 export default audioBar;

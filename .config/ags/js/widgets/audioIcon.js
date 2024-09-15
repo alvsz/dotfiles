@@ -1,13 +1,11 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
-const audioIcon = (source, setup = () => {}) =>
+const audioIcon = ({ source, ...rest }) =>
   Widget.Icon({
     className: "audioIcon",
     vpack: "center",
-    setup: (self) => {
-      if (typeof setup == "function") setup(self);
-    },
+    ...rest,
   }).hook(
     Audio,
     (self) => {
