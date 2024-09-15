@@ -131,6 +131,7 @@ export const Applauncher = () => {
   }).hook(App, (_, name, visible) => {
     if (name != WINDOW_NAME) return;
 
+    Applications.reload();
     entry.set_text("");
     if (visible) entry.grab_focus();
   });

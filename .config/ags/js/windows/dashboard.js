@@ -25,7 +25,36 @@ const RadioButton = Widget.subclass(Gtk.RadioButton);
 const networkPopup = networkInfo();
 const bluetoothPopup = bluetoothInfo();
 
-// import audioBar from "../misc/audioBar.js";
+const make_audio_list = (a, sink) => {
+  const make_button = (stream, group) => {
+    const b = RadioButton({
+      active: Audio.bind(sink ? "speaker" : "microphone").as(
+        (s) => s.id === stream.id,
+      ),
+      child: Widget.Label({
+        hexpand: true,
+        truncate: "end",
+        hpack: "start",
+        label: stream.bind("description"),
+      }),
+    }).on("toggled", (s) => {
+      if (s.active === true) {
+        if (sink) Audio.control.set_default_sink(stream.stream);
+        else Audio.control.set_default_source(stream.stream);
+      }
+    });
+
+    if (group.length > 0) b.join_group(group[0]);
+    return b;
+  };
+
+  let c = new Array();
+
+  for (const s of a) {
+    c.push(make_button(s, c));
+  }
+  return c;
+};
 
 const sliders = Widget.Box({
   vertical: true,
@@ -33,89 +62,31 @@ const sliders = Widget.Box({
   hpack: "fill",
   vpack: "fill",
   className: "sliders",
-
-  setup: (self) => {
-    const make_button = (stream, group) => {
-      const b = RadioButton({
-        active: Audio.bind("speaker").as((s) => s.id === stream.id),
-        child: Widget.Box({
-          children: [
-            Widget.Label({
-              hexpand: true,
-              truncate: "end",
-              hpack: "start",
-              label: stream.bind("description"),
-            }),
-            Widget.Icon({
-              hpack: "end",
-              icon: stream.bind("icon-name").as((i) => {
-                if (Utils.lookUpIcon(i)) return i;
-                else return "audio-speakers";
-              }),
-            }),
-          ],
-        }),
-      }).on("toggled", (s) => {
-        // print("clicado", stream.description);
-        if (s.active === true) Audio.control.set_default_sink(stream.stream);
-      });
-
-      if (group.length > 0) b.join_group(group[0]);
-      return b;
-    };
-
-    const make_list = () => {
-      let c = new Array();
-
-      for (const s of Audio.speakers) {
-        c.push(make_button(s, c));
-      }
-      return c;
-    };
-
-    const update = () => {
-      // print("algo mudou", a, b, c);
-      self.children = make_list();
-    };
-
-    self
-      // .hook(Audio, update, "speaker-changed")
-      .hook(Audio, update, "stream-added")
-      .hook(Audio, update, "stream-removed");
-  },
+  children: [
+    Widget.Label({
+      label: "lista de saídas",
+      visible: Audio.bind("speakers").as((a) => a.length > 0),
+    }),
+    Widget.Box({
+      vertical: true,
+      homogeneous: false,
+      className: "speakers",
+      visible: Audio.bind("speakers").as((a) => a.length > 0),
+      children: Audio.bind("speakers").as((a) => make_audio_list(a, true)),
+    }),
+    Widget.Label({
+      label: "lista de entradas",
+      visible: Audio.bind("microphones").as((a) => a.length > 0),
+    }),
+    Widget.Box({
+      vertical: true,
+      homogeneous: false,
+      className: "microphones",
+      visible: Audio.bind("microphones").as((a) => a.length > 0),
+      children: Audio.bind("microphones").as((a) => make_audio_list(a, false)),
+    }),
+  ],
 });
-// =======
-// const streamList = (isSink) =>
-//   Widget.Box({
-//     className: isSink ? "sinkList" : "sourceList",
-//     vertical: true,
-//     homogeneous: false,
-//     children: Audio.bind(isSink ? "speakers" : "microphones").transform((s) =>
-//       s.map((a) => {
-//         let defaultId;
-//
-//         if (isSink) defaultId = Audio.control.get_default_sink()?.id;
-//         else defaultId = Audio.control.get_default_source()?.id;
-//
-//         return RadioButton({
-//           // group: self.children,
-//           active: a.stream.id == defaultId,
-//           child: Widget.Label({
-//             hpack: "start",
-//             justification: "left",
-//             truncate: "end",
-//             label: a.description,
-//           }),
-//         }).on("clicked", (button) => {
-//           if (!button.active || !a.stream) return;
-//
-//           if (isSink) Audio.control.set_default_sink(a.stream);
-//           else Audio.control.set_default_source(a.stream);
-//         });
-//       }),
-//     ),
-//   });
-// >>>>>>> 4091508 (não lembro)
 
 const networkButton = Widget.Button({
   className: "networkButton",
@@ -392,59 +363,3 @@ const dashboard = () =>
   });
 
 export default dashboard;
-
-// =======
-// const streamList = (isSink) => {
-//   // let children = [];
-//
-//   return Widget.Box({
-//     className: isSink ? "sinkList" : "sourceList",
-//     vertical: true,
-//     homogeneous: false,
-//     children: Audio.bind(isSink ? "speakers" : "microphones").as((a) => {
-//       print(a);
-//       print(a.name);
-//       print(a.description);
-//       print(a.id);
-//
-//       let defaultId;
-//
-//       if (isSink) defaultId = Audio.control.get_default_sink()?.id;
-//       else defaultId = Audio.control.get_default_source()?.id;
-//
-//       return RadioButton({
-//         // group: children,
-//         active: a?.stream?.id == defaultId,
-//         child: Widget.Label({
-//           hpack: "start",
-//           justification: "left",
-//           truncate: "end",
-//           label: a.description,
-//         }),
-//       }).on("clicked", (button) => {
-//         if (!button.active || !a.stream) return;
-//
-//         if (isSink) Audio.control.set_default_sink(a.stream);
-//         else Audio.control.set_default_source(a.stream);
-//       });
-//     }),
-//   });
-// };
-//
-// const sliders = () =>
-//   Widget.Box({
-//     vertical: true,
-//     homogeneous: false,
-//     hpack: "fill",
-//     vpack: "fill",
-//     className: "sliders",
-//
-// >>>>>>> 48a0ed5 (tentei fazer uma lista de outputs mas não funfou)
-
-// <<<<<<< HEAD
-// =======
-//       Widget.Label("lista de saídas"),
-//       streamList(true),
-//       // Widget.Label("lista de entradas"),
-//       // streamList(false),
-// >>>>>>> 48a0ed5 (tentei fazer uma lista de outputs mas não funfou)

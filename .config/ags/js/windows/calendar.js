@@ -133,12 +133,12 @@ const Calendar = () => {
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                    className: "location",
-                    label: event.location,
-                    hpack: "start",
-                    justification: "left",
-                    wrap: true,
-                  })
+                  className: "location",
+                  label: event.location,
+                  hpack: "start",
+                  justification: "left",
+                  wrap: true,
+                })
                 : null,
             ],
           });
