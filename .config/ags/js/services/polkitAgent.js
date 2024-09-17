@@ -192,10 +192,6 @@ class AuthenticationDialog extends Service {
 
 class AuthenticationAgent extends Service {
   static {
-    // takes three arguments
-    // the class itself
-    // an object defining the signals
-    // an object defining its properties
     Service.register(
       this,
       {
