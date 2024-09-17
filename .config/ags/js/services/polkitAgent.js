@@ -64,7 +64,7 @@ class AuthenticationDialog extends Service {
     this._userNames = userNames;
 
     if (userNames.length > 1) {
-      print(
+      logError(
         `polkitAuthenticationAgent: Received ${userNames.length} identities that can be used for authentication. Only considering one.`,
       );
     }

@@ -42,12 +42,12 @@ const audioBar = (isSink) =>
 
           if (!available) {
             self.value = 0;
-            self.visible = false;
+            // self.visible = false;
             return;
           }
 
           self.value = stream.volume;
-          self.visible = true;
+          // self.visible = true;
         }),
     },
     [

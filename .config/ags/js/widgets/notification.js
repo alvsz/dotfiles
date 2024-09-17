@@ -43,8 +43,9 @@ const notification = (n) => {
 
     child: Widget.Icon("window-close-symbolic"),
     onClicked: () => {
-      if (n.popup) n.dismiss();
-      else n.close();
+      // if (n.popup) n.dismiss();
+      // else
+      n.close();
     },
   });
 

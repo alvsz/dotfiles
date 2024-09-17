@@ -14,10 +14,6 @@ import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
 import calendarServer from "./js/services/ecal.js";
 globalThis.calendarserver = calendarServer;
-
-// import Lock from "./js/misc/Lock.js";
-// globalThis.lock = Lock;
-
 globalThis.polkit = polkitAgent;
 globalThis.utils = Utils;
 
@@ -32,10 +28,7 @@ polkitAgent.connect("initiate", () => {
 
 const windows = [
   ...forMonitors(Bar),
-  // forMonitors(Lockscreen),
-  // ...forMonitors(Backdrop),
-  // NotificationCenter(),
-  // NotificationsPopupWindow(),
+  //
   AppMenu(),
   Calendar(),
   Dashboard(),

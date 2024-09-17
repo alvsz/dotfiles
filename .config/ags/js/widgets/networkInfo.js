@@ -3,6 +3,7 @@ import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import NM from "gi://NM";
+globalThis.nm = NM;
 
 const knownSSIDs = () => {
   let knownSSIDs = new Set();
@@ -93,9 +94,9 @@ const wifiButton = (ap, known) =>
 
         ap._ap.rsn_flags > 0 || ap._ap.wpa_flags > 0
           ? Widget.Icon({
-            icon: "dialog-password",
-            className: "password",
-          })
+              icon: "dialog-password",
+              className: "password",
+            })
           : null,
       ],
     }),
