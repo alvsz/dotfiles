@@ -326,6 +326,12 @@ window {
       padding: 0.2em;
     }
   }
+
+  box.horizontal {
+    box.vertical {
+      @extend .horizontalSpacer;
+    }
+  }
 }
 
 .calendar {
@@ -618,6 +624,10 @@ window {
     @extend .verticalSpacer;
   }
 
+  & > *:first-child {
+    margin-top: 0em;
+  }
+
   .userImage {
     font-size: 4.5em;
   }
@@ -689,12 +699,10 @@ window {
     font-size: 5.5em;
   }
 
-  .vertical {
-    margin-left: 0.4em;
-  }
-
-  .bouncingText {
-    margin-right: 0.4em;
+  &.has-album-cover {
+    box.vertical {
+      margin-left: 0.4em;
+    }
   }
 
   .position {

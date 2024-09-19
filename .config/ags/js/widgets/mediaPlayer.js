@@ -99,7 +99,9 @@ const mediaPlayer = (player) => {
   const albumCover = Widget.Icon({
     className: "albumCover",
   }).hook(player, (self) => {
-    self.visible = player.coverPath != null;
+    const hasCover = player.coverPath != null;
+    self.parent.toggleClassName("has-album-cover", hasCover);
+    self.visible = hasCover;
     self.icon = player.coverPath;
   });
 
