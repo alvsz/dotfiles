@@ -11,9 +11,7 @@ org.gnome.Geary --gapplication-service &
 
 swayidle timeout 420 'dpms off' resume 'dpms on' &
 
-swww init
-
-# pgrep spotify_player || spotify_player -d
+swww-daemon &
 
 kdeconnectd &
 
