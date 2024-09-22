@@ -3,9 +3,13 @@ somar = function(a, b)
 	return a + b
 end
 
-printstatus = function()
-	-- print("novo status do dwl")
+autostart = function()
+	io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+	io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
+	io.popen("~/.config/dwl/autostart.sh")
+end
 
+printstatus = function()
 	local clients = get_clients()
 
 	for index, client in pairs(clients) do
