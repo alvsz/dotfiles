@@ -55,6 +55,8 @@ const deviceItem = (device) =>
         vpack: "fill",
         children: [
           Widget.Label({
+            hpack: "start",
+            justification: "left",
             wrap: true,
             label: device.model,
           }),
@@ -88,7 +90,15 @@ const deviceList = () => {
     className: "upower",
     setup: (self) => {
       const update = () => {
-        self.children = client.get_devices().map((d) => deviceItem(d));
+        const devices = client.get_devices().map((d) => deviceItem(d));
+
+        if (devices.length < 1) {
+          self.children = [];
+          self.visible = false;
+        } else {
+          self.children = devices;
+          self.visible = true;
+        }
       };
       update();
       self.hook(client, update, "device_added");
