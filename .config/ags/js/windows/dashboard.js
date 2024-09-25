@@ -18,6 +18,7 @@ import mediaPlayer from "../widgets/mediaPlayer.js";
 import networkInfo from "../widgets/networkInfo.js";
 import bluetoothInfo from "../widgets/bluetoothInfo.js";
 import audioBar from "../widgets/audioBar.js";
+import deviceList from "../widgets/UPowerDevices.js";
 
 globalThis.powerprofiles = powerProfiles;
 
@@ -357,6 +358,7 @@ const userCenter = () => {
       powerMenu,
       sliders,
       mpris(),
+      deviceList(),
       // volumeInfo(),
       flowBox,
     ],
