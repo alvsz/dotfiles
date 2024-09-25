@@ -263,12 +263,12 @@ const userCenter = () => {
     }),
   });
 
-  const powerButton = Widget.Button({
+  const powerButton = Widget.ToggleButton({
     child: Widget.Icon(icons.powermenu.shutdown),
     vpack: "center",
     hpack: "end",
-    onClicked: (_) => {
-      powerMenu.set_reveal_child(!powerMenu.child_revealed);
+    onToggled: ({ active }) => {
+      powerMenu.set_reveal_child(active);
     },
   });
 
