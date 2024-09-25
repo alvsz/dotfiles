@@ -38,4 +38,4 @@
   :namespace "eww_pwcalc"
   (pwcalculator
     :class "pwcalc"
-    :cmd "pwcalculator.lua '${secret}' '${domain}' | wl-copy -p && ${EWW_CMD} close pwcalc-wayland & ${EWW_CMD} update domain='' & ${EWW_CMD} update secret=''"))
+    :cmd "pwcalculator.js '${secret}' '${domain}' | wl-copy -p && ${EWW_CMD} close pwcalc-wayland & ${EWW_CMD} update domain='' & ${EWW_CMD} update secret=''"))
