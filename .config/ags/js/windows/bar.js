@@ -28,6 +28,7 @@ globalThis.battery = Battery;
 globalThis.notification = Notifications;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
+globalThis.tray = SystemTray;
 globalThis.utils = Utils;
 globalThis.gdk = Gdk;
 
@@ -239,7 +240,10 @@ const Left = (monitorId) =>
     vexpand: true,
     homogeneous: false,
     className: "leftBar",
-    children: [archDash(), dwl(monitorId)],
+    children: [
+      archDash(),
+      // dwl(monitorId)
+    ],
   });
 
 const Center = () =>
@@ -260,9 +264,10 @@ const Right = (monitorId) =>
       revealOnClick({
         shown: Widget.Icon(icons.ui.arrow.left),
         hidden: SysTray(),
-      }).hook(dwlIpc, (self) => {
-        self.visible = dwlIpc.value[monitorId].active;
       }),
+      // .hook(dwlIpc, (self) => {
+      //   self.visible = dwlIpc.value[monitorId].active;
+      // }),
       networkIndicator(),
       audioIcon({ source: false }),
       bluetoothIcon(),

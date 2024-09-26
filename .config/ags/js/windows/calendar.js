@@ -123,22 +123,22 @@ const Calendar = () => {
             css: event.color ? `color: ${event.color};` : null,
             children: [
               Widget.Label({
-                className: "summary",
-                label: event.summary ? event.summary : "",
                 hpack: "start",
                 justification: "left",
                 wrap: true,
+                className: "summary",
                 visible: event.summary ? event.summary.length > 0 : false,
+                label: event.summary ? event.summary : "",
               }),
               time,
               event.location?.length > 0
                 ? Widget.Label({
-                  className: "location",
-                  label: event.location,
-                  hpack: "start",
-                  justification: "left",
-                  wrap: true,
-                })
+                    className: "location",
+                    label: event.location,
+                    hpack: "start",
+                    justification: "left",
+                    wrap: true,
+                  })
                 : null,
             ],
           });

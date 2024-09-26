@@ -224,7 +224,7 @@ const userCenter = () => {
 
   const powerMenu = Widget.Revealer({
     transition: "slide_down",
-    transitionDuration: 500,
+    // transitionDuration: 500,
 
     child: Widget.Box({
       vertical: true,

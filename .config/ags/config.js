@@ -27,7 +27,8 @@ polkitAgent.connect("initiate", () => {
 });
 
 const windows = [
-  ...forMonitors(Bar),
+  Bar(0),
+  // ...forMonitors(Bar),
   //
   AppMenu(),
   Calendar(),
