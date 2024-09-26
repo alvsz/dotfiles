@@ -7,6 +7,8 @@ ags &
 
 systemctl --user start gammastep-indicator
 
+udiskie --tray &
+
 org.gnome.Geary --gapplication-service &
 
 swayidle timeout 420 'dpms off' resume 'dpms on' &
