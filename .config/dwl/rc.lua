@@ -13,30 +13,36 @@ dwl_cfg = {
 
 	printstatus = function()
 		print("status")
-		local clients = get_clients()
-		--
-		for index, client in pairs(clients) do
-			print(index, client.app_id)
-			-- 	print(client.app_id)
-			-- 	print(client.title)
-			-- 	print(client.isfloating)
-		end
-		-- -- print(clients)
-		local monitors = get_monitors()
-		--
-		for index, monitor in pairs(monitors) do
-			print(index, monitor)
-			-- 	print(monitor.layout)
-			-- 	print(monitor.tagset1)
-			-- 	print(monitor.tagset2)
-			-- 	print(monitor.name)
-		end
 
-		-- print(clients, monitors)
+		local clients = get_clients()
+		local monitors = get_monitors()
+
+		for i, c in pairs(clients) do
+			for j, m in pairs(monitors) do
+				local visible = client.visibleon(c, m)
+				print(i, j, "cliente " .. c.app_id .. " visivel no monitor " .. m.name .. ": " .. visible)
+			end
+		end
+	end,
+
+	reload = function()
+		print("reload")
 	end,
 
 	env = {
-		["key"] = "value",
 		["XDG_CURRENT_DESKTOP"] = "wlroots",
+	},
+
+	input_config = {
+		["LIBINPUT_DEFAULT_ACCELERATION_PROFILE"] = "ADAPTIVE",
+		["LIBINPUT_DEFAULT_ACCELERATION"] = 0,
+		["LIBINPUT_DEFAULT_CLICK_METHOD"] = "CLICKFINGER",
+		["LIBINPUT_DEFAULT_DISABLE_WHILE_TYPING"] = 1,
+		["LIBINPUT_DEFAULT_LEFT_HANDED"] = 0,
+		["LIBINPUT_DEFAULT_MIDDLE_EMULATION"] = 1,
+		["LIBINPUT_DEFAULT_NATURAL_SCROLL"] = 1,
+		["LIBINPUT_DEFAULT_TAP"] = 1,
+		["LIBINPUT_DEFAULT_DRAG"] = 1,
+		["LIBINPUT_DEFAULT_SCROLL_METHOD"] = "2FG",
 	},
 }

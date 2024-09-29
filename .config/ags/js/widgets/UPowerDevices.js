@@ -1,7 +1,10 @@
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
 import UPowerGlib from "gi://UPowerGlib";
-globalThis.upower = UPowerGlib;
+globalThis.upowerglib = UPowerGlib;
+
+const client = UPowerGlib.Client.new();
+globalThis.upower = client;
 
 import icons from "../icons.js";
 
@@ -48,10 +51,8 @@ const deviceItem = (device) =>
     ],
   });
 
-const deviceList = () => {
-  const client = UPowerGlib.Client.new();
-
-  const box = Widget.Box({
+const deviceList = () =>
+  Widget.Box({
     vertical: true,
     homogeneous: false,
     hpack: "fill",
@@ -74,8 +75,5 @@ const deviceList = () => {
       self.hook(client, update, "device_removed");
     },
   });
-
-  return box;
-};
 
 export default deviceList;

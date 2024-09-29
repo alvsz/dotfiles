@@ -1,28 +1,26 @@
 #!/bin/env sh
 
-# /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-/usr/lib/gsd-xsettings &
+# /usr/lib/gsd-xsettings &
 
 ags &
 
 systemctl --user start gammastep-indicator
 
-udiskie --tray &
+pgrep udiskie || udiskie --tray &
 
-org.gnome.Geary --gapplication-service &
+# org.gnome.Geary --gapplication-service &
 
-swayidle timeout 420 'dpms off' resume 'dpms on' &
+pgrep swayidle || swayidle timeout 420 'dpms off' resume 'dpms on' &
 
-swww-daemon &
+pgrep swww-daemon || swww-daemon &
 
-kdeconnectd &
+pgrep kdeconnectd || kdeconnectd &
 
 sleep 5
-kdeconnect-indicator &
+pgrep kdeconnect-indi || kdeconnect-indicator &
 
 if [ "${HOSTNAME}" = "archlinux" ]; then
-	# polychromatic-tray-applet &
-	openrgb --startminimized &
+	pgrep openrgb || openrgb --startminimized &
 	# openrgb -p 'padrao'
 	# openrgb -c 800080
 fi
