@@ -19,7 +19,7 @@ dwl_cfg = {
 
 		for i, c in pairs(clients) do
 			for j, m in pairs(monitors) do
-				local visible = client.visibleon(c, m)
+				local visible = c:visibleon(m)
 				print(i, j, "cliente " .. c.app_id .. " visivel no monitor " .. m.name .. ": " .. visible)
 			end
 		end
@@ -43,6 +43,6 @@ dwl_cfg = {
 		["LIBINPUT_DEFAULT_NATURAL_SCROLL"] = 1,
 		["LIBINPUT_DEFAULT_TAP"] = 1,
 		["LIBINPUT_DEFAULT_DRAG"] = 1,
-		["LIBINPUT_DEFAULT_SCROLL_METHOD"] = "2FG",
+		["LIBINPUT_DEFAULT_SCROLL_METHOD"] = "EDGE",
 	},
 }

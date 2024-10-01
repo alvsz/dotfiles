@@ -49,5 +49,3 @@ elif [[ "$XDG_SESSION_TYPE" = "wayland" ]]; then
 fi
 
 xrdb -merge ~/.cache/wal/colors.Xresources
-
-eval "$(luarocks --tree "${XDG_DATA_HOME}/luarocks" path)"
