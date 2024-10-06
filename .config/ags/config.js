@@ -7,6 +7,7 @@ import AppMenu from "./js/windows/appmenu.js";
 import Calendar from "./js/windows/calendar.js";
 import Dashboard from "./js/windows/dashboard.js";
 import Polkit from "./js/windows/polkit.js";
+import NetworkAgentDialog from "./js/windows/networkSecretDialog.js";
 
 import polkitAgent from "./js/services/polkitAgent.js";
 import networkAgent from "./js/services/networkAgent.js";
@@ -30,10 +31,7 @@ polkitAgent.connect("initiate", () => {
 });
 
 networkAgent.connect("initiate", (_, dialog) => {
-  print("novo autenticador do polkit");
-  print(dialog);
-  print(dialog.cancel());
-  // App.
+  App.addWindow(NetworkAgentDialog(dialog));
 });
 
 const windows = [

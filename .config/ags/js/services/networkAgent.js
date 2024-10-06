@@ -31,7 +31,6 @@ class NetworkSecretDialog extends Service {
         ["title"]: ["string", "r"],
         ["message"]: ["string", "r"],
         ["secrets"]: ["jsobject", "r"],
-        ["request-id"]: ["string", "r"],
         ["flags"]: ["int", "r"],
       },
     );
@@ -49,7 +48,6 @@ class NetworkSecretDialog extends Service {
 
     this._agent = agent;
     this._requestId = requestId;
-    this.changed("request-id");
     this._connection = connection;
     this._settingName = settingName;
     this._hints = hints;
@@ -58,6 +56,10 @@ class NetworkSecretDialog extends Service {
 
     if (contentOverride) this._content = contentOverride;
     else this._content = this._getContent();
+
+    this.changed("title");
+    this.changed("message");
+    this.changed("secrets");
   }
 
   cancel() {
@@ -375,9 +377,6 @@ class NetworkSecretDialog extends Service {
         log(`Invalid connection type: ${connectionType}`);
     }
 
-    this.changed("title");
-    this.changed("message");
-    this.changed("secrets");
     return content;
   }
 
@@ -385,7 +384,7 @@ class NetworkSecretDialog extends Service {
     return this._content.title;
   }
   get message() {
-    return this._content.title;
+    return this._content.message;
   }
   get secrets() {
     return this._content.secrets;

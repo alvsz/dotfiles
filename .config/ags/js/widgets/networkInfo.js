@@ -51,19 +51,19 @@ const wiredButton = (conn) =>
     }),
   });
 
-const wifiButton = (ap, known) =>
+const wifiButton = (ap) =>
   Widget.Button({
     className: "networkButton",
     onClicked: () => {
-      if (known) {
-        Utils.execAsync(`nmcli dev wifi connect "${ap.ssid}"`).catch((err) =>
-          Utils.notify(
-            "Erro ao conectar à rede Wi-Fi",
-            err.toString(),
-            "network-error-symbolic",
-          ),
-        );
-      }
+      // if (known) {
+      Utils.execAsync(`nmcli dev wifi connect "${ap.ssid}"`).catch((err) =>
+        Utils.notify(
+          "Erro ao conectar à rede Wi-Fi",
+          err.toString(),
+          "network-error-symbolic",
+        ),
+      );
+      // }
     },
 
     child: Widget.Box({
@@ -176,7 +176,7 @@ const networkInfo = () => {
                   .sort((b, a) => {
                     return a.strength - b.strength;
                   })
-                  .map((ap) => wifiButton(ap, true));
+                  .map((ap) => wifiButton(ap));
 
                 if (children.length < 1) self.children = [];
                 else self.children = children;
@@ -210,7 +210,7 @@ const networkInfo = () => {
                   .sort((b, a) => {
                     return a.strength - b.strength;
                   })
-                  .map((ap) => wifiButton(ap, false));
+                  .map((ap) => wifiButton(ap));
 
                 if (children.length < 1) {
                   self.children = [];
