@@ -29,7 +29,7 @@ polkitAgent.connect("initiate", () => {
   App.addWindow(Polkit(polkitAgent._currentDialog));
 });
 
-networkAgent.connect("initiate", (dialog) => {
+networkAgent.connect("initiate", (_, dialog) => {
   print("novo autenticador do polkit");
   print(dialog);
   print(dialog.cancel());

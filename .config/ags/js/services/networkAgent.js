@@ -63,9 +63,10 @@ class NetworkSecretDialog extends Service {
   cancel() {
     this._agent.respond(
       this._requestId,
-      Shell.NetworkAgentResponse.USER_CANCELED,
+      GjsNetworkAgent.NetworkAgentResponse.USER_CANCELED,
     );
-    this.close();
+    this.emit("done", true);
+    // this.close();
   }
 
   authenticate(secrets) {
@@ -84,9 +85,10 @@ class NetworkSecretDialog extends Service {
     if (valid) {
       this._agent.respond(
         this._requestId,
-        Shell.NetworkAgentResponse.CONFIRMED,
+        GjsNetworkAgent.NetworkAgentResponse.CONFIRMED,
       );
-      this.close();
+      this.emit("done", false);
+      // this.close();
     }
     // do nothing if not valid
   }
@@ -159,7 +161,7 @@ class NetworkSecretDialog extends Service {
       case "wpa-psk":
       case "sae":
         secrets.push({
-          label: _("Password"),
+          label: "Senha",
           key: "psk",
           value: wirelessSecuritySetting.psk || "",
           validate: this._validateWpaPsk,
@@ -168,7 +170,7 @@ class NetworkSecretDialog extends Service {
         break;
       case "none": // static WEP
         secrets.push({
-          label: _("Key"),
+          label: "Chave",
           key: `wep-key${wirelessSecuritySetting.wep_tx_keyidx}`,
           value:
             wirelessSecuritySetting.get_wep_key(
@@ -183,7 +185,7 @@ class NetworkSecretDialog extends Service {
         if (wirelessSecuritySetting.auth_alg === "leap") {
           // Cisco LEAP
           secrets.push({
-            label: _("Password"),
+            label: "Senha",
             key: "leap-password",
             value: wirelessSecuritySetting.leap_password || "",
             password: true,
@@ -329,10 +331,7 @@ class NetworkSecretDialog extends Service {
         wirelessSetting = this._connection.get_setting_wireless();
         ssid = NM.utils_ssid_to_utf8(wirelessSetting.get_ssid().get_data());
         content.title = "Autenticação necessária";
-        content.message =
-          "Senhas ou chaves criptografadas são necessárias para acessar a rede sem fio “%s”".format(
-            ssid,
-          );
+        content.message = `Senhas ou chaves criptografadas são necessárias para acessar a rede sem fio "${ssid}"`;
         this._getWirelessSecrets(content.secrets, wirelessSetting);
         break;
       case "802-3-ethernet":
@@ -369,10 +368,7 @@ class NetworkSecretDialog extends Service {
       case "cdma":
       case "bluetooth":
         content.title = "Autenticação necessária";
-        content.message =
-          "Uma senha é necessária para se conectar a “%s”".format(
-            connectionSetting.get_id(),
-          );
+        content.message = `Uma senha é necessária para se conectar a "${connectionSetting.get_id()}"`;
         this._getMobileSecrets(content.secrets, connectionType);
         break;
       default:
@@ -485,23 +481,16 @@ class NetworkAgent extends Service {
         let wirelessSetting = connection.get_setting_wireless();
         let ssid = NM.utils_ssid_to_utf8(wirelessSetting.get_ssid().get_data());
         title = "Autenticação necessária";
-        body =
-          "Senhas ou chaves criptografadas são necessárias para acessar a rede sem fio “%s”".format(
-            ssid,
-          );
+        body = `Senhas ou chaves criptografadas são necessárias para acessar a rede sem fio "${ssid}"`;
         break;
       }
       case "802-3-ethernet":
         title = "Autenticação 802.1X com cabo";
-        body = "Uma senha é necessária para se conectar a “%s”".format(
-          connection.get_id(),
-        );
+        body = `Uma senha é necessária para se conectar a "${connection.get_id()}"`;
         break;
       case "pppoe":
         title = "Autenticação DSL";
-        body = "Uma senha é necessária para se conectar a “%s”".format(
-          connection.get_id(),
-        );
+        body = `Uma senha é necessária para se conectar a "${connection.get_id()}"`;
         break;
       case "gsm":
         if (hints.includes("pin")) {
@@ -514,15 +503,11 @@ class NetworkAgent extends Service {
       case "cdma":
       case "bluetooth":
         title = "Autenticação necessária";
-        body = "Uma senha é necessária para se conectar a “%s”".format(
-          connectionSetting.get_id(),
-        );
+        body = `Uma senha é necessária para se conectar a "${connectionSetting.get_id()}"`;
         break;
       case "vpn":
         title = "Senha de VPN";
-        body = "Uma senha é necessária para se conectar a “%s”".format(
-          connectionSetting.get_id(),
-        );
+        body = `Uma senha é necessária para se conectar a "${connectionSetting.get_id()}`;
         break;
       default:
         log(`Invalid connection type: ${connectionType}`);
@@ -586,7 +571,7 @@ class NetworkAgent extends Service {
       hints,
       flags,
     );
-    dialog.connect("destroy", () => {
+    dialog.connect("done", () => {
       delete this._dialogs[requestId];
     });
     this._dialogs[requestId] = dialog;
