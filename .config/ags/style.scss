@@ -838,20 +838,12 @@ window {
   }
 }
 
-.polkit {
+.dialog {
   @extend .basewindow;
   padding: 1em;
-  min-width: 18em;
-
-  .userImage {
-    font-size: 5em;
-    // margin-top: 0.1em;
-  }
 
   .title {
     font-weight: bold;
-    // margin-bottom: 1em;
-    // margin: 0em 1em;
     margin: 1em 1em 1em 1em;
     font-size: 1.1em;
   }
@@ -860,28 +852,15 @@ window {
     margin: 0em 1em;
   }
 
-  .message {
-    margin-bottom: 1em;
-  }
-
-  .userName {
-    margin: 0.5em;
-  }
-
   entry {
     min-width: 18em;
-    margin: 0em 1em;
-  }
-
-  .error {
-    margin-top: 0.5em;
   }
 
   .info {
     font-style: italic;
   }
 
-  .horizontal {
+  box.horizontal {
     margin-top: 1em;
   }
 
@@ -895,6 +874,38 @@ window {
     background-color: css("@accent_bg_color");
     margin-left: 0.3em;
     @extend .fancyButton;
+  }
+}
+
+.polkit {
+  @extend .dialog;
+
+  .userImage {
+    font-size: 5em;
+    // margin-top: 0.1em;
+  }
+
+  .message {
+    margin-bottom: 1em;
+  }
+
+  .userName {
+    margin: 0.5em;
+  }
+
+  .error {
+    margin-top: 0.5em;
+  }
+  entry {
+    margin: 0em 1em;
+  }
+}
+
+.networkAgentDialog {
+  @extend .dialog;
+
+  .passwords {
+    margin: 1em 0em;
   }
 }
 
