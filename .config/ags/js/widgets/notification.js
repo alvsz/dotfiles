@@ -68,7 +68,6 @@ const notification = (n) => {
           hpack: "center",
           label: label,
           wrap: true,
-          // truncate: "middle",
         }),
       }),
     ),
