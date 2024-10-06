@@ -1,3 +1,5 @@
+import Service from "resource:///com/github/Aylur/ags/service.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
@@ -208,7 +210,7 @@ class NetworkSecretDialog extends Service {
     if (this._settingName === "802-1x" && this._hints.length) {
       if (this._hints.includes("identity")) {
         secrets.push({
-          label: _("Username"),
+          label: "Nome de usuário",
           key: "identity",
           value: ieee8021xSetting.identity || "",
           password: false,
@@ -216,7 +218,7 @@ class NetworkSecretDialog extends Service {
       }
       if (this._hints.includes("password")) {
         secrets.push({
-          label: _("Password"),
+          label: "Senha",
           key: "password",
           value: ieee8021xSetting.password || "",
           password: true,
@@ -224,7 +226,7 @@ class NetworkSecretDialog extends Service {
       }
       if (this._hints.includes("private-key-password")) {
         secrets.push({
-          label: _("Private key password"),
+          label: "Senha da chave privada",
           key: "private-key-password",
           value: ieee8021xSetting.private_key_password || "",
           password: true,
@@ -243,13 +245,13 @@ class NetworkSecretDialog extends Service {
         // is not visible here since we only care about phase2 authentication
         // (and don't even care of which one)
         secrets.push({
-          label: _("Username"),
+          label: "Nome de usuário",
           key: null,
           value: ieee8021xSetting.identity || "",
           password: false,
         });
         secrets.push({
-          label: _("Password"),
+          label: "Senha",
           key: "password",
           value: ieee8021xSetting.password || "",
           password: true,
@@ -263,7 +265,7 @@ class NetworkSecretDialog extends Service {
           password: false,
         });
         secrets.push({
-          label: _("Private key password"),
+          label: "Senha da chave privada",
           key: "private-key-password",
           value: ieee8021xSetting.private_key_password || "",
           password: true,
@@ -279,19 +281,19 @@ class NetworkSecretDialog extends Service {
   _getPPPoESecrets(secrets) {
     let pppoeSetting = this._connection.get_setting_pppoe();
     secrets.push({
-      label: _("Username"),
+      label: "Nome de usuário",
       key: "username",
       value: pppoeSetting.username || "",
       password: false,
     });
     secrets.push({
-      label: _("Service"),
+      label: "Serviço",
       key: "service",
       value: pppoeSetting.service || "",
       password: false,
     });
     secrets.push({
-      label: _("Password"),
+      label: "Senha",
       key: "password",
       value: pppoeSetting.password || "",
       password: true,
@@ -306,7 +308,7 @@ class NetworkSecretDialog extends Service {
         this._connection.get_setting_gsm();
     else setting = this._connection.get_setting_by_name(connectionType);
     secrets.push({
-      label: _("Password"),
+      label: "Senha",
       key: "password",
       value: setting.value || "",
       password: true,
@@ -326,17 +328,18 @@ class NetworkSecretDialog extends Service {
       case "802-11-wireless":
         wirelessSetting = this._connection.get_setting_wireless();
         ssid = NM.utils_ssid_to_utf8(wirelessSetting.get_ssid().get_data());
-        content.title = _("Authentication required");
-        content.message = _(
-          "Passwords or encryption keys are required to access the wireless network “%s”",
-        ).format(ssid);
+        content.title = "Autenticação necessária";
+        content.message =
+          "Senhas ou chaves criptografadas são necessárias para acessar a rede sem fio “%s”".format(
+            ssid,
+          );
         this._getWirelessSecrets(content.secrets, wirelessSetting);
         break;
       case "802-3-ethernet":
-        content.title = _("Wired 802.1X authentication");
+        content.title = "Autenticação 802.1X com cabo";
         content.message = null;
         content.secrets.push({
-          label: _("Network name"),
+          label: "Nome da rede",
           key: null,
           value: connectionSetting.get_id(),
           password: false,
@@ -344,19 +347,18 @@ class NetworkSecretDialog extends Service {
         this._get8021xSecrets(content.secrets);
         break;
       case "pppoe":
-        content.title = _("DSL authentication");
+        content.title = "Autenticação DSL";
         content.message = null;
         this._getPPPoESecrets(content.secrets);
         break;
       case "gsm":
         if (this._hints.includes("pin")) {
           let gsmSetting = this._connection.get_setting_gsm();
-          content.title = _("PIN code required");
-          content.message = _(
-            "PIN code is needed for the mobile broadband device",
-          );
+          content.title = "Código PIN necessário";
+          content.message =
+            "O código PIN é necessário para o dispositivo móvel de banda larga";
           content.secrets.push({
-            label: _("PIN"),
+            label: "PIN",
             key: "pin",
             value: gsmSetting.pin || "",
             password: true,
@@ -366,10 +368,11 @@ class NetworkSecretDialog extends Service {
       // fall through
       case "cdma":
       case "bluetooth":
-        content.title = _("Authentication required");
-        content.message = _("A password is required to connect to “%s”").format(
-          connectionSetting.get_id(),
-        );
+        content.title = "Autenticação necessária";
+        content.message =
+          "Uma senha é necessária para se conectar a “%s”".format(
+            connectionSetting.get_id(),
+          );
         this._getMobileSecrets(content.secrets, connectionType);
         break;
       default:
@@ -439,6 +442,7 @@ class NetworkAgent extends Service {
     } catch (e) {
       this._native = null;
       logError(e, "error initializing the NetworkManager Agent");
+      App.quit();
     }
   }
 
