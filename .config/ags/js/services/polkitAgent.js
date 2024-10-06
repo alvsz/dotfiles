@@ -216,7 +216,7 @@ class AuthenticationAgent extends Service {
     try {
       this._nativeAgent.register();
     } catch (e) {
-      print("Failed to register AuthenticationAgent");
+      logError(e, "Failed to register AuthenticationAgent");
       App.quit();
     }
   }
@@ -225,7 +225,7 @@ class AuthenticationAgent extends Service {
     try {
       this._nativeAgent.unregister();
     } catch (e) {
-      print("Failed to unregister AuthenticationAgent");
+      logError(e, "Failed to unregister AuthenticationAgent");
       App.quit();
     }
   }

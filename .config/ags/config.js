@@ -9,6 +9,9 @@ import Dashboard from "./js/windows/dashboard.js";
 import Polkit from "./js/windows/polkit.js";
 
 import polkitAgent from "./js/services/polkitAgent.js";
+import networkAgent from "./js/services/networkAgent.js";
+
+// import networkAgent from "./js/services/networkAgent.js";
 
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
@@ -24,6 +27,13 @@ scssWatcher();
 
 polkitAgent.connect("initiate", () => {
   App.addWindow(Polkit(polkitAgent._currentDialog));
+});
+
+networkAgent.connect("initiate", (dialog) => {
+  print("novo autenticador do polkit");
+  print(dialog);
+  print(dialog.cancel());
+  // App.
 });
 
 const windows = [
