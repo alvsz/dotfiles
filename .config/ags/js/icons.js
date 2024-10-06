@@ -101,7 +101,7 @@ export default {
   },
   upower: {
     [UPowerGlib.DeviceKind.UNKNOWN]: "UNKNOWN",
-    [UPowerGlib.DeviceKind.LINE_POWER]: "LINE_POWER",
+    [UPowerGlib.DeviceKind.LINE_POWER]: "ac-adapter",
     [UPowerGlib.DeviceKind.TABLET]: "input-tablet",
     [UPowerGlib.DeviceKind.COMPUTER]: "computer",
     [UPowerGlib.DeviceKind.GAMING_INPUT]: "input-gaming",
