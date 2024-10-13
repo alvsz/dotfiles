@@ -20,15 +20,29 @@ end
 -- print("Conectado ao servidor!")
 
 if arg[1] == "follow" then
-	-- Loop para ouvir eventos do servidor
 	while true do
 		local event, err = client:receive()
+
 		if not err then
 			print(event)
 		else
 			print("Erro ao receber evento: " .. err)
-			break -- Sai do loop em caso de erro
+			break
 		end
+	end
+elseif arg[1] == "status" then
+	while true do
+		local event, err = client:receive()
+
+		if not err then
+			print(event)
+		else
+			print("Erro ao receber evento: " .. err)
+			break
+		end
+
+		client:close()
+		break
 	end
 end
 

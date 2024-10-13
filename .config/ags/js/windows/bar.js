@@ -33,6 +33,9 @@ globalThis.utils = Utils;
 globalThis.gdk = Gdk;
 
 import { dwlIpc } from "../vars.js";
+globalThis.dwl = dwlIpc;
+
+const nTags = 7;
 
 const Workspace = ({
   onPrimaryClick,
@@ -61,17 +64,19 @@ const genTags = (monitorId) => {
   let Tags = [];
   const mon = dwlIpc.value[monitorId];
 
-  for (const tag of mon.tags) {
+  for (let i = 0; i < nTags; i++) {
+    const tagMask = 1 << i;
     let test = Workspace({
-      urgent: tag.state == 2,
-      selected: tag.state == 1,
-      occupied: tag.clients > 0,
+      urgent: mon.clients.find((c) => c.tags & tagMask && c.isurgent),
+      selected: (tagMask & mon.seltags) != 0,
+      occupied: mon.clients.find((c) => (c.tags & tagMask) != 0) ? true : false,
       onMiddleClick: () => {},
       onPrimaryClick: () => {},
       onSecondaryClick: () => {},
     });
     Tags.push(test);
   }
+
   return Tags;
 };
 
@@ -95,16 +100,16 @@ const clientTitle = (monitorId) =>
 
     const limitWidth = 45;
 
-    const title =
-      mon.title != "" ? mon.title : mon.appid != "" ? mon.appid : "";
+    const focused = mon.clients.find((c) => c.focused);
+    const title = focused?.title;
 
-    if (title.length > limitWidth) {
-      self.label = title.substring(0, limitWidth - 3) + "...";
-    } else {
-      self.label = title;
+    if (focused && title) {
+      if (title.length > limitWidth) {
+        self.label = title.substring(0, limitWidth - 3) + "...";
+      } else {
+        self.label = title;
+      }
     }
-
-    // self.label = title;
   });
 
 const clientIcon = (monitorId) =>
@@ -114,20 +119,29 @@ const clientIcon = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
 
-    self.icon = Utils.lookUpIcon(mon.appid) ? mon.appid : icons.apps.fallback;
+    const appid = mon.clients.find((c) => c.focused)?.app_id;
+    self.icon = Utils.lookUpIcon(appid) ? appid : icons.apps.fallback;
   });
 
 const client = (monitorId) =>
   Widget.Box({
-    // spacing: 5,
     homogeneous: false,
     className: "client",
     children: [clientIcon(monitorId), clientTitle(monitorId)],
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
 
-    self.visible = mon.appid != "" || mon.title != "";
-    self.tooltipText = `${mon.appid} - ${mon.title}`;
+    const focused = mon.clients.find((c) => c.focused);
+
+    if (focused) {
+      const title = focused.title;
+      const appid = focused.app_id;
+
+      self.visible = true;
+      self.tooltipText = `${appid} - ${title}`;
+    } else {
+      self.visible = false;
+    }
   });
 
 const layoutIcon = (monitorId) =>
@@ -139,7 +153,7 @@ const layoutIcon = (monitorId) =>
   }).hook(dwlIpc, (self) => {
     const mon = dwlIpc.value[monitorId];
 
-    self.label = mon.layout.new.symbol;
+    self.label = mon.layout;
   });
 
 const dwl = (monitorId) =>
@@ -240,10 +254,7 @@ const Left = (monitorId) =>
     vexpand: true,
     homogeneous: false,
     className: "leftBar",
-    children: [
-      archDash(),
-      // dwl(monitorId)
-    ],
+    children: [archDash(), dwl(monitorId)],
   });
 
 const Center = () =>
@@ -264,10 +275,9 @@ const Right = (monitorId) =>
       revealOnClick({
         shown: Widget.Icon(icons.ui.arrow.left),
         hidden: SysTray(),
+      }).hook(dwlIpc, (self) => {
+        self.visible = dwlIpc.value[monitorId].active;
       }),
-      // .hook(dwlIpc, (self) => {
-      //   self.visible = dwlIpc.value[monitorId].active;
-      // }),
       networkIndicator(),
       audioIcon({ source: false }),
       bluetoothIcon(),
@@ -277,7 +287,7 @@ const Right = (monitorId) =>
     ],
   });
 
-const Bar = ({ monitor } = {}) =>
+const Bar = (monitor = 0) =>
   Widget.Window({
     name: `bar-${monitor}`,
     monitor: monitor,
