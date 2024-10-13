@@ -20,7 +20,7 @@ sleep 5
 pgrep kdeconnect-indi || kdeconnect-indicator &
 
 if [ "${HOSTNAME}" = "archlinux" ]; then
-	pgrep openrgb || openrgb --startminimized &
+	openrgb --startminimized &
 	# openrgb -p 'padrao'
 	# openrgb -c 800080
 fi

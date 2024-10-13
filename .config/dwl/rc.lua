@@ -1,9 +1,16 @@
+-- local cjson = require("cjson")
+
+-- local map = function(arr, func)
+-- 	local new_arr = {}
+-- 	for i, v in ipairs(arr) do
+-- 		new_arr[i] = func(v, i)
+-- 	end
+-- 	setmetatable(new_arr, cjson.empty_array_mt)
+-- 	return new_arr
+-- end
+
 dwl_cfg = {
 	autostart = function()
-		-- { "systemctl", "--user", "import-environment", "WAYLAND_DISPLAY", "XDG_CURRENT_DESKTOP" }
-		-- {"dbus-update-activation-environment","--systemd","WAYLAND_DISPLAY","XDG_CURRENT_DESKTOP=wlroots",}
-		-- { "sh", "-c", "~/.config/dwl/autostart.sh" }
-
 		io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 		io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
 		io.popen("~/.config/dwl/autostart.sh")
@@ -14,15 +21,38 @@ dwl_cfg = {
 	printstatus = function()
 		print("status")
 
-		local clients = get_clients()
-		local monitors = get_monitors()
+		-- local monitors = get_monitors()
 
-		for i, c in pairs(clients) do
-			for j, m in pairs(monitors) do
-				local visible = c:visibleon(m)
-				print(i, j, "cliente " .. c.app_id .. " visivel no monitor " .. m.name .. ": " .. visible)
-			end
-		end
+		-- local status = map(monitors, function(m, i)
+		-- 	return {
+		-- 		name = m.name,
+		-- 		layout = m.layout,
+		-- 		seltags = m.seltags,
+		-- 		mfact = m.mfact,
+		-- 		nmaster = m.nmaster,
+		-- 		scale = m.scale,
+		-- 		gaps = m.gaps,
+		-- 		x = m.x,
+		-- 		y = m.y,
+		-- 		id = i,
+		-- 		clients = map(m.clients, function(c, j)
+		-- 			return {
+		-- 				app_id = c.app_id,
+		-- 				title = c.title,
+		-- 				tags = c.tags,
+		-- 				type = c.type,
+		-- 				monitor = i,
+		-- 				geometry = c.geometry,
+		-- 				isfloating = c.isfloating,
+		-- 				isurgent = c.isurgent,
+		-- 				isfullscreen = c.isfullscreen,
+		-- 				nokill = c.nokill,
+		-- 				pos = j,
+		-- 			}
+		-- 		end),
+		-- 	}
+		-- end)
+		-- print(status)
 	end,
 
 	reload = function()
