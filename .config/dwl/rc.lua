@@ -8,7 +8,6 @@
 -- 	setmetatable(new_arr, cjson.empty_array_mt)
 -- 	return new_arr
 -- end
-
 dwl_cfg = {
 	autostart = function()
 		io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
@@ -22,7 +21,7 @@ dwl_cfg = {
 		print("status")
 
 		-- local monitors = get_monitors()
-
+		--
 		-- local status = map(monitors, function(m, i)
 		-- 	return {
 		-- 		name = m.name,
@@ -52,7 +51,7 @@ dwl_cfg = {
 		-- 		end),
 		-- 	}
 		-- end)
-		-- print(status)
+		-- print(cjson.encode(status))
 	end,
 
 	reload = function()
