@@ -45,9 +45,9 @@ export const jsWatcher = () => {
 
 export const forMonitors = (widget) => {
   return vars.dwlIpc.value.map((mon) => {
-    // return widget(mon.id);
-    const id = vars.dwlIpc.value.indexOf(mon);
-    return widget({ monitor: id });
+    return widget(mon.id);
+    // const id = vars.dwlIpc.value.indexOf(mon);
+    // return widget({ monitor: id });
   });
 };
 

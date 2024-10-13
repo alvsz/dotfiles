@@ -35,9 +35,8 @@ networkAgent.connect("initiate", (_, dialog) => {
 });
 
 const windows = [
-  Bar(0),
-  // ...forMonitors(Bar),
-  //
+  // Bar(0),
+  ...forMonitors(Bar),
   AppMenu(),
   Calendar(),
   Dashboard(),
