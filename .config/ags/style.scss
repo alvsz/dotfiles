@@ -434,6 +434,14 @@ window {
     padding: 0.8em;
     border-radius: 0.6em;
 
+    & > * {
+      @extend .verticalSpacer;
+    }
+
+    & > *:first-child {
+      margin-top: 0em;
+    }
+
     .monitor {
       & > * {
         @extend .horizontalSpacer;

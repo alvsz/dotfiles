@@ -262,7 +262,7 @@ const Center = () =>
     className: "centerBar",
   });
 
-const Right = () =>
+const Right = (monitorId) =>
   Widget.Box({
     hpack: "end",
     vpack: "fill",
@@ -271,10 +271,8 @@ const Right = () =>
       revealOnClick({
         shown: Widget.Icon(icons.ui.arrow.left),
         hidden: SysTray(),
+        visible: dwlIpc.bind().as((d) => d[monitorId].focused),
       }),
-      // .hook(dwlIpc, (self) => {
-      //   self.visible = dwlIpc.value[monitorId].active;
-      // }),
       networkIndicator(),
       audioIcon({ source: false }),
       bluetoothIcon(),
@@ -295,7 +293,7 @@ const Bar = (monitor = 0) =>
     child: Widget.CenterBox({
       startWidget: Left(monitor),
       centerWidget: Center(monitor),
-      endWidget: Right(),
+      endWidget: Right(monitor),
     }),
   });
 

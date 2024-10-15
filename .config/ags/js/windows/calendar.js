@@ -2,6 +2,7 @@ import GLib from "gi://GLib";
 
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import DateTime from "../services/datetime.js";
 import calendarServer from "../services/ecal.js";
@@ -289,7 +290,7 @@ const Calendar = () => {
   const windows = Widget.Box({
     className: "monitors",
     vertical: true,
-    homogeneous: true,
+    homogeneous: false,
     children: dwlIpc.bind().as((mons) =>
       mons.map((mon) => {
         let tags = new Array();
@@ -299,14 +300,14 @@ const Calendar = () => {
           const tag = Widget.Box({
             className: "tag",
             vertical: true,
-            homogeneous: true,
+            homogeneous: false,
             children: mon.clients
               .filter((c) => (c.tags & tagMask) != 0)
               .map((c) =>
                 Widget.Box({
                   vertical: true,
                   className: "client",
-                  hpack: "center",
+                  hpack: "fill",
                   vpack: "start",
                   children: [
                     Widget.Icon(
