@@ -15,22 +15,50 @@ local function emit_event(c, event)
 	c:send(event .. "\n")
 end
 
-local function is_mon_active(m)
-	for _, c in ipairs(m.clients) do
-		if c.focused then
+local function port_is_open(port)
+	local command = 'netstat -anp tcp | grep ":' .. port .. '"'
+
+	local h = io.popen(command, "r")
+
+	if h ~= nil then
+		local result = h:read("*a")
+		h:close()
+		print(result)
+
+		if result:find("ESTABLISHED") then
+			return false
+		else
 			return true
 		end
+	else
+		return false
 	end
-	return false
+end
+
+port_found = false
+
+while not port_found do
+	if os.getenv("DWL_IPC_PORT") then
+		port = tonumber(os.getenv("DWL_IPC_PORT"))
+
+		port_found = true
+		break
+	end
+
+	port = math.random(49152, 65535)
+	if port_is_open(port) then
+		port_found = true
+		print("porta encontrada: " .. port)
+	end
 end
 
 dwl_cfg = {
 	autostart = function()
 		io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 		io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
-		io.popen("~/.config/dwl/autostart.sh")
+		-- io.popen("~/.config/dwl/autostart.sh")
 
-		server = socket.bind("localhost", 12345)
+		server = socket.bind("localhost", port)
 		server:settimeout(0)
 		print("Servidor esperando por conexões...")
 		clients = {}
@@ -55,7 +83,7 @@ dwl_cfg = {
 				x = m.x,
 				y = m.y,
 				id = i - 1,
-				active = is_mon_active(m),
+				focused = m.focused,
 				clients = map(m.clients, function(c, j)
 					return {
 						app_id = c.app_id,
@@ -64,9 +92,9 @@ dwl_cfg = {
 						type = c.type,
 						monitor = i,
 						geometry = c.geometry,
-						isfloating = c.isfloating,
-						isurgent = c.isurgent,
-						isfullscreen = c.isfullscreen,
+						floating = c.floating,
+						urgent = c.urgent,
+						fullscreen = c.fullscreen,
 						nokill = c.nokill,
 						focused = c.focused,
 						pos = j - 1,
@@ -115,10 +143,13 @@ dwl_cfg = {
 
 	reload = function()
 		print("reload")
+
+		print(port_found, port)
 	end,
 
 	env = {
 		["XDG_CURRENT_DESKTOP"] = "wlroots",
+		["DWL_IPC_PORT"] = port,
 	},
 
 	input_config = {

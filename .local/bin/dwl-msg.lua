@@ -4,14 +4,14 @@ local socket = require("socket")
 
 local client
 
--- Função para enviar mensagens ao servidor
--- local function send_message(message)
--- 	print("Enviando mensagem: " .. message)
--- 	client:send(message .. "\n") -- Envia a mensagem com uma nova linha
--- end
+local port = tonumber(os.getenv("DWL_IPC_PORT"))
 
--- Conecta ao servidor
-client = socket.connect("localhost", 12345)
+if not port then
+	print("porta não definida")
+	os.exit(1)
+end
+
+client = socket.connect("localhost", port)
 
 if not client then
 	print("falha ao conectar ao servidor")
