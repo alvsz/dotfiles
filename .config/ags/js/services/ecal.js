@@ -35,27 +35,32 @@ class CalendarServer extends Service {
 
     this._events = [];
 
-    const promises = this._sources.map((source) => {
+    const promises = this._sources.flatMap((source) => {
       if (source.has_extension("Calendar")) {
-        const promise = new Promise((resolve, _) => {
-          ECal.Client.connect(
-            source,
-            ECal.ClientSourceType.EVENTS,
-            20,
-            null,
-            (_, res) => {
-              const client = ECal.Client.connect_finish(res);
+        return [
+          ECal.ClientSourceType.EVENTS,
+          ECal.ClientSourceType.TASKS,
+          ECal.ClientSourceType.MEMOS,
+        ].map(
+          (type) =>
+            new Promise((resolve, _) => {
+              ECal.Client.connect(source, type, 20, null, (_, res) => {
+                try {
+                  const client = ECal.Client.connect_finish(res);
 
-              if (client) {
-                resolve(client);
-              } else {
-                resolve();
-                return;
-              }
-            },
-          );
-        });
-        return promise;
+                  if (client) {
+                    resolve(client);
+                  } else {
+                    resolve();
+                    return;
+                  }
+                } catch (e) {
+                  logError(e);
+                  resolve();
+                }
+              });
+            }),
+        );
       }
     });
 

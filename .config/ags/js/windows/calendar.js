@@ -8,7 +8,9 @@ import calendarServer from "../services/ecal.js";
 import Weather from "../services/weather.js";
 
 import notification from "../widgets/notification.js";
+import icons from "../icons.js";
 import { Placeholder } from "../notification.js";
+import { dwlIpc, nTags } from "../vars.js";
 
 globalThis.weather = Weather;
 
@@ -284,12 +286,41 @@ const Calendar = () => {
     },
   });
 
+  const windows = Widget.Box({
+    className: "windows",
+    vertical: false,
+    homogeneous: true,
+    children: dwlIpc.bind().as((mons) => {
+      let tags = new Array();
+      const mon = mons[0];
+
+      for (let i = 0; i < nTags.value; i++) {
+        const tagMask = 1 << i;
+        const tag = Widget.Box({
+          className: "tag",
+          vertical: true,
+          homogeneous: true,
+          children: mon.clients
+            .filter((c) => (c.tags & tagMask) != 0)
+            .map((c) =>
+              Widget.Icon(
+                Utils.lookUpIcon(c.app_id) ? c.app_id : icons.apps.fallback,
+              ),
+            ),
+        });
+
+        tags.push(tag);
+      }
+      return tags;
+    }),
+  });
+
   return Widget.Box({
     vertical: true,
     homogeneous: false,
     vpack: "fill",
     hpack: "fill",
-    children: [calendarBox, events, weather],
+    children: [calendarBox, events, weather, windows],
   });
 
   // return cal;

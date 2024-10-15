@@ -32,10 +32,8 @@ globalThis.tray = SystemTray;
 globalThis.utils = Utils;
 globalThis.gdk = Gdk;
 
-import { dwlIpc } from "../vars.js";
+import { dwlIpc, nTags } from "../vars.js";
 globalThis.dwl = dwlIpc;
-
-const nTags = 7;
 
 const Workspace = ({
   onPrimaryClick,
@@ -64,7 +62,7 @@ const genTags = (monitorId) => {
   let Tags = [];
   const mon = dwlIpc.value[monitorId];
 
-  for (let i = 0; i < nTags; i++) {
+  for (let i = 0; i < nTags.value; i++) {
     const tagMask = 1 << i;
     let test = Workspace({
       urgent: mon.clients.find((c) => c.tags & tagMask && c.isurgent),
@@ -264,20 +262,19 @@ const Center = () =>
     className: "centerBar",
   });
 
-const Right = (monitorId) =>
+const Right = () =>
   Widget.Box({
     hpack: "end",
     vpack: "fill",
-    // hexpand: false,
-    // spacing: 7,
     className: "rightBar",
     children: [
       revealOnClick({
         shown: Widget.Icon(icons.ui.arrow.left),
         hidden: SysTray(),
-      }).hook(dwlIpc, (self) => {
-        self.visible = dwlIpc.value[monitorId].active;
       }),
+      // .hook(dwlIpc, (self) => {
+      //   self.visible = dwlIpc.value[monitorId].active;
+      // }),
       networkIndicator(),
       audioIcon({ source: false }),
       bluetoothIcon(),
@@ -294,12 +291,11 @@ const Bar = (monitor = 0) =>
     layer: "bottom",
     anchor: ["top", "left", "right"],
     exclusivity: "exclusive",
-    // exclusive: true,
     className: "barwindow",
     child: Widget.CenterBox({
       startWidget: Left(monitor),
       centerWidget: Center(monitor),
-      endWidget: Right(monitor),
+      endWidget: Right(),
     }),
   });
 

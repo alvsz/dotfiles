@@ -15,6 +15,8 @@ const dwlIpc = Variable(JSON.parse(Utils.exec("dwl-msg.lua status")), {
   listen: [["dwl-msg.lua", "follow"], (out) => JSON.parse(out)],
 });
 
+const nTags = Variable(7);
+
 // const focusedMon = () => {
 //   for (const mon of dwlIpc.value) {
 //     if (!mon.active) break;
@@ -24,4 +26,4 @@ const dwlIpc = Variable(JSON.parse(Utils.exec("dwl-msg.lua status")), {
 //   }
 // };
 
-export { colors, dwlIpc };
+export { colors, dwlIpc, nTags };
