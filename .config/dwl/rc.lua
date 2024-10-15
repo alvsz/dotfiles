@@ -56,7 +56,7 @@ dwl_cfg = {
 	autostart = function()
 		io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 		io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
-		-- io.popen("~/.config/dwl/autostart.sh")
+		io.popen("~/.config/dwl/autostart.sh")
 
 		server = socket.bind("localhost", port)
 		server:settimeout(0)
