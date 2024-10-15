@@ -287,32 +287,55 @@ const Calendar = () => {
   });
 
   const windows = Widget.Box({
-    className: "windows",
-    vertical: false,
+    className: "monitors",
+    vertical: true,
     homogeneous: true,
-    children: dwlIpc.bind().as((mons) => {
-      let tags = new Array();
-      const mon = mons[0];
+    children: dwlIpc.bind().as((mons) =>
+      mons.map((mon) => {
+        let tags = new Array();
 
-      for (let i = 0; i < nTags.value; i++) {
-        const tagMask = 1 << i;
-        const tag = Widget.Box({
-          className: "tag",
-          vertical: true,
-          homogeneous: true,
-          children: mon.clients
-            .filter((c) => (c.tags & tagMask) != 0)
-            .map((c) =>
-              Widget.Icon(
-                Utils.lookUpIcon(c.app_id) ? c.app_id : icons.apps.fallback,
+        for (let i = 0; i < nTags.value; i++) {
+          const tagMask = 1 << i;
+          const tag = Widget.Box({
+            className: "tag",
+            vertical: true,
+            homogeneous: true,
+            children: mon.clients
+              .filter((c) => (c.tags & tagMask) != 0)
+              .map((c) =>
+                Widget.Box({
+                  vertical: true,
+                  className: "client",
+                  hpack: "center",
+                  vpack: "start",
+                  children: [
+                    Widget.Icon(
+                      Utils.lookUpIcon(c.app_id)
+                        ? c.app_id
+                        : icons.apps.fallback,
+                    ),
+                    // Widget.Label(c.app_id),
+                    Widget.Label({
+                      label: c.app_id.trim().substring(0, 5),
+                      wrap: true,
+                    }),
+                  ],
+                }),
               ),
-            ),
-        });
+          });
 
-        tags.push(tag);
-      }
-      return tags;
-    }),
+          tags.push(tag);
+        }
+
+        return Widget.Box({
+          vertical: false,
+          homogeneous: true,
+          className: "monitor",
+          children: tags,
+        });
+        // return tags;
+      }),
+    ),
   });
 
   return Widget.Box({

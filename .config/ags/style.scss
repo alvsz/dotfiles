@@ -429,34 +429,48 @@ window {
     }
   }
 
-  .windows {
+  .monitors {
     background-color: css("alpha(currentColor, 0.04)");
     padding: 0.8em;
     border-radius: 0.6em;
 
-    & > * {
-      @extend .horizontalSpacer;
-    }
+    .monitor {
+      & > * {
+        @extend .horizontalSpacer;
+      }
 
-    & > *:first-child {
-      margin-top: 0em;
+      & > *:first-child {
+        margin-left: 0em;
+      }
     }
 
     .tag {
       border: dotted 0.1em purple;
       background-color: css("alpha(currentColor, 0.08)");
-      padding: 0.8em;
+      padding: 0.2em;
       border-radius: 0.6em;
 
+      & > * {
+        @extend .verticalSpacer;
+      }
+
+      & > *:first-child {
+        margin-top: 0em;
+      }
+    }
+
+    .client {
+      border: dashed 0.1em green;
+      background-color: css("alpha(currentColor, 0.12)");
+      border-radius: 0.3em;
+      padding: 0.2em;
       image {
-        // border: dashed 0.1em green;
-        // background-color: css("alpha(currentColor, 0.12)");
-        // border-radius: 0.3em;
-        // padding: 0.3em;
         font-size: 1.5em;
       }
     }
+    // }
   }
+
   .weather {
     background-color: css("alpha(currentColor, 0.04)");
     padding: 0.8em;
