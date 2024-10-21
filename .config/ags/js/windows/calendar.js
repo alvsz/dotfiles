@@ -134,6 +134,16 @@ const Calendar = () => {
                 label: event.summary ? event.summary : "",
               }),
               time,
+
+              ...event.description.map((d) =>
+                Widget.Label({
+                  hpack: "start",
+                  justification: "left",
+                  wrap: true,
+                  label: d,
+                }),
+              ),
+
               event.location?.length > 0
                 ? Widget.Label({
                     className: "location",

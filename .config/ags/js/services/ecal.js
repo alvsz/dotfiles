@@ -80,6 +80,9 @@ class CalendarServer extends Service {
 
     const summary = event.event.get_summary()?.get_value();
     const location = event.event.get_location();
+    const description = event.event
+      .get_descriptions()
+      .map((d) => d.get_value());
     const dtstart = event.event.get_dtstart().get_value();
     const dtend = event.event.get_dtend().get_value();
 
@@ -118,6 +121,7 @@ class CalendarServer extends Service {
     return {
       summary: summary,
       location: location,
+      description: description,
       start: start,
       end: end,
       single_day: single_day,
