@@ -5,6 +5,7 @@ import scrollable from "./bouncingText.js";
 import icons from "../icons.js";
 
 const lengthStr = (length) => {
+  if (length === -1) return "--:--";
   const min = Math.floor(length / 60);
   const sec = Math.floor(length % 60);
   const sec0 = sec < 10 ? "0" : "";
