@@ -35,21 +35,25 @@ local function port_is_open(port)
 	end
 end
 
-port_found = false
+local function make_port()
+	port_found = false
 
-while not port_found do
-	if os.getenv("DWL_IPC_PORT") then
-		port = tonumber(os.getenv("DWL_IPC_PORT"))
+	while not port_found do
+		-- if os.getenv("DWL_IPC_PORT") then
+		-- 	port = tonumber(os.getenv("DWL_IPC_PORT"))
+		--
+		-- 	port_found = true
+		-- 	break
+		-- end
 
-		port_found = true
-		break
+		port = math.random(49152, 65535)
+		if port_is_open(port) then
+			port_found = true
+			print("porta encontrada: " .. port)
+		end
 	end
 
-	port = math.random(49152, 65535)
-	if port_is_open(port) then
-		port_found = true
-		print("porta encontrada: " .. port)
-	end
+	return port
 end
 
 dwl_cfg = {
@@ -97,6 +101,7 @@ dwl_cfg = {
 						fullscreen = c.fullscreen,
 						nokill = c.nokill,
 						focused = c.focused,
+						address = c.address,
 						pos = j - 1,
 					}
 				end),
@@ -149,7 +154,7 @@ dwl_cfg = {
 
 	env = {
 		["XDG_CURRENT_DESKTOP"] = "wlroots",
-		["DWL_IPC_PORT"] = port,
+		["DWL_IPC_PORT"] = make_port(),
 	},
 
 	input_config = {
