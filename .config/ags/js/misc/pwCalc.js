@@ -14,12 +14,12 @@ function sha1bytes(text) {
   return hex2bytearray(c.get_string());
 }
 
-export const pwCalc = (secret, domain, length) => {
+export default (secret, domain, length) => {
   // secret = secret ? secret.toString() : " "
   // domain = domain ? domain.toString() : " "
 
-  const text = (secret ? secret.toString() : " ") +
-    (domain ? domain.toString() : " ");
+  const text =
+    (secret ? secret.toString() : " ") + (domain ? domain.toString() : " ");
   const sha1 = sha1bytes(text);
   const base64 = GLib.base64_encode(sha1);
   return base64.substring(0, length);

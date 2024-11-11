@@ -112,6 +112,7 @@ audio/vnd.dts=mpv.desktop;
 audio/vnd.dts.hd=mpv.desktop;
 audio/x-adpcm=mpv.desktop;
 audio/m3u=mpv.desktop;
+image/avif=imv-dir.desktop;
 
 [Default Applications]
 image/jpeg=org.gnome.Loupe.desktop
@@ -216,7 +217,7 @@ image/vnd.microsoft.icon=org.gnome.Loupe.desktop
 image/vnd.radiance=org.gnome.Loupe.desktop
 image/x-exr=org.gnome.Loupe.desktop
 image/x-qoi=org.gnome.Loupe.desktop
-image/avif=org.gnome.Loupe.desktop
+image/avif=imv-dir.desktop
 image/heic=org.gnome.Loupe.desktop
 image/jxl=org.gnome.Loupe.desktop
 audio/x-vorbis+ogg=mpv.desktop
