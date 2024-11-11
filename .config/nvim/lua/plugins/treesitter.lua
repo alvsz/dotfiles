@@ -7,6 +7,7 @@ return {
       "vim",
       "c",
       "python",
+      "arduino",
       -- add more arguments for adding more treesitter parsers
     },
   },
