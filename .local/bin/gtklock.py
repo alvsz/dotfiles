@@ -3,7 +3,19 @@
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('GtkSessionLock', '0.1')
+gi.require_version('AstalAuth', '0.1')
 from gi.repository import Gtk, Gdk, GtkSessionLock
+from gi.repository import AstalAuth as Auth
+
+def callback(_, task) -> None:
+    try:
+        Auth.Pam.authenticate_finish(task)
+        print("success")
+        lock.unlock_and_destroy()
+        display.sync()
+        quit()
+    except Exception as e:
+        print(e)
 
 if(not GtkSessionLock.is_supported()):
     quit()
@@ -12,9 +24,8 @@ lock = GtkSessionLock.prepare_lock()
 display = Gdk.Display.get_default()
 
 def unlock(widget):
-    lock.unlock_and_destroy()
-    display.sync()
-    quit()
+    password = widget.get_text()
+    Auth.Pam.authenticate(password, callback)
 
 def create_lock_window():
     window = Gtk.Window()

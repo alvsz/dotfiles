@@ -10,7 +10,7 @@ pgrep udiskie || udiskie --tray &
 
 org.gnome.Geary --gapplication-service &
 
-pgrep swayidle || swayidle timeout 420 'dpms off' resume 'dpms on' &
+pgrep swayidle || swayidle timeout 600 "gtklock.py" lock "gtklock.py" timeout 420 'dpms off' resume 'dpms on' &
 
 pgrep swww-daemon || swww-daemon &
 

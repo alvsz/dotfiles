@@ -12,8 +12,6 @@ import NetworkAgentDialog from "./js/windows/networkSecretDialog.js";
 import polkitAgent from "./js/services/polkitAgent.js";
 import networkAgent from "./js/services/networkAgent.js";
 
-// import networkAgent from "./js/services/networkAgent.js";
-
 import { cssPath, forMonitors, scssWatcher } from "./js/utils.js";
 
 import calendarServer from "./js/services/ecal.js";
