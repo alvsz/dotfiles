@@ -6,6 +6,15 @@ const devButton = (dev) =>
   Widget.Button({
     className: "deviceButton",
     onClicked: () => {
+      if (!dev.trusted && !dev.connected)
+        Utils.execAsync(`bluetoothctl pair "${dev.address}"`).catch((err) =>
+          Utils.notify(
+            "Erro ao parear",
+            err.toString(),
+            "network-error-symbolic",
+          ),
+        );
+
       dev.setConnection(!dev.connected);
     },
 
