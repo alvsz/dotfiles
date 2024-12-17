@@ -8,6 +8,7 @@ return {
       "c",
       "python",
       "arduino",
+      "blueprint",
       -- add more arguments for adding more treesitter parsers
     },
   },
