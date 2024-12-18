@@ -44,7 +44,7 @@ if [[ "$XDG_SESSION_TYPE" = "x11" ]]; then
 elif [[ "$XDG_SESSION_TYPE" = "wayland" ]]; then
     export MOZ_ENABLE_WAYLAND=1
     export SDL_VIDEODRIVER=wayland
-    export QT_QPA_PLATFORM=wayland
+    # export QT_QPA_PLATFORM=wayland
     # xhost +si:localuser:root
 fi
 
