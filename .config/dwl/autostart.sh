@@ -2,7 +2,7 @@
 
 # /usr/lib/gsd-xsettings &
 
-ags &
+agsv1 &
 
 systemctl --user start gammastep-indicator
 
@@ -20,7 +20,8 @@ sleep 5
 pgrep kdeconnect-indi || kdeconnect-indicator &
 
 if [ "${HOSTNAME}" = "archlinux" ]; then
-	pgrep openrgb || openrgb --startminimized &
-	# openrgb -p 'padrao'
+	# pgrep openrgb ||
+	openrgb --startminimized &
+	openrgb -p 'padrao'
 	# openrgb -c 800080
 fi
