@@ -11,9 +11,19 @@ if (ok) {
   colors = JSON.parse(new TextDecoder().decode(colorsJson));
 }
 
-const dwlIpc = Variable(JSON.parse(Utils.exec("dwl-msg.lua status")), {
-  listen: [["dwl-msg.lua", "follow"], (out) => JSON.parse(out)],
-});
+// const dwlIpc = Variable();
+
+const dwlIpc = Variable(
+  JSON.parse("[]"),
+  // [],
+  // JSON.parse(Utils.exec("dwlcmd run return get_status()")),
+  {
+    listen: [
+      ["dwlcmd", "follow", "return get_status()"],
+      (out) => JSON.parse(out),
+    ],
+  },
+);
 
 const nTags = Variable(7);
 

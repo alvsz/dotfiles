@@ -44,7 +44,8 @@ get_status = function()
 			end),
 		}
 	end)
-	cjson.encode(status)
+
+	return cjson.encode(status)
 end
 
 dwl_cfg = {
@@ -66,6 +67,15 @@ dwl_cfg = {
 
 	env = {
 		["XDG_CURRENT_DESKTOP"] = "wlroots",
+	},
+
+	theme = {
+		["root"] = "#222222ff",
+		["normal"] = "#444444ff",
+		["focus"] = "#005577ff",
+		["urgent"] = "#ff0000ff",
+		["float"] = "#ff0000ff",
+		["border_width"] = 1,
 	},
 
 	input_config = {

@@ -282,18 +282,18 @@ const Right = (monitorId) =>
     ],
   });
 
-const Bar = (monitor = 0) =>
+const Bar = (gdkmonitor, index) =>
   Widget.Window({
-    name: `bar-${monitor}`,
-    monitor: monitor,
+    name: `bar-${index}`,
+    gdkmonitor: gdkmonitor,
     layer: "bottom",
     anchor: ["top", "left", "right"],
     exclusivity: "exclusive",
     className: "barwindow",
     child: Widget.CenterBox({
-      startWidget: Left(monitor),
-      centerWidget: Center(monitor),
-      endWidget: Right(monitor),
+      startWidget: Left(index),
+      centerWidget: Center(index),
+      endWidget: Right(index),
     }),
   });
 
