@@ -1,4 +1,5 @@
 local cjson = require("cjson")
+local dwl = require("dwl")
 
 local map = function(arr, func)
 	local new_arr = {}
@@ -10,7 +11,7 @@ local map = function(arr, func)
 end
 
 get_status = function()
-	local monitors = get_monitors()
+	local monitors = dwl.get_monitors()
 
 	local status = map(monitors, function(m, i)
 		return {
@@ -21,10 +22,13 @@ get_status = function()
 			nmaster = m.nmaster,
 			scale = m.scale,
 			gaps = m.gaps,
-			x = m.x,
-			y = m.y,
+			coords = {
+				x = m.x,
+				y = m.y,
+			},
 			id = i - 1,
 			focused = m.focused,
+			address = m.address,
 			clients = map(m.clients, function(c, j)
 				return {
 					app_id = c.app_id,
@@ -39,6 +43,7 @@ get_status = function()
 					nokill = c.nokill,
 					focused = c.focused,
 					address = c.address,
+					scratchkey = c.scratchkey,
 					pos = j - 1,
 				}
 			end),
@@ -48,7 +53,7 @@ get_status = function()
 	return cjson.encode(status)
 end
 
-dwl_cfg = {
+dwl.cfg = {
 	autostart = function()
 		io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 		io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
@@ -75,7 +80,7 @@ dwl_cfg = {
 		["focus"] = "#005577ff",
 		["urgent"] = "#ff0000ff",
 		["float"] = "#ff0000ff",
-		["border_width"] = 1,
+		["border_width"] = 2,
 	},
 
 	input_config = {
