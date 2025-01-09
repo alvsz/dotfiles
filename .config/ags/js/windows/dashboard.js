@@ -369,6 +369,7 @@ const stack = Widget.Stack({
   transition: "slide_up_down",
   vpack: "start",
   homogeneous: false,
+  interpolate_size: true,
 
   children: {
     networkPopup: networkPopup,
