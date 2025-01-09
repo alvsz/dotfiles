@@ -1,0 +1,57 @@
+using Gtk 4.0;
+using Astal 4.0;
+
+template $Bar: Astal.Window {
+    // bitfields currently don't work in blueprint
+    // anchor: top | left | right;
+    exclusivity: exclusive;
+    layer: bottom;
+    powered: false;
+    styles ["Bar"]
+
+    CenterBox {
+        start-widget: Box {
+            orientation: horizontal;
+            homogeneous: false;
+            spacing: 0;
+            halign: start;
+            valign: fill;
+            styles ["left"]
+            Label {
+                halign: start;
+                // hexpand: true;
+                label: "teste";
+            }
+            Button {
+                // halign: end;
+                child: Label {
+                    // halign: end;
+                    label: "arch";
+                };
+            }
+        };
+        center-widget: Label {
+            halign: center;
+            valign: fill;
+            label: "hello";
+            styles ["center"]
+        };
+        end-widget: Box {
+            orientation: horizontal;
+            homogeneous: false;
+            spacing: 0;
+            halign: end;
+            valign: fill;
+            styles ["right"]
+            Image bluetooth {
+                icon-name: bind $powered_icon(template.powered) as <string>;
+            }
+            Label clock {
+                label: "teste";
+            }
+            Label {
+                label: "teste";
+            }
+        };
+    }
+}

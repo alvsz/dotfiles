@@ -1,0 +1,47 @@
+@use "sass:string";
+
+@function css($color) {
+  @return string.unquote($color);
+}
+
+window {
+  font: 11pt Inter;
+}
+
+.verticalSpacer {
+  margin: 0.4em 0em 0em 0em;
+}
+
+.horizontalSpacer {
+  margin: 0em 0em 0em 0.3em;
+}
+
+.module {
+  min-height: 1em;
+  background-color: css("@window_bg_color");
+  border-radius: 0.5em;
+  padding: 0.1em 0.4em 0.1em 0.4em;
+
+  & > * {
+    @extend .horizontalSpacer;
+  }
+}
+
+window.Bar {
+  background-color: transparent;
+
+  .left {
+    margin: 3px 0px 0px 10px;
+    @extend .module;
+  }
+
+  .right {
+    margin: 3px 10px 0px 0px;
+    @extend .module;
+  }
+
+  .center {
+    margin: 3px 0px 0px 0px;
+    @extend .module;
+  }
+}
