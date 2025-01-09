@@ -2,8 +2,6 @@ using Gtk 4.0;
 using Astal 4.0;
 
 template $Bar: Astal.Window {
-    // bitfields currently don't work in blueprint
-    // anchor: top | left | right;
     exclusivity: exclusive;
     layer: bottom;
     powered: false;
@@ -19,23 +17,33 @@ template $Bar: Astal.Window {
             styles ["left"]
             Label {
                 halign: start;
-                // hexpand: true;
                 label: "teste";
             }
             Button {
-                // halign: end;
                 child: Label {
-                    // halign: end;
                     label: "arch";
                 };
             }
         };
-        center-widget: Label {
-            halign: center;
-            valign: fill;
-            label: "hello";
+
+        center-widget: Box {
             styles ["center"]
+            Button {
+                child: Stack mpris_stack {
+                    hhomogeneous: false;
+                    vhomogeneous: true;
+                    interpolate-size: true;
+                    transition-type: slide_up;
+                };
+                clicked => $on_mpris_button_clicked();
+
+                EventControllerScroll {
+                    scroll => $on_mpris_button_scroll();
+                    flags: vertical;
+                }
+            }
         };
+
         end-widget: Box {
             orientation: horizontal;
             homogeneous: false;
@@ -43,14 +51,32 @@ template $Bar: Astal.Window {
             halign: end;
             valign: fill;
             styles ["right"]
-            Image bluetooth {
-                icon-name: bind $powered_icon(template.powered) as <string>;
+            Revealer {
+                transition-type: slide_left;
+                reveal-child: bind tray_toggle.active;
+                child: Box {
+                    Label {
+                        label: "teste";
+                    }
+                    Label {
+                        label: "teste";
+                    }
+                    Label {
+                        label: "teste";
+                    }
+                    Label {
+                        label: "teste";
+                    }
+                };
+            }
+            ToggleButton tray_toggle {
+                child: Image {
+                };
+            }
+            Image {
+                icon-name: bind $bluetooth_icon(template.powered) as <string>;
             }
             Label clock {
-                label: "teste";
-            }
-            Label {
-                label: "teste";
             }
         };
     }

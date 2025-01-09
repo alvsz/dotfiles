@@ -22,8 +22,11 @@ window {
   border-radius: 0.5em;
   padding: 0.1em 0.4em 0.1em 0.4em;
 
-  & > * {
+  > * {
     @extend .horizontalSpacer;
+  }
+  > *:first-child {
+    margin-left: 0em;
   }
 }
 
