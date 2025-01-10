@@ -1,10 +1,11 @@
 using Gtk 4.0;
 using Astal 4.0;
+using AstalBluetooth 0.1;
+using AstalWp 0.1;
 
 template $Bar: Astal.Window {
     exclusivity: exclusive;
     layer: bottom;
-    powered: false;
     styles ["Bar"]
 
     CenterBox {
@@ -28,19 +29,7 @@ template $Bar: Astal.Window {
 
         center-widget: Box {
             styles ["center"]
-            Button {
-                child: Stack mpris_stack {
-                    hhomogeneous: false;
-                    vhomogeneous: true;
-                    interpolate-size: true;
-                    transition-type: slide_up;
-                };
-                clicked => $on_mpris_button_clicked();
-
-                EventControllerScroll {
-                    scroll => $on_mpris_button_scroll();
-                    flags: vertical;
-                }
+            $barMprisButton {
             }
         };
 
@@ -70,11 +59,12 @@ template $Bar: Astal.Window {
                 };
             }
             ToggleButton tray_toggle {
-                child: Image {
-                };
             }
             Image {
-                icon-name: bind $bluetooth_icon(template.powered) as <string>;
+                icon-name: bind template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.volume-icon;
+            }
+            Image {
+                icon-name: bind $bluetooth_icon(template.bluetooth as <AstalBluetooth.Bluetooth>.is-powered) as <string>;
             }
             Label clock {
             }

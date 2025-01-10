@@ -1,0 +1,16 @@
+using Gtk 4.0;
+
+template $barMprisButton: Button {
+    child: Stack mpris_stack {
+        hhomogeneous: false;
+        vhomogeneous: true;
+        interpolate-size: true;
+        transition-type: slide_up;
+    };
+    clicked => $on_mpris_button_clicked();
+
+    EventControllerScroll {
+        scroll => $on_mpris_button_scroll();
+        flags: vertical;
+    }
+}

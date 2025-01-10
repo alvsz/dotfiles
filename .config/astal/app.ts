@@ -1,4 +1,4 @@
-import { App, Astal } from "astal/gtk4";
+import { App } from "astal/gtk4";
 import style from "./style.scss";
 import Bar from "./window/Bar";
 
@@ -9,7 +9,8 @@ App.start({
     res("ok");
   },
   css: style,
-  main() {
-    new Bar();
+  main: () => {
+    App.get_monitors().map((m) => new Bar(m));
+    // new Bar();
   },
 });
