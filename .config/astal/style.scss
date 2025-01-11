@@ -32,19 +32,35 @@ window {
 
 window.Bar {
   background-color: transparent;
+  -gtk-icon-size: 1.5em;
 
   .left {
     margin: 3px 0px 0px 10px;
     @extend .module;
   }
 
-  .right {
-    margin: 3px 10px 0px 0px;
-    @extend .module;
-  }
-
   .center {
     margin: 3px 0px 0px 0px;
     @extend .module;
+  }
+
+  .right {
+    margin: 3px 10px 0px 0px;
+    @extend .module;
+
+    > button {
+      -gtk-icon-size: 1em;
+      margin-left: 0em;
+    }
+
+    > revealer > *:last-child {
+      margin-right: 0.3em;
+      > * {
+        @extend .horizontalSpacer;
+      }
+      > *:first-child {
+        margin-left: 0em;
+      }
+    }
   }
 }

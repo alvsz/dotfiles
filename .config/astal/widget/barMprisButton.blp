@@ -6,6 +6,13 @@ template $barMprisButton: Button {
         vhomogeneous: true;
         interpolate-size: true;
         transition-type: slide_up;
+
+        StackPage {
+            name: "nada";
+            child: Label {
+                label: "Nada tocando";
+            };
+        }
     };
     clicked => $on_mpris_button_clicked();
 

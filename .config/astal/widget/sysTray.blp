@@ -1,0 +1,20 @@
+using Gtk 4.0;
+using AstalTray 0.1;
+
+template $sysTrayItem: Button {
+  child: Image {
+    gicon: bind template.item as <AstalTray.TrayItem>.gicon;
+  };
+  tooltip-markup: bind template.item as <AstalTray.TrayItem>.tooltip-markup;
+  clicked => $on_clicked();
+
+  GestureClick {
+      button: 3;
+      pressed => $open_menu();
+  }
+
+  EventControllerScroll  {
+    scroll => $on_scroll();
+    flags: both_axes;
+  }
+}

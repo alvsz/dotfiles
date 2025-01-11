@@ -1,13 +1,13 @@
-import { App, Astal, Gdk, Gtk } from "astal/gtk4";
-import { property, register } from "astal/gobject";
+import { Gtk } from "astal/gtk4";
+import { register } from "astal/gobject";
 
 import Mpris from "gi://AstalMpris";
 
-import teste from "./barMprisButton.blp";
+import template from "./barMprisButton.blp";
 
 @register({
   GTypeName: "barMprisButton",
-  Template: teste,
+  Template: template,
   InternalChildren: ["mpris_stack"],
 })
 export default class barMprisButton extends Gtk.Button {
@@ -63,11 +63,6 @@ export default class barMprisButton extends Gtk.Button {
     super();
 
     this.mpris = Mpris.get_default();
-
-    this._mpris_stack.add_named(
-      new Gtk.Label({ label: "Nada tocando" }),
-      "nada",
-    );
 
     this.mpris.get_players().map((player: Mpris.Player) => {
       this.add_player(player);

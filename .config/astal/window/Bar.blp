@@ -43,23 +43,11 @@ template $Bar: Astal.Window {
             Revealer {
                 transition-type: slide_left;
                 reveal-child: bind tray_toggle.active;
-                child: Box {
-                    Label {
-                        label: "teste";
-                    }
-                    Label {
-                        label: "teste";
-                    }
-                    Label {
-                        label: "teste";
-                    }
-                    Label {
-                        label: "teste";
-                    }
-                };
+                child: $sysTray { };
             }
             ToggleButton tray_toggle {
             }
+            $networkIcon { }
             Image {
                 icon-name: bind template.wp as <AstalWp.Wp>.audio as <AstalWp.Audio>.default-speaker as <AstalWp.Endpoint>.volume-icon;
             }

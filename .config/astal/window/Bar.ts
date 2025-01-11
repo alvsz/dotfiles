@@ -4,14 +4,10 @@ import { property, register } from "astal/gobject";
 
 import Battery from "gi://AstalBattery";
 import Wp from "gi://AstalWp";
-import Network from "gi://AstalNetwork";
 import Bluetooth from "gi://AstalBluetooth";
 
 import Template from "./Bar.blp";
 import icons from "../icons";
-
-import mprisButton from "../widget/barMprisButton";
-mprisButton;
 
 @register({
   GTypeName: "Bar",

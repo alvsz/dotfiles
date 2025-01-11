@@ -1,7 +1,7 @@
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
-import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
+// import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
@@ -28,7 +28,7 @@ globalThis.battery = Battery;
 globalThis.notification = Notifications;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
-globalThis.tray = SystemTray;
+// globalThis.tray = SystemTray;
 globalThis.utils = Utils;
 globalThis.gdk = Gdk;
 
@@ -68,9 +68,9 @@ const genTags = (monitorId) => {
       urgent: mon.clients.find((c) => c.tags & tagMask && c.isurgent),
       selected: (tagMask & mon.seltags) != 0,
       occupied: mon.clients.find((c) => (c.tags & tagMask) != 0) ? true : false,
-      onMiddleClick: () => {},
-      onPrimaryClick: () => {},
-      onSecondaryClick: () => {},
+      onMiddleClick: () => { },
+      onPrimaryClick: () => { },
+      onSecondaryClick: () => { },
     });
     Tags.push(test);
   }
@@ -204,26 +204,26 @@ const Media = () =>
     }),
   });
 
-const SysTray = () =>
-  Widget.Box({
-    className: "sysTray",
-    vpack: "fill",
-  }).hook(SystemTray, (self) => {
-    self.children = SystemTray.items.map((item) =>
-      Widget.Button({
-        child: Widget.Icon({ icon: item.bind("icon") }),
-        vpack: "fill",
-        className: "trayItem",
-
-        onPrimaryClick: (_, event) => item.activate(event),
-        onSecondaryClick: (_, event) => {
-          item.menu.toggleClassName("trayMenu", true);
-          item.openMenu(event);
-        },
-        tooltipText: item.bind("tooltip-markup"),
-      }),
-    );
-  });
+// const SysTray = () =>
+//   Widget.Box({
+//     className: "sysTray",
+//     vpack: "fill",
+//   }).hook(SystemTray, (self) => {
+//     self.children = SystemTray.items.map((item) =>
+//       Widget.Button({
+//         child: Widget.Icon({ icon: item.bind("icon") }),
+//         vpack: "fill",
+//         className: "trayItem",
+//
+//         onPrimaryClick: (_, event) => item.activate(event),
+//         onSecondaryClick: (_, event) => {
+//           item.menu.toggleClassName("trayMenu", true);
+//           item.openMenu(event);
+//         },
+//         tooltipText: item.bind("tooltip-markup"),
+//       }),
+//     );
+//   });
 
 const batteryIcon = () =>
   Widget.Icon({
@@ -268,11 +268,11 @@ const Right = (monitorId) =>
     vpack: "fill",
     className: "rightBar",
     children: [
-      revealOnClick({
-        shown: Widget.Icon(icons.ui.arrow.left),
-        hidden: SysTray(),
-        visible: dwlIpc.bind().as((d) => d[monitorId].focused),
-      }),
+      // revealOnClick({
+      //   shown: Widget.Icon(icons.ui.arrow.left),
+      //   hidden: SysTray(),
+      //   visible: dwlIpc.bind().as((d) => d[monitorId].focused),
+      // }),
       networkIndicator(),
       audioIcon({ source: false }),
       bluetoothIcon(),
