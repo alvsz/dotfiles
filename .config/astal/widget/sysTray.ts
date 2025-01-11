@@ -7,6 +7,7 @@ import template from "./sysTray.blp";
 @register({
   GTypeName: "sysTrayItem",
   Template: template,
+  InternalChildren: ["menu"],
 })
 class sysTrayItem extends Gtk.Button {
   declare _menu: Gtk.PopoverMenu;
@@ -16,14 +17,9 @@ class sysTrayItem extends Gtk.Button {
     super();
 
     this.item = i;
-    this._menu = Gtk.PopoverMenu.new_from_model(this.item.menu_model);
     this._menu.set_parent(this);
     this._menu.set_position(Gtk.PositionType.BOTTOM);
-    this._menu.flags = Gtk.PopoverMenuFlags.NESTED;
 
-    this.item.connect("notify::menu-model", (self: Tray.TrayItem) => {
-      this._menu.menu_model = self.menu_model;
-    });
     this.item.connect("notify::action-group", (self: Tray.TrayItem) => {
       this.insert_action_group("dbusmenu", self.action_group);
     });
