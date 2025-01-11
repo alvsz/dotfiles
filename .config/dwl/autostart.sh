@@ -4,6 +4,8 @@
 
 agsv1 &
 
+ags run --gtk4 -d ~/.config/astal &
+
 systemctl --user start gammastep-indicator
 
 pgrep udiskie || udiskie --tray &
