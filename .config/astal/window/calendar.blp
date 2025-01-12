@@ -1,0 +1,165 @@
+using Gtk 4.0;
+using Astal 4.0;
+
+template $Calendar: Astal.Window {
+  layer: overlay;
+  halign: center;
+  valign: start;
+  anchor: top;
+  styles ["Calendar"]
+
+  Box {
+    // visible: false;
+    orientation: horizontal;
+    homogeneous: true;
+    halign: fill;
+    valign: fill;
+
+    Box {
+      orientation: vertical;
+      homogeneous: false;
+      valign: fill;
+      Box {
+        orientation: vertical;
+        homogeneous: false;
+        styles ["calendar"]
+
+        Label month_name {
+          styles ["month-name"]
+        }
+        Box {
+          orientation: horizontal;
+          homogeneous: true;
+          halign: fill;
+          hexpand: true;
+          styles ["week-days"]
+
+          Label {
+            label: "dom";
+          }
+          Label {
+            label: "seg";
+          }
+          Label {
+            label: "ter";
+          }
+          Label {
+            label: "qua";
+          }
+          Label {
+            label: "qui";
+          }
+          Label {
+            label: "sex";
+          }
+          Label {
+            label: "sáb";
+          }
+        }
+        Calendar calendar {
+          show-day-names: false;
+          show-heading: false;
+
+          notify => $on_day_selected();
+        }
+      }
+      Box weather {
+        orientation: vertical;
+        homogeneous: false;
+        valign: fill;
+        halign: fill;
+        visible: false;
+        styles ["weather"]
+
+        Box {
+          orientation: horizontal;
+          homogeneous: false;
+          valign: start;
+          halign: fill;
+          Image {
+            icon-name: bind template.weather as <$Weather>.icon-name;
+            styles ["main-icon"]
+          }
+          Label {
+            halign: start;
+            hexpand: true;
+            label: bind template.weather as <$Weather>.temp;
+            styles ["temp"]
+          }
+          Box {
+            orientation: vertical;
+            homogeneous: false;
+            valign: fill;
+            halign: end;
+            Label {
+              label: bind template.weather as <$Weather>.city-name;
+              justify: right;
+              halign: end;
+              styles ["city-name"]
+            }
+            Label {
+              label: bind template.weather as <$Weather>.sky;
+              styles ["sky"]
+            }
+          }
+        }
+        Box {
+          orientation: horizontal;
+          homogeneous: false;
+          valign: center;
+          halign: center;
+          Image {
+            icon-name: "raindrop-symbolic";
+          }
+          Label {
+            label:  bind template.weather as <$Weather>.humidity;
+          }
+        }
+        Box {
+          orientation: horizontal;
+          homogeneous: false;
+          valign: center;
+          halign: center;
+          Image {
+            icon-name: bind $is_daytime(template.weather as <$Weather>.is-daytime) as <string>;
+          }
+          Label {
+            label:  bind $format_daytime(template.weather as <$Weather>.is-daytime) as <string>;
+          }
+          Image {
+            icon-name: bind $is_not_daytime(template.weather as <$Weather>.is-daytime) as <string>;
+          }
+        }
+        Box {
+          orientation: horizontal;
+          homogeneous: false;
+          valign: center;
+          halign: center;
+          Image {
+            icon-name: "speedometer-symbolic";
+          }
+          Label {
+            label:  bind template.weather as <$Weather>.pressure;
+          }
+        }
+        Box {
+          orientation: horizontal;
+          homogeneous: false;
+          valign: center;
+          halign: center;
+          Image {
+            icon-name: "weather-windy-symbolic";
+          }
+          Label {
+            label:  bind template.weather as <$Weather>.wind;
+          }
+        }
+      }
+    }
+    Box {
+      Button {
+        label: "oi";
+      }
+    }
+  }
+}

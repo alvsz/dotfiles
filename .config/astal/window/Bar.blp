@@ -9,28 +9,23 @@ template $Bar: Astal.Window {
     styles ["Bar"]
 
     CenterBox {
-        start-widget: Box {
+        start-widget: 
+        Box {
             orientation: horizontal;
             homogeneous: false;
             spacing: 0;
             halign: start;
             valign: fill;
             styles ["left"]
-            Label {
-                halign: start;
-                label: "teste";
-            }
             Button {
-                child: Label {
-                    label: "arch";
-                };
+                    styles ["arch"]
+                    label: "";
             }
         };
 
         center-widget: Box {
             styles ["center"]
-            $barMprisButton {
-            }
+            $barMprisButton { }
         };
 
         end-widget: Box {

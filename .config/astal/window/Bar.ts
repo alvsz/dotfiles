@@ -33,6 +33,7 @@ export default class Bar extends Astal.Window {
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.RIGHT,
       visible: true,
+      name: `Bar-${monitor.get_connector() || ""}`,
     });
 
     this.bluetooth = Bluetooth.get_default();

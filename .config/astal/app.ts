@@ -1,6 +1,7 @@
 import { App } from "astal/gtk4";
-import style from "./style.scss";
+import style from "./style/style.scss";
 import Bar from "./window/Bar";
+import Calendar from "./window/calendar";
 
 import mprisButton from "./widget/barMprisButton";
 mprisButton;
@@ -18,6 +19,7 @@ App.start({
   css: style,
   main: () => {
     App.get_monitors().map((m) => new Bar(m));
+    new Calendar();
     // new Bar();
   },
 });
