@@ -1,0 +1,35 @@
+@use "./base.scss";
+
+window.Bar {
+  background-color: transparent;
+  -gtk-icon-size: 1.5em;
+
+  .left {
+    margin: 3px 0px 0px 10px;
+    @extend .bar-module;
+    .arch {
+      color: #1793d1;
+      font-family: Symbols Nerd Font;
+    }
+  }
+
+  .center {
+    margin: 3px 0px 0px 0px;
+    @extend .bar-module;
+  }
+
+  .right {
+    margin: 3px 10px 0px 0px;
+    @extend .bar-module;
+
+    > button {
+      -gtk-icon-size: 1em;
+      margin-left: 0em;
+    }
+
+    > revealer > *:last-child {
+      margin-right: 0.3em;
+      @extend .horizontalSpacer;
+    }
+  }
+}

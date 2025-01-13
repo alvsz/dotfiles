@@ -1,15 +1,21 @@
 using Gtk 4.0;
 using Astal 4.0;
+using AstalNotifd 0.1;
 
 template $Calendar: Astal.Window {
   layer: overlay;
   halign: center;
   valign: start;
   anchor: top;
+  visible: false;
   styles ["Calendar"]
 
+  notifd: AstalNotifd.Notifd {
+    notified => $on_notified();
+    resolved => $on_resolved();
+  };
+
   Box {
-    // visible: false;
     orientation: horizontal;
     homogeneous: true;
     halign: fill;
@@ -31,6 +37,17 @@ template $Calendar: Astal.Window {
           show-heading: false;
 
           notify => $on_day_selected();
+        }
+      }
+      Box events {
+        orientation: vertical;
+        homogeneous: false;
+        styles ["events"]
+        Label {
+          label: "teste";
+        }
+        Button {
+          label: "coisas";
         }
       }
       Box weather {
@@ -126,10 +143,9 @@ template $Calendar: Astal.Window {
         }
       }
     }
-    Box {
-      Button {
-        label: "oi";
-      }
+    Box notifications {
+      orientation: vertical;
+      styles ["notification-center"]
     }
   }
 }

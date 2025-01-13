@@ -1,5 +1,10 @@
 import { App } from "astal/gtk4";
+import { monitorFile } from "astal/file";
+
+// import Notifd from "gi://AstalNotifd";
+
 import style from "./style/style.scss";
+
 import Bar from "./window/Bar";
 import Calendar from "./window/calendar";
 
@@ -18,8 +23,16 @@ App.start({
   },
   css: style,
   main: () => {
+    // print(Notifd.get_default());
+    // print(Notifd.get_default());
+    // print(Notifd.get_default());
+
     App.get_monitors().map((m) => new Bar(m));
     new Calendar();
-    // new Bar();
+
+    monitorFile("./style/", (file: string) => {
+      print("scss updated", file);
+      // App.apply_css("./style/style.scss", true);
+    });
   },
 });

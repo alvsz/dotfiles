@@ -1,0 +1,29 @@
+using Gtk 4.0;
+using AstalNetwork 0.1;
+
+template $networkIcon: Stack {
+  valign: center;
+  halign: center;
+  transition-type: slide_down;
+  visible-child-name: bind $shown_icon(template.network as <AstalNetwork.Network>.primary as <AstalNetwork.Primary>) as <string>;
+  styles ["network-icon"]
+
+  StackPage {
+    name: "offline";
+    child: Image {
+      icon-name: "network-offline";
+    };
+  }
+  StackPage {
+    name: "wifi";
+    child: Image {
+      icon-name: bind template.network as <AstalNetwork.Network>.wifi as <AstalNetwork.Wifi>.icon-name;
+    };
+  }
+  StackPage {
+    name: "wired";
+    child: Image {
+      icon-name: bind template.network as <AstalNetwork.Network>.wired as <AstalNetwork.Wired>.icon-name;
+    };
+  }
+}

@@ -1,0 +1,47 @@
+using Gtk 4.0;
+
+template $EventWidget: Box {
+  orientation: vertical;
+  homogeneous: false;
+  halign: fill;
+  valign: fill;
+  // visible: false;
+  styles ["event"]
+
+  Label {
+    justify: left;
+    halign: start;
+    wrap: true;
+    max-width-chars: 40;
+    visible: bind $summary_visible(template.event as <$Event>.summary) as <bool>;
+    label: bind template.event as <$Event>.summary;
+    styles ["summary"]
+  }
+  Label time {
+    justify: left;
+    halign: start;
+    wrap: true;
+    max-width-chars: 40;
+    label: bind $format_time(template.event as <$Event>.dtstart) as <string>;
+    styles ["time"]
+  }
+  Label {
+    justify: left;
+    halign: start;
+    wrap: true;
+    max-width-chars: 40;
+    visible: bind $description_visible(template.event as <$Event>.description) as <bool>;
+    label: bind template.event as <$Event>.description;
+    styles ["description"]
+  }
+  Label {
+    justify: left;
+    halign: start;
+    wrap: true;
+    max-width-chars: 40;
+    visible: bind $location_visible(template.event as <$Event>.location) as <bool>;
+    label: bind template.event as <$Event>.location;
+    styles ["location"]
+  }
+
+}

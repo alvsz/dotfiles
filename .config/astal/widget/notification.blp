@@ -1,0 +1,76 @@
+using Gtk 4.0;
+using AstalNotifd 0.1;
+
+template $Notification: Box {
+  homogeneous: false;
+  orientation: vertical;
+  halign: fill;
+  valign: start;
+  styles ["notification"]
+
+  notification: AstalNotifd.Notification {
+    invoked => $on_invoked();
+    resolved => $on_resolved();
+  };
+  
+  Box {
+    homogeneous: false;
+    orientation: horizontal;
+    styles ["header"]
+
+    Image {
+      icon-name: bind template.notification as <AstalNotifd.Notification>.app-icon;
+      styles ["app-icon"]
+    }
+    Label {
+      halign: fill;
+      xalign: 0;
+      ellipsize: end;
+      hexpand: true;
+      max-width-chars: 40;
+      label: bind template.notification as <AstalNotifd.Notification>.app-name;
+      styles ["app-name"]
+    }
+    Label {
+      label: bind $format_time(template.notification as <AstalNotifd.Notification>.time) as <string>;
+    }
+    Button {
+      halign: end;
+      icon-name: "window-close-symbolic";
+      clicked => $on_clicked();
+    }
+  }
+  Separator { }
+  Box {
+    homogeneous: false;
+    orientation: horizontal;
+    styles ["content"]
+
+    Image {
+      icon-name: bind template.notification as <AstalNotifd.Notification>.image;
+      styles ["icon"]
+    }
+    Box {
+      homogeneous: false;
+      orientation: vertical;
+      Label {
+        halign: start;
+        xalign: 0;
+        ellipsize: end;
+        max-width-chars: 30;
+        label: bind template.notification as <AstalNotifd.Notification>.summary;
+        styles ["summary"]
+      }
+      Label {
+        halign: start;
+        xalign: 0;
+        wrap: true;
+        use-markup: true;
+        justify: fill;
+        max-width-chars: 40;
+        label: bind template.notification as <AstalNotifd.Notification>.body;
+        styles ["body"]
+      }
+    }
+  }
+}

@@ -1,0 +1,161 @@
+@use "sass:string";
+@use "./base.scss";
+
+@function css($color) {
+  @return string.unquote($color);
+}
+
+@function gtkalpha($c, $a) {
+  @return string.unquote("alpha(#{$c},#{$a})");
+}
+
+window.Calendar {
+  @extend .basewindow;
+  > box {
+    @extend .horizontalSpacer;
+    > * {
+      @extend .verticalSpacer;
+    }
+  }
+
+  .calendar {
+    @extend .module;
+    min-width: 25em;
+
+    .month-name {
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+
+    calendar {
+      background-color: transparent;
+      border: 0 solid transparent;
+    }
+
+    .week-days {
+      font-weight: bolder;
+      color: css("@accent_color");
+    }
+
+    grid {
+      label.day-name {
+        font-weight: bolder;
+        color: css("@accent_color");
+      }
+    }
+  }
+
+  .events {
+    @extend .module;
+    @extend .verticalSpacer;
+
+    .event {
+      border-color: css("currentColor");
+      border-left-width: 0.2em;
+      border-left-style: solid;
+      padding-left: 0.5em;
+      background-color: css("alpha(currentColor, 0.05)");
+      border-radius: 0.5em;
+
+      label {
+        color: css("@theme_fg_color");
+      }
+
+      .summary {
+        font-weight: bolder;
+      }
+    }
+  }
+
+  .weather {
+    @extend .verticalSpacer;
+    @extend .module;
+    padding: 0.8em;
+
+    .main-icon {
+      -gtk-icon-size: 3em;
+      margin-right: 0em;
+    }
+
+    image {
+      -gtk-icon-size: 1.5em;
+      margin: 0em 0.3em;
+    }
+
+    .city-name {
+      font-weight: bolder;
+    }
+
+    .temp {
+      font-size: 2em;
+      font-weight: bolder;
+    }
+  }
+
+  .notification-center {
+    @extend .module;
+    @extend .verticalSpacer;
+
+    .notification {
+      /* box-shadow: 2px 3px 8px 0 gtkalpha(black, 0.4); */
+      border: 1pt solid gtkalpha(css("@theme_fg_color"), 0.03);
+
+      .header {
+        padding: 0.5rem;
+        color: gtkalpha(css("@theme_fg_color"), 0.5);
+
+        .app-icon {
+          margin: 0 0.4rem;
+        }
+
+        .app-name {
+          margin-right: 0.3rem;
+          font-weight: bold;
+
+          &:first-child {
+            margin-left: 0.4rem;
+          }
+        }
+
+        .time {
+          margin: 0 0.4rem;
+        }
+
+        button {
+          padding: 0.2rem;
+          min-width: 0;
+          min-height: 0;
+        }
+      }
+
+      separator {
+        margin: 0 0.4rem;
+        background-color: gtkalpha(css("@theme_fg_color"), 0.1);
+      }
+
+      .content {
+        margin: 1rem;
+        margin-top: 0.5rem;
+
+        .summary {
+          font-size: 1.2em;
+          color: css("@theme_fg_color");
+        }
+
+        .body {
+          color: gtkalpha(css("@theme_fg_color"), 0.8);
+        }
+
+        /* .image { */
+        /*   border: 1px solid gtkalpha(css("@theme_fg_color"), 0.02); */
+        /*   margin-right: 0.5rem; */
+        /*   border-radius: 9px; */
+        /*   min-width: 100px; */
+        /*   min-height: 100px; */
+        /*   background-size: cover; */
+        /*   background-position: center; */
+        /* } */
+      }
+    }
+  }
+}
