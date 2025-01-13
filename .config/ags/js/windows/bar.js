@@ -1,4 +1,4 @@
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+// import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 // import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
@@ -25,7 +25,7 @@ globalThis.glib = GLib;
 globalThis.user = User;
 globalThis.audio = Audio;
 globalThis.battery = Battery;
-globalThis.notification = Notifications;
+// globalThis.notification = Notifications;
 globalThis.network = Network;
 globalThis.mpris = Mpris;
 // globalThis.tray = SystemTray;
@@ -68,9 +68,9 @@ const genTags = (monitorId) => {
       urgent: mon.clients.find((c) => c.tags & tagMask && c.isurgent),
       selected: (tagMask & mon.seltags) != 0,
       occupied: mon.clients.find((c) => (c.tags & tagMask) != 0) ? true : false,
-      onMiddleClick: () => { },
-      onPrimaryClick: () => { },
-      onSecondaryClick: () => { },
+      onMiddleClick: () => {},
+      onPrimaryClick: () => {},
+      onSecondaryClick: () => {},
     });
     Tags.push(test);
   }

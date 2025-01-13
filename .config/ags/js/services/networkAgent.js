@@ -1,6 +1,6 @@
 import Service from "resource:///com/github/Aylur/ags/service.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+// import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import Gio from "gi://Gio";
@@ -525,6 +525,14 @@ class NetworkAgent extends Service {
       body: body,
       iconName: "dialog-password-symbolic",
       actions: {
+        Cancelar: () => {
+          if (!notif.answered)
+            this._native.respond(
+              requestId,
+              GjsNetworkAgent.NetworkAgentResponse.USER_CANCELED,
+            );
+          delete this._notifications[requestId];
+        },
         Autenticar: () => {
           notif.answered = true;
           this._handleRequest(requestId, connection, settingName, hints, flags);
@@ -532,17 +540,10 @@ class NetworkAgent extends Service {
       },
     });
 
-    const n = Notifications.getNotification(id);
+    // const n = Notifications.getNotification(id);
     this._notifications[requestId] = notif;
 
-    n.connect("closed", () => {
-      if (!notif.answered)
-        this._native.respond(
-          requestId,
-          GjsNetworkAgent.NetworkAgentResponse.USER_CANCELED,
-        );
-      delete this._notifications[requestId];
-    });
+    n.connect("closed", () => {});
   }
 
   _newRequest(agent, requestId, connection, settingName, hints, flags) {

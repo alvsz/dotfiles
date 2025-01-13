@@ -2,7 +2,7 @@ import Gdk from "gi://Gdk";
 
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+// import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 
 import Bar from "./js/windows/bar.js";
 import AppMenu from "./js/windows/appmenu.js";
@@ -21,8 +21,8 @@ globalThis.calendarserver = calendarServer;
 globalThis.polkit = polkitAgent;
 globalThis.utils = Utils;
 
-Notifications.popupTimeout = 3000;
-Notifications.cacheActions = true;
+// Notifications.popupTimeout = 3000;
+// Notifications.cacheActions = true;
 
 scssWatcher();
 

@@ -1,16 +1,16 @@
 import GLib from "gi://GLib";
 
 import Widget from "resource:///com/github/Aylur/ags/widget.js";
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+// import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 
 import DateTime from "../services/datetime.js";
 import calendarServer from "../services/ecal.js";
 import Weather from "../services/weather.js";
 
-import notification from "../widgets/notification.js";
+// import notification from "../widgets/notification.js";
 import icons from "../icons.js";
-import { Placeholder } from "../notification.js";
+// import { Placeholder } from "../notification.js";
 import { dwlIpc, nTags } from "../vars.js";
 
 globalThis.weather = Weather;
@@ -368,11 +368,12 @@ const notificationList = () => {
     vpack: "start",
     vexpand: true,
     // visible: true,
-  }).hook(Notifications, (self) => {
-    self.children = Notifications.notifications.reverse().map(notification);
-
-    if (!self.children.length === 0) self.children = [Placeholder()];
   });
+  //   .hook(Notifications, (self) => {
+  //   self.children = Notifications.notifications.reverse().map(notification);
+  //
+  //   if (!self.children.length === 0) self.children = [Placeholder()];
+  // });
 
   return Widget.Scrollable({
     className: "scroll",
