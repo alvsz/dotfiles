@@ -125,6 +125,13 @@ window.Calendar {
       font-weight: bolder;
       color: css("@accent_color");
     }
+
+    grid {
+      label.day-name {
+        font-weight: bolder;
+        color: css("@accent_color");
+      }
+    }
   }
 
   .weather {

@@ -27,37 +27,7 @@ template $Calendar: Astal.Window {
         Label month_name {
           styles ["month-name"]
         }
-        Box {
-          orientation: horizontal;
-          homogeneous: true;
-          halign: fill;
-          hexpand: true;
-          styles ["week-days"]
-
-          Label {
-            label: "dom";
-          }
-          Label {
-            label: "seg";
-          }
-          Label {
-            label: "ter";
-          }
-          Label {
-            label: "qua";
-          }
-          Label {
-            label: "qui";
-          }
-          Label {
-            label: "sex";
-          }
-          Label {
-            label: "sáb";
-          }
-        }
         Calendar calendar {
-          show-day-names: false;
           show-heading: false;
 
           notify => $on_day_selected();
