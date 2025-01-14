@@ -9,7 +9,7 @@ import template from "./notification.blp";
   Template: template,
   InternalChildren: [],
 })
-export default class Notification extends Gtk.Box {
+export default class Notification extends Gtk.Revealer {
   declare popup: boolean;
   declare _notification: Notifd.Notification;
 
@@ -46,8 +46,6 @@ export default class Notification extends Gtk.Box {
   }
 
   protected on_clicked() {
-    // print("clicked!");
-    // if (this.popup)
     this.notification.dismiss();
   }
 }

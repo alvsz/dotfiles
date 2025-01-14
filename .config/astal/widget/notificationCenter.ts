@@ -23,10 +23,12 @@ export default class NotificationCenter extends Gtk.Box {
       const notif = this.notifs.get(id);
       if (notif) {
         notif.notification = self.get_notification(id);
+        notif.reveal_child = true;
         this.reorder_child_after(notif, null);
       }
     } else {
       const notif = new Notification(self.get_notification(id), false);
+      notif.reveal_child = true;
       this.notifs.set(id, notif);
       this.append(notif);
     }
@@ -40,6 +42,13 @@ export default class NotificationCenter extends Gtk.Box {
     if (!this.notifs.has(id)) return;
 
     const notif = this.notifs.get(id);
-    if (notif) this.remove(notif);
+    if (notif) {
+      notif.reveal_child = false;
+
+      setTimeout(() => {
+        notif.hide();
+        this.remove(notif);
+      }, notif.transition_duration);
+    }
   }
 }
