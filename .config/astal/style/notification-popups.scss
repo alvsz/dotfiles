@@ -1,0 +1,17 @@
+@use "sass:string";
+@use "./base.scss";
+
+@function css($color) {
+  @return string.unquote($color);
+}
+
+.popups {
+  @extend .verticalSpacer;
+  background-color: transparent;
+  padding-top: 0.4em;
+
+  .notification {
+    background-color: css("@window_bg_color");
+    min-width: 25em;
+  }
+}

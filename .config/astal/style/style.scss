@@ -1,12 +1,78 @@
+@use "sass:string";
 @use "./bar.scss";
 @use "./calendar.scss";
+@use "./notification-popups.scss";
+
+@function css($color) {
+  @return string.unquote($color);
+}
+
+@function gtkalpha($c, $a) {
+  @return string.unquote("alpha(#{$c},#{$a})");
+}
 
 window {
+  background-color: transparent;
   font: 11pt Inter;
 }
 
-window.notification-popups {
-  padding: 3em;
-  border: 2px solid purple;
-  background-color: green;
+.notification {
+  background-color: gtkalpha(css("@theme_fg_color"), 0.04);
+  border-radius: 0.5em;
+  border: 0.1em solid css("@headerbar_border_color");
+
+  .header {
+    padding: 0.4em;
+    color: gtkalpha(css("@theme_fg_color"), 0.5);
+
+    .app-icon {
+      margin: 0 0.4rem;
+    }
+
+    .app-name {
+      margin-right: 0.3rem;
+      font-weight: bold;
+
+      &:first-child {
+        margin-left: 0.4rem;
+      }
+    }
+
+    .time {
+      margin: 0 0.4em;
+    }
+
+    button {
+      padding: 0.3em;
+      min-width: 0;
+      min-height: 0;
+    }
+  }
+
+  separator {
+    margin: 0 0.2em;
+    background-color: gtkalpha(css("@theme_fg_color"), 0.1);
+  }
+
+  .content {
+    padding: 0.8em;
+    padding-top: 0.4rem;
+
+    .vertical {
+      .summary {
+        font-size: 1.2em;
+        color: css("@theme_fg_color");
+      }
+
+      .body {
+        color: gtkalpha(css("@theme_fg_color"), 0.8);
+      }
+    }
+
+    .icon {
+      -gtk-icon-size: 4em;
+      border: 0.1em solid gtkalpha(css("@theme_fg_color"), 0.02);
+      margin-right: 0.4em;
+    }
+  }
 }
