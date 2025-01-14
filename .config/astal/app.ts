@@ -1,7 +1,7 @@
 import { App } from "astal/gtk4";
 import { monitorFile } from "astal/file";
-
-// import Notifd from "gi://AstalNotifd";
+import { GLib } from "astal/gobject";
+import { exec } from "astal/process";
 
 import style from "./style/style.scss";
 
@@ -15,6 +15,8 @@ networkIcon;
 import sysTray from "./widget/sysTray";
 sysTray;
 
+// const scss_path = `${GLib.getenv("XDG_CONFIG_DIR")}/astal/style/scss`;
+
 App.start({
   instanceName: "astal",
   requestHandler(request, res) {
@@ -23,16 +25,13 @@ App.start({
   },
   css: style,
   main: () => {
-    // print(Notifd.get_default());
-    // print(Notifd.get_default());
-    // print(Notifd.get_default());
-
     App.get_monitors().map((m) => new Bar(m));
     new Calendar();
 
     monitorFile("./style/", (file: string) => {
       print("scss updated", file);
-      // App.apply_css("./style/style.scss", true);
+      exec(`sass ./style/style.scss ./style.css`);
+      App.apply_css("./style.css", true);
     });
   },
 });

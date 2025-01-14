@@ -33,6 +33,7 @@ template $Notification: Box {
     }
     Label {
       label: bind $format_time(template.notification as <AstalNotifd.Notification>.time) as <string>;
+      styles ["time"]
     }
     Button {
       halign: end;
@@ -47,6 +48,7 @@ template $Notification: Box {
     styles ["content"]
 
     Image {
+      valign: start;
       icon-name: bind template.notification as <AstalNotifd.Notification>.image;
       styles ["icon"]
     }
@@ -56,8 +58,9 @@ template $Notification: Box {
       Label {
         halign: start;
         xalign: 0;
-        ellipsize: end;
-        max-width-chars: 30;
+        wrap: true;
+        justify: left;
+        max-width-chars: 26;
         label: bind template.notification as <AstalNotifd.Notification>.summary;
         styles ["summary"]
       }
@@ -67,7 +70,7 @@ template $Notification: Box {
         wrap: true;
         use-markup: true;
         justify: fill;
-        max-width-chars: 40;
+        max-width-chars: 31;
         label: bind template.notification as <AstalNotifd.Notification>.body;
         styles ["body"]
       }

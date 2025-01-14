@@ -11,7 +11,16 @@ import template from "./notification.blp";
 })
 export default class Notification extends Gtk.Box {
   declare popup: boolean;
-  @property(Notifd.Notification) declare notification: Notifd.Notification;
+  declare _notification: Notifd.Notification;
+
+  @property(Notifd.Notification) get notification() {
+    return this._notification;
+  }
+
+  set notification(notif: Notifd.Notification) {
+    this._notification = notif;
+    this.notify("notification");
+  }
 
   constructor(notif: Notifd.Notification, p: boolean) {
     super();
@@ -37,7 +46,8 @@ export default class Notification extends Gtk.Box {
   }
 
   protected on_clicked() {
-    print("clicked!");
-    if (this.popup) this.notification.dismiss();
+    // print("clicked!");
+    // if (this.popup)
+    this.notification.dismiss();
   }
 }

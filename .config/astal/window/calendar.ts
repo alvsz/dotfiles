@@ -6,28 +6,20 @@ import { CalendarService } from "../service/calendar";
 import template from "./calendar.blp";
 import { CollectionObject } from "../service/evolutionDataServer";
 import EventWidget from "../widget/event";
-import Notification from "../widget/notification";
-import Notifd from "gi://AstalNotifd";
+import NotificationCenter from "../widget/notificationCenter";
+NotificationCenter;
 
 @register({
   GTypeName: "Calendar",
   Template: template,
-  InternalChildren: [
-    "calendar",
-    "month_name",
-    "events",
-    "weather",
-    "notifications",
-  ],
+  InternalChildren: ["calendar", "month_name", "events", "weather"],
 })
 export default class Calendar extends Astal.Window {
   declare _calendar: Gtk.Calendar;
   declare _month_name: Gtk.Label;
   declare _weather: Gtk.Box;
   declare _events: Gtk.Box;
-  declare _notifications: Gtk.Box;
   declare caldav_service: CalendarService;
-  @property(Notifd.Notifd) declare notifd: Notifd.Notifd;
   @property(Weather) declare weather: Weather;
 
   constructor() {
@@ -35,7 +27,6 @@ export default class Calendar extends Astal.Window {
       application: App,
     });
 
-    this.notifd = Notifd.get_default();
     this.weather = new Weather();
     this.caldav_service = new CalendarService();
 
@@ -111,20 +102,5 @@ export default class Calendar extends Astal.Window {
     return this.weather.is_daytime
       ? `${sunset} - ${sunrise}`
       : `${sunrise} - ${sunset}`;
-  }
-
-  protected on_notified(self: Notifd.Notifd, id: number, replaced: boolean) {
-    this._notifications.append(
-      new Notification(self.get_notification(id), false),
-    );
-    print(self, id, replaced);
-  }
-
-  protected on_resolved(
-    self: Notifd.Notifd,
-    id: number,
-    reason: Notifd.ClosedReason,
-  ) {
-    print(self, id, reason);
   }
 }
