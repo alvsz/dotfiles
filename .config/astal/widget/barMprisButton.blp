@@ -1,6 +1,12 @@
 using Gtk 4.0;
+using AstalMpris 0.1;
 
 template $barMprisButton: Button {
+    mpris: AstalMpris.Mpris {
+        player-added => $on_player_added();
+        player-closed => $on_player_closed();
+    };
+
     child: Stack mpris_stack {
         hhomogeneous: false;
         vhomogeneous: true;

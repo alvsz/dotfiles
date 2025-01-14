@@ -8,6 +8,8 @@ template $networkIcon: Stack {
   visible-child-name: bind $shown_icon(template.network as <AstalNetwork.Network>.primary as <AstalNetwork.Primary>) as <string>;
   styles ["network-icon"]
 
+  network: AstalNetwork.Network { };
+
   StackPage {
     name: "offline";
     child: Image {

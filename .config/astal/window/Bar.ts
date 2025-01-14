@@ -2,12 +2,18 @@ import { GLib } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import { property, register } from "astal/gobject";
 
-import Battery from "gi://AstalBattery";
 import Wp from "gi://AstalWp";
 import Bluetooth from "gi://AstalBluetooth";
 
 import Template from "./Bar.blp";
 import icons from "../icons";
+
+import mprisButton from "../widget/barMprisButton";
+mprisButton;
+import networkIcon from "../widget/networkIcon";
+networkIcon;
+import sysTray from "../widget/sysTray";
+sysTray;
 
 @register({
   GTypeName: "Bar",
@@ -35,9 +41,6 @@ export default class Bar extends Astal.Window {
       visible: true,
       name: `Bar-${monitor.get_connector() || ""}`,
     });
-
-    this.bluetooth = Bluetooth.get_default();
-    this.wp = Wp.get_default();
 
     setInterval(() => {
       this.update_clock();

@@ -14,8 +14,6 @@ export default class networkIcon extends Gtk.Stack {
 
   constructor() {
     super();
-
-    this.network = Network.get_default();
   }
 
   protected shown_icon() {

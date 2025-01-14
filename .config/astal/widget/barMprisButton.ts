@@ -1,5 +1,5 @@
 import { Gtk } from "astal/gtk4";
-import { register } from "astal/gobject";
+import { property, register } from "astal/gobject";
 
 import Mpris from "gi://AstalMpris";
 
@@ -11,7 +11,7 @@ import template from "./barMprisButton.blp";
   InternalChildren: ["mpris_stack"],
 })
 export default class barMprisButton extends Gtk.Button {
-  declare mpris: Mpris.Mpris;
+  @property(Mpris.Mpris) declare mpris: Mpris.Mpris;
   declare _mpris_stack: Gtk.Stack;
 
   private get_player(bus_name: string) {
@@ -35,7 +35,17 @@ export default class barMprisButton extends Gtk.Button {
     }
   }
 
-  private add_player(player: Mpris.Player) {
+  constructor() {
+    super();
+
+    this.mpris = Mpris.get_default();
+
+    this.mpris.get_players().map((player: Mpris.Player) => {
+      this.on_player_added(this.mpris, player);
+    });
+  }
+
+  protected on_player_added(self: Mpris.Mpris, player: Mpris.Player) {
     const label = new Gtk.Label();
 
     player.connect("notify", (self: Mpris.Player) => {
@@ -47,7 +57,7 @@ export default class barMprisButton extends Gtk.Button {
     this._mpris_stack.set_visible_child_name(player.bus_name);
   }
 
-  private remove_player = (self: Mpris.Mpris, player: Mpris.Player) => {
+  protected on_player_closed(self: Mpris.Mpris, player: Mpris.Player) {
     const label = this._mpris_stack.get_child_by_name(player.bus_name);
     if (label) {
       this._mpris_stack.remove(label);
@@ -57,25 +67,6 @@ export default class barMprisButton extends Gtk.Button {
       if (this.mpris.get_players().length == 0)
         this._mpris_stack.set_visible_child_name("nada");
     }, 1000);
-  };
-
-  constructor() {
-    super();
-
-    this.mpris = Mpris.get_default();
-
-    this.mpris.get_players().map((player: Mpris.Player) => {
-      this.add_player(player);
-    });
-
-    this.mpris.connect(
-      "player-added",
-      (self: Mpris.Mpris, player: Mpris.Player) => {
-        this.add_player(player);
-      },
-    );
-
-    this.mpris.connect("player-closed", this.remove_player);
   }
 
   protected on_mpris_button_clicked(self: Gtk.Button) {

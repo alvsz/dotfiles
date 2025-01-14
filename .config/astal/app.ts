@@ -7,15 +7,7 @@ import style from "./style/style.scss";
 
 import Bar from "./window/Bar";
 import Calendar from "./window/calendar";
-
-import mprisButton from "./widget/barMprisButton";
-mprisButton;
-import networkIcon from "./widget/networkIcon";
-networkIcon;
-import sysTray from "./widget/sysTray";
-sysTray;
-
-// const scss_path = `${GLib.getenv("XDG_CONFIG_DIR")}/astal/style/scss`;
+import NotificationPopups from "./window/NotificationPopups";
 
 App.start({
   instanceName: "astal",
@@ -27,6 +19,7 @@ App.start({
   main: () => {
     App.get_monitors().map((m) => new Bar(m));
     new Calendar();
+    new NotificationPopups();
 
     monitorFile("./style/", (file: string) => {
       print("scss updated", file);

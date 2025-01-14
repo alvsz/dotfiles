@@ -39,9 +39,8 @@ export default class NotificationCenter extends Gtk.Box {
     id: number,
     reason: Notifd.ClosedReason,
   ) {
-    if (!this.notifs.has(id)) return;
-
     const notif = this.notifs.get(id);
+
     if (notif) {
       notif.reveal_child = false;
 
