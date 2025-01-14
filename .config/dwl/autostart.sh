@@ -4,6 +4,8 @@
 
 agsv1 &
 
+astal-notifd -d &
+
 ags run --gtk4 -d ~/.config/astal &
 
 systemctl --user start gammastep-indicator
