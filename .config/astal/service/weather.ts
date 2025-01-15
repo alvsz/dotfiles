@@ -105,7 +105,6 @@ export default class Weather extends GObject.Object {
 
   _onLocationUpdate(location: Geoclue.Location | null) {
     if (!location) return;
-    // print("location mudou");
     this.emit("location-updated", location.latitude, location.longitude);
 
     this._latitude = location.latitude;
@@ -127,7 +126,6 @@ export default class Weather extends GObject.Object {
   }
 
   _onWeatherUpdate(info: GWeather.Info) {
-    // print("weather mudou");
     const network_error = info.network_error();
     this._available = !network_error;
     this.notify("available");

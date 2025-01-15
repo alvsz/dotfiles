@@ -140,6 +140,11 @@ template $Calendar: Astal.Window {
       }
     }
 
-    $NotificationCenter { }
+    ScrolledWindow {
+      child: $NotificationCenter { };
+      hscrollbar-policy: never;
+      vexpand: true;
+    }
+    
   }
 }

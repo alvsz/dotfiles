@@ -23,7 +23,8 @@ template $Notification: Revealer {
       styles ["header"]
 
       Image {
-        icon-name: bind template.notification as <AstalNotifd.Notification>.app-icon;
+        icon-name: bind $get_app_icon(template.notification as <AstalNotifd.Notification>.app-icon) as <string>;
+        visible: bind $app_icon_visible(template.notification as <AstalNotifd.Notification>.app-icon) as <bool>;
         styles ["app-icon"]
       }
       Label {
@@ -32,7 +33,7 @@ template $Notification: Revealer {
         ellipsize: end;
         hexpand: true;
         max-width-chars: 40;
-        label: bind template.notification as <AstalNotifd.Notification>.app-name;
+        label: bind $get_app_name(template.notification as <AstalNotifd.Notification>.app-name) as <string>;
         styles ["app-name"]
       }
       Label {
@@ -54,6 +55,7 @@ template $Notification: Revealer {
       Image {
         valign: start;
         icon-name: bind template.notification as <AstalNotifd.Notification>.image;
+        visible: bind $icon_visible(template.notification as <AstalNotifd.Notification>.image) as <bool>;
         styles ["icon"]
       }
       Box {

@@ -39,6 +39,29 @@ export default class Notification extends Gtk.Revealer {
     print(self, reason);
   }
 
+  protected get_app_icon() {
+    if (this.notification.app_icon) return this.notification.app_icon;
+    else if (this.notification.desktop_entry)
+      return this.notification.desktop_entry;
+    else return "";
+  }
+
+  protected app_icon_visible() {
+    if (this.notification.app_icon || this.notification.desktop_entry)
+      return true;
+    else return false;
+  }
+
+  protected get_app_name() {
+    if (this.notification.app_name?.length > 0)
+      return this.notification.app_name;
+    else return "Desconhecido";
+  }
+
+  protected icon_visible() {
+    return this.notification.image?.length > 0;
+  }
+
   protected format_time() {
     return GLib.DateTime.new_from_unix_local(this.notification.time).format(
       "%H:%M",

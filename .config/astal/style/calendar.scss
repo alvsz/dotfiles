@@ -93,6 +93,12 @@ window.Calendar {
   }
 
   .notification-center {
-    @extend .verticalSpacer;
+    > *:first-child > .notification {
+      margin-top: 0em;
+    }
+
+    .notification {
+      margin: 0.4em 0em 0em 0em;
+    }
   }
 }

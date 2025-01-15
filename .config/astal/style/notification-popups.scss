@@ -6,11 +6,12 @@
 }
 
 .popups {
-  @extend .verticalSpacer;
+  /* @extend .verticalSpacer; */
   background-color: transparent;
-  padding-top: 0.4em;
+  /* padding-top: 0.4em; */
 
   .notification {
+    margin: 0.4em 0em 0em 0em;
     background-color: css("@window_bg_color");
     min-width: 25em;
   }
