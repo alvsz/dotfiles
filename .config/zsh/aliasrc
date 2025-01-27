@@ -36,7 +36,8 @@ alias static_file_server="python -m http.server 8000"
 alias nsxiv="nsxiv ${XEMBED+"-e $XEMBED"}"
 alias mpv="mpv ${XEMBED+"--wid=$XEMBED"}"
 alias zathura="zathura ${XEMBED+"-e $XEMBED"}"
-# alias surf="surf ${XEMBED+"-e $XEMBED"}"
+alias surf="surf ${XEMBED+"-e $XEMBED"}"
+alias gpp="g++"
 
 converter265 () {
 	if [ "${HOSTNAME}" = "vivobook" ]; then

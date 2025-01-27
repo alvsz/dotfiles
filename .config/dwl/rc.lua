@@ -35,7 +35,8 @@ get_status = function()
 					title = c.title,
 					tags = c.tags,
 					x11 = c.x11,
-					monitor = i,
+					monitor_index = i,
+					monitor = c.monitor.address,
 					geometry = c.geometry,
 					floating = c.floating,
 					urgent = c.urgent,
@@ -59,15 +60,15 @@ dwl.cfg = {
 		io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
 		io.popen("~/.config/dwl/autostart.sh")
 
-		print("autostart")
+		-- print("autostart")
 	end,
 
 	printstatus = function()
-		print("status")
+		-- print("status")
 	end,
 
 	reload = function()
-		print("reload")
+		-- print("reload")
 	end,
 
 	env = {
