@@ -54,8 +54,14 @@ template $Notification: Revealer {
 
       Image {
         valign: start;
-        icon-name: bind template.notification as <AstalNotifd.Notification>.image;
+        icon-name: bind $get_icon(template.notification as <AstalNotifd.Notification>.image) as <string>;
         visible: bind $icon_visible(template.notification as <AstalNotifd.Notification>.image) as <bool>;
+        styles ["icon"]
+      }
+      Image {
+        valign: start;
+        file: bind $get_ficon(template.notification as <AstalNotifd.Notification>.image) as <string>;
+        visible: bind $ficon_visible(template.notification as <AstalNotifd.Notification>.image) as <bool>;
         styles ["icon"]
       }
       Box {
@@ -81,6 +87,13 @@ template $Notification: Revealer {
           styles ["body"]
         }
       }
+    }
+    Box actions {
+      halign: fill;
+      hexpand: true;
+      homogeneous: true;
+      visible: false;
+      styles ["actions"]
     }
   };
 }

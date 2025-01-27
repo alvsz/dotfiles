@@ -12,17 +12,20 @@ template $Bar: Astal.Window {
     wp: AstalWp.Wp { };
 
     CenterBox {
-        start-widget: 
-        Box {
+        start-widget: Box {
             orientation: horizontal;
             homogeneous: false;
             spacing: 0;
             halign: start;
             valign: fill;
             styles ["left"]
+
             Button {
                     styles ["arch"]
                     label: "";
+            }
+            $DwlBox {
+                monitor: bind template.gdkmonitor;
             }
         };
 

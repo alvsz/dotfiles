@@ -70,7 +70,10 @@ export default class sysTray extends Gtk.Box {
       if (!this.items.has(item_id)) return;
 
       const item = this.items.get(item_id);
-      if (item) this.remove(item);
+      if (item) {
+        this.items.delete(item_id);
+        this.remove(item);
+      }
     });
   }
 }

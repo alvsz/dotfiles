@@ -7,5 +7,6 @@ template $Popups: $NotificationCenter {
 
   notifd: AstalNotifd.Notifd {
     notified => $on_notified_popup();
+    resolved => $on_resolved();
   };
 }

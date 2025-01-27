@@ -1,0 +1,86 @@
+using Gtk 4.0;
+using Astal 4.0;
+
+template $PolkitDialog: Astal.Window {
+  layer: overlay;
+  keymode: exclusive;
+  visible: true;
+  styles ["Polkit"]
+
+  Box {
+    orientation: vertical;
+    homogeneous: false;
+
+    Label {
+      label: "Autenticação necessária";
+      halign: center;
+      styles ["title"]
+    }
+    Label message {
+      label: bind template.dialog as <$AuthenticationDialog>.message;
+      visible: bind $message_visible(template.dialog as <$AuthenticationDialog>.message) as <bool>;
+      halign: center;
+      wrap: true;
+      justify: center;
+      max-width-chars: 33;
+      styles ["message"]
+    }
+    Image {
+      file: bind template.dialog as <$AuthenticationDialog>.user-image;
+      halign: center;
+      styles ["user-image"]
+    }
+    Label {
+      label: bind $format_name(template.dialog as <$AuthenticationDialog>.user-name) as <string>;
+      halign: center;
+      max-width-chars: 33;
+      styles ["user-name"]
+    }
+    Entry password {
+      halign: fill;
+      hexpand: true;
+      placeholder-text: "Senha";
+      visibility: bind template.dialog as <$AuthenticationDialog>.echo-on;
+      activate => $on_activate();
+      notify::text => $on_change();
+    }
+    Label info {
+      label: bind template.dialog as <$AuthenticationDialog>.info;
+      visible: bind $info_visible(template.dialog as <$AuthenticationDialog>.info) as <bool>;
+      wrap: true;
+      halign: center;
+      justify: center;
+      max-width-chars: 33;
+      styles ["info"]
+    }
+    Label error {
+      label: bind template.dialog as <$AuthenticationDialog>.error;
+      visible: bind $error_visible(template.dialog as <$AuthenticationDialog>.error) as <bool>;
+      wrap: true;
+      halign: center;
+      justify: center;
+      max-width-chars: 30;
+      styles ["error"]
+    }
+    Box {
+      orientation: horizontal;
+      homogeneous: true;
+      halign: fill;
+      hexpand: true;
+      Button {
+        label: "Cancelar";
+        halign: fill;
+        clicked => $on_cancel();
+        styles ["cancel", "destructive-action"]
+      }
+      Button auth {
+        label: "Autenticar";
+        sensitive: false;
+        halign: fill;
+        clicked => $on_authenticate();
+        styles ["auth", "suggested-action"]
+      }
+    }
+  }
+}
+

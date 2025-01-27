@@ -1,4 +1,4 @@
-import { GLib } from "astal";
+import { GLib, exec, subprocess } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import { property, register } from "astal/gobject";
 
@@ -14,6 +14,8 @@ import networkIcon from "../widget/networkIcon";
 networkIcon;
 import sysTray from "../widget/sysTray";
 sysTray;
+import dwlBox from "../widget/dwlBox";
+dwlBox;
 
 @register({
   GTypeName: "Bar",
@@ -39,6 +41,7 @@ export default class Bar extends Astal.Window {
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.RIGHT,
       visible: true,
+      gdkmonitor: monitor,
       name: `Bar-${monitor.get_connector() || ""}`,
     });
 

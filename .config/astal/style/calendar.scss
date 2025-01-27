@@ -101,4 +101,13 @@ window.Calendar {
       margin: 0.4em 0em 0em 0em;
     }
   }
+
+  .mpris {
+    @extend .module;
+    @extend .horizontalSpacer;
+
+    image.cover-art {
+      -gtk-icon-size: 5em;
+    }
+  }
 }

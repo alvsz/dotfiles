@@ -8,6 +8,8 @@ import { CollectionObject } from "../service/evolutionDataServer";
 import EventWidget from "../widget/event";
 import NotificationCenter from "../widget/notificationCenter";
 NotificationCenter;
+import mprisPlayerList from "../widget/mprisPlayerList";
+mprisPlayerList;
 
 @register({
   GTypeName: "Calendar",

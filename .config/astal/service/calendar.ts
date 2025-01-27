@@ -55,8 +55,8 @@ class EventList extends Collection {
   async getEventsInRange(start: Date, end: Date) {
     return this.queryObjects(
       `(occur-in-time-range? 
-            (make-time "${ECal.isodate_from_time_t(start.getTime() / 1000)}")
-            (make-time "${ECal.isodate_from_time_t(end.getTime() / 1000)}"))`,
+            (make-time "${ECal.isodate_from_time_t((start.getTime() / 1000) as never)}")
+            (make-time "${ECal.isodate_from_time_t((end.getTime() / 1000) as never)}"))`,
     ).then((events) => events.map((ecal) => new Event(ecal, this._client)));
   }
 

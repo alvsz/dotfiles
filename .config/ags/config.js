@@ -8,17 +8,17 @@ import Bar from "./js/windows/bar.js";
 import AppMenu from "./js/windows/appmenu.js";
 import Calendar from "./js/windows/calendar.js";
 import Dashboard from "./js/windows/dashboard.js";
-import Polkit from "./js/windows/polkit.js";
+// import Polkit from "./js/windows/polkit.js";
 import NetworkAgentDialog from "./js/windows/networkSecretDialog.js";
 
-import polkitAgent from "./js/services/polkitAgent.js";
+// import polkitAgent from "./js/services/polkitAgent.js";
 import networkAgent from "./js/services/networkAgent.js";
 
 import { cssPath, scssWatcher } from "./js/utils.js";
 
 import calendarServer from "./js/services/ecal.js";
 globalThis.calendarserver = calendarServer;
-globalThis.polkit = polkitAgent;
+// globalThis.polkit = polkitAgent;
 globalThis.utils = Utils;
 
 // Notifications.popupTimeout = 3000;
@@ -26,9 +26,9 @@ globalThis.utils = Utils;
 
 scssWatcher();
 
-polkitAgent.connect("initiate", () => {
-  App.addWindow(Polkit(polkitAgent._currentDialog));
-});
+// polkitAgent.connect("initiate", () => {
+//   App.addWindow(Polkit(polkitAgent._currentDialog));
+// });
 
 networkAgent.connect("initiate", (_, dialog) => {
   App.addWindow(NetworkAgentDialog(dialog));

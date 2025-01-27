@@ -1,7 +1,9 @@
 @use "sass:string";
+@use "./base.scss";
 @use "./bar.scss";
 @use "./calendar.scss";
 @use "./notification-popups.scss";
+@use "./polkit.scss";
 
 @function css($color) {
   @return string.unquote($color);
@@ -12,7 +14,6 @@
 }
 
 window {
-  background-color: transparent;
   font: 11pt Inter;
 }
 
@@ -74,5 +75,10 @@ window {
       border: 0.1em solid gtkalpha(css("@theme_fg_color"), 0.02);
       margin-right: 0.4em;
     }
+  }
+
+  .actions {
+    @extend .horizontalSpacer;
+    padding: 0.3em;
   }
 }

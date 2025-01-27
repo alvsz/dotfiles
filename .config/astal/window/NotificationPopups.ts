@@ -34,9 +34,6 @@ class Popups extends NotificationCenter {
             this.get_root()?.hide();
             this.hide();
           }
-          // else {
-          //   print(this.get_first_child());
-          // }
         }, notif.transition_duration + 1);
       },
       notif.notification.expire_timeout > 0

@@ -30,7 +30,7 @@ export default class NotificationCenter extends Gtk.Box {
       const notif = new Notification(self.get_notification(id), false);
       notif.reveal_child = true;
       this.notifs.set(id, notif);
-      this.append(notif);
+      this.prepend(notif);
     }
   }
 

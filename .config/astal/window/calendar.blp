@@ -138,12 +138,14 @@ template $Calendar: Astal.Window {
           }
         }
       }
+      $mprisPlayerList { }
     }
 
     ScrolledWindow {
       child: $NotificationCenter { };
       hscrollbar-policy: never;
       vexpand: true;
+      styles ["undershoot-top", "undershoot-bottom"]
     }
     
   }

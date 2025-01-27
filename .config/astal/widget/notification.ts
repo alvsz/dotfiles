@@ -1,16 +1,25 @@
-import { Gtk } from "astal/gtk4";
+import { Gtk, Astal, Gdk } from "astal/gtk4";
 import { GLib, property, register } from "astal/gobject";
 import Notifd from "gi://AstalNotifd";
 
 import template from "./notification.blp";
 
+const fileExists = (path: string) => GLib.file_test(path, GLib.FileTest.EXISTS);
+
+const urgency = {
+  [Notifd.Urgency.LOW]: "low",
+  [Notifd.Urgency.NORMAL]: "normal",
+  [Notifd.Urgency.CRITICAL]: "critical",
+};
+
 @register({
   GTypeName: "Notification",
   Template: template,
-  InternalChildren: [],
+  InternalChildren: ["actions"],
 })
 export default class Notification extends Gtk.Revealer {
   declare popup: boolean;
+  declare _actions: Gtk.Box;
   declare _notification: Notifd.Notification;
 
   @property(Notifd.Notification) get notification() {
@@ -26,6 +35,24 @@ export default class Notification extends Gtk.Revealer {
     super();
     this.notification = notif;
     this.popup = p;
+
+    for (let a of this.notification.actions) {
+      const b = new Gtk.Button({
+        child: new Gtk.Label({
+          label: a.label,
+          wrap: true,
+          justify: Gtk.Justification.CENTER,
+        }),
+      });
+
+      b.connect("clicked", () => {
+        this.notification.invoke(a.id);
+      });
+
+      this._actions.append(b);
+      this._actions.show();
+    }
+    this.add_css_class(urgency[this.notification.urgency]);
   }
 
   protected on_invoked(self: Notifd.Notification, action_id: string) {
@@ -58,8 +85,35 @@ export default class Notification extends Gtk.Revealer {
     else return "Desconhecido";
   }
 
+  protected get_icon() {
+    if (
+      this.notification.image?.length > 0 &&
+      !fileExists(this.notification.image)
+    )
+      return this.notification.image;
+    else return "";
+  }
+
+  protected get_ficon() {
+    if (
+      this.notification.image?.length > 0 &&
+      fileExists(this.notification.image)
+    )
+      return this.notification.image;
+    else return "";
+  }
+
   protected icon_visible() {
-    return this.notification.image?.length > 0;
+    return (
+      this.notification.image?.length > 0 &&
+      !fileExists(this.notification.image)
+    );
+  }
+
+  protected ficon_visible() {
+    return (
+      this.notification.image?.length > 0 && fileExists(this.notification.image)
+    );
   }
 
   protected format_time() {
