@@ -1,0 +1,29 @@
+using Gtk 4.0;
+
+template $DwlBox: Box {
+    orientation: horizontal;
+    homogeneous: false;
+    spacing: 0;
+
+    styles ["dwl"]
+    Box tags {
+        orientation: horizontal;
+        homogeneous: true;
+        spacing: 0;
+        styles ["tags"]
+    }
+    Button layout_button {
+        styles ["layout"]
+    }
+    Box client_box {
+        orientation: horizontal;
+        homogeneous: false;
+        spacing: 0;
+        styles ["client"]
+        Image client_icon { }
+        Label client_title {
+            max-width-chars: 40;
+            ellipsize: end;
+        }
+    }
+}

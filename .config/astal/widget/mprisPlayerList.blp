@@ -1,0 +1,96 @@
+using Gtk 4.0;
+using AstalMpris 0.1;
+
+template $mprisPlayer: Box {
+  orientation: horizontal;
+  homogeneous: false;
+  halign: fill;
+  valign: fill;
+  styles ["mpris"]
+
+  Image {
+    valign: center;
+    halign: start;
+    file: bind template.player as <AstalMpris.Player>.cover-art;
+    styles ["cover-art"]
+  }
+  Box {
+    orientation: vertical;
+    homogeneous: false;
+
+    Box {
+      orientation: horizontal;
+      homogeneous: false;
+      Label {
+        label: bind template.player as <AstalMpris.Player>.title;
+        hexpand: true;
+        wrap: true;
+        halign: start;
+        max-width-chars: 26;
+        styles ["heading"]
+      }
+      Image {
+        halign: end;
+        valign: start;
+        icon-name: bind template.player as <AstalMpris.Player>.entry;
+        tooltip-text: bind template.player as <AstalMpris.Player>.identity;
+      }
+    }
+    Label {
+      hexpand: true;
+      wrap: true;
+      halign: start;
+      max-width-chars: 26;
+      label: bind template.player as <AstalMpris.Player>.artist;
+    }
+    Scale {
+      valign: end;
+      adjustment: Adjustment {
+        value: bind template.player as <AstalMpris.Player>.position;
+        lower: 0;
+        upper: bind template.player as <AstalMpris.Player>.length;
+        value-changed => $on_value_changed();
+      };
+    }
+    CenterBox {
+      start-widget: Label {
+        halign: start;
+        valign: end;
+        label: bind $format_position(template.player as <AstalMpris.Player>.position) as <string>;
+        styles ["position"]
+      };
+
+      center-widget: Box {
+        homogeneous: true;
+        orientation: horizontal;
+        halign: center;
+        valign: center;
+        styles ["player-controls"]
+
+        Button previous {
+          icon-name: "media-skip-backward-symbolic";
+          visible: bind template.player as <AstalMpris.Player>.can-go-previous;
+          clicked => $on_previous();
+        }
+        Button playpause {
+          icon-name: bind $format_play_button(template.player as <AstalMpris.Player>.playback-status) as <string>;
+          clicked => $on_playpause();
+        }
+        Button next {
+          icon-name: "media-skip-forward-symbolic";
+          visible: bind template.player as <AstalMpris.Player>.can-go-next;
+          clicked => $on_next();
+        }
+      };
+
+      end-widget: Label {
+        halign: end;
+        valign: end;
+        label: bind $format_length(template.player as <AstalMpris.Player>.length) as <string>;
+        styles ["length"]
+      };
+    }
+  }
+
+
+}
