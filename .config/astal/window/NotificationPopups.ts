@@ -30,7 +30,7 @@ class Popups extends NotificationCenter {
         super.on_resolved(self, id, Notifd.ClosedReason.UNDEFINED);
 
         setTimeout(() => {
-          if (!this.get_first_child()) {
+          if (!this._notifs.get_first_child()) {
             this.get_root()?.hide();
             this.hide();
           }
