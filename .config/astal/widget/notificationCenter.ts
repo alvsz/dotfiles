@@ -8,9 +8,11 @@ import Notification from "./notification";
 @register({
   GTypeName: "NotificationCenter",
   Template: template,
+  InternalChildren: ["notifs"],
 })
 export default class NotificationCenter extends Gtk.Box {
   declare notifs: Map<number, Notification>;
+  declare _notifs: Gtk.Box;
   @property(Notifd.Notifd) declare notifd: Notifd.Notifd;
 
   constructor() {
@@ -30,7 +32,7 @@ export default class NotificationCenter extends Gtk.Box {
       const notif = new Notification(self.get_notification(id), false);
       notif.reveal_child = true;
       this.notifs.set(id, notif);
-      this.prepend(notif);
+      this._notifs.prepend(notif);
     }
   }
 
@@ -46,8 +48,24 @@ export default class NotificationCenter extends Gtk.Box {
 
       setTimeout(() => {
         notif.hide();
-        this.remove(notif);
+        this._notifs.remove(notif);
       }, notif.transition_duration);
     }
+  }
+
+  protected on_dnd(self: Notifd.Notifd) {
+    print("dnd mudou!!!! notifcenter", self.get_dont_disturb());
+  }
+
+  protected on_clear() {
+    this.notifd.get_notifications().forEach((n) => n.dismiss());
+  }
+
+  protected on_dnd_active(self: Gtk.Switch) {
+    print("notifd: ", this.notifd.get_dont_disturb());
+    const active = self.get_active();
+    print("switch mudou", active);
+    this.notifd.set_dont_disturb(active);
+    this.notifd.dont_disturb = active;
   }
 }

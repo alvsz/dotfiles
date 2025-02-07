@@ -93,8 +93,9 @@ window.Calendar {
   }
 
   .notification-center {
-    > *:first-child > .notification {
-      margin-top: 0em;
+    .header {
+      @extend .module;
+      @extend .horizontalSpacer;
     }
 
     .notification {
