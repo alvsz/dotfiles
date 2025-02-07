@@ -41,7 +41,7 @@ template $PolkitDialog: Astal.Window {
       hexpand: true;
       placeholder-text: "Senha";
       visibility: bind template.dialog as <$AuthenticationDialog>.echo-on;
-      activate => $on_activate();
+      activate => $on_authenticate();
       notify::text => $on_change();
     }
     Label info {
@@ -81,6 +81,10 @@ template $PolkitDialog: Astal.Window {
         styles ["auth", "suggested-action"]
       }
     }
+  }
+
+  EventControllerKey {
+    key-pressed => $on_key_pressed();
   }
 }
 

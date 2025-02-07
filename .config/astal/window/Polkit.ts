@@ -36,14 +36,29 @@ export default class PolkitDialog extends Astal.Window {
 
     this.dialog = dialog;
 
-    dialog.connect("success", this.on_success.bind(this));
-    agent.connect("done", this.close_dialog.bind(this));
+    dialog.connect("success", (_: AuthenticationDialog, success: boolean) => {
+      if (!success) {
+        this._error.visible = true;
+        this._error.label = "não funcionou, tente novamente";
+        this._auth.sensitive = true;
+
+        this._password.sensitive = true;
+        this._password.text = "";
+        this._password.grab_focus();
+      }
+    });
+    agent.connect("done", () => this.close());
 
     this._password.grab_focus();
   }
 
-  protected close_dialog() {
-    this.close();
+  protected on_key_pressed(
+    self: Gtk.EventControllerKey,
+    keyval: number,
+    keycode: number,
+    state: Gdk.ModifierType,
+  ) {
+    if (keycode === 9) this.on_cancel();
   }
 
   protected format_name() {
@@ -52,25 +67,9 @@ export default class PolkitDialog extends Astal.Window {
     else return "Administrador";
   }
 
-  protected on_activate(self: Gtk.Entry) {
-    this.response(self.get_text());
-  }
-
   protected on_change(self: Gtk.Entry) {
     const text = self.get_text();
     this._auth.sensitive = text.length > 0;
-  }
-
-  protected on_success(_: AuthenticationDialog, success: boolean) {
-    if (!success) {
-      this._error.visible = true;
-      this._error.label = "não funcionou, tente novamente";
-      this._auth.sensitive = true;
-
-      this._password.sensitive = true;
-      this._password.text = "";
-      this._password.grab_focus();
-    }
   }
 
   protected on_cancel() {
