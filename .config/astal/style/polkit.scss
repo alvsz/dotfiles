@@ -1,0 +1,69 @@
+@use "sass:string";
+@use "./base.scss";
+
+@function css($color) {
+  @return string.unquote($color);
+}
+
+@function gtkalpha($c, $a) {
+  @return string.unquote("alpha(#{$c},#{$a})");
+}
+
+.dialog {
+  @extend .basewindow;
+  /* padding: 1em; */
+
+  .title {
+    font-weight: bold;
+    margin: 1rem;
+    font-size: 1.1rem;
+  }
+
+  label {
+    margin: 0rem 1rem;
+  }
+
+  entry {
+    min-width: 18rem;
+  }
+
+  .info {
+    font-style: italic;
+  }
+
+  box.horizontal {
+    margin-top: 1em;
+  }
+
+  button.cancel {
+    margin-right: 0.3rem;
+  }
+
+  button.auth {
+    margin-left: 0.3rem;
+  }
+}
+
+window.Polkit {
+  @extend .dialog;
+
+  .user-image {
+    -gtk-icon-size: 6rem;
+  }
+
+  .user-name {
+    margin: 0.5em;
+  }
+
+  .message {
+    margin-bottom: 1em;
+  }
+
+  .error {
+    margin-top: 0.5em;
+  }
+
+  entry {
+    margin: 0em 1em;
+  }
+}
