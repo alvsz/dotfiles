@@ -1,4 +1,3 @@
-import { GLib, exec, subprocess } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import { property, register } from "astal/gobject";
 import {

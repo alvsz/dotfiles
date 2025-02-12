@@ -22,8 +22,10 @@ class Popups extends NotificationCenter {
     const notif = this.notifs.get(id);
     if (!notif) return;
 
-    this.show();
-    this.get_root()?.show();
+    if (!self.get_dont_disturb()) {
+      this.show();
+      this.get_root()?.show();
+    }
 
     setTimeout(
       () => {
