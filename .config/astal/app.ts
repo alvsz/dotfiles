@@ -1,6 +1,5 @@
-import { App } from "astal/gtk4";
-import { monitorFile } from "astal/file";
-import { GLib } from "astal/gobject";
+import { App, Gdk } from "astal/gtk4";
+import { Gio, monitorFile } from "astal/file";
 import { exec } from "astal/process";
 
 import style from "./style/style.scss";
@@ -21,7 +20,6 @@ const main = () => {
 
   const agent = new AuthenticationAgent();
   agent.enable();
-
   agent.connect(
     "initiate",
     (self: AuthenticationAgent, a: AuthenticationDialog) => {
@@ -34,6 +32,32 @@ const main = () => {
     exec(`sass ./style/style.scss ./style.css`);
     App.apply_css("./style.css", true);
   });
+
+  const display = Gdk.Display.get_default();
+  if (display) {
+    const monitors = display.get_monitors();
+    monitors.connect(
+      "notify::items-changed",
+      (
+        self: Gio.ListModel<Gdk.Monitor>,
+        position: number,
+        removed: number,
+        added: number,
+      ) => {
+        print("items changed", self, position, removed, added);
+        if (added > 1 || removed > 1) print("bugou total");
+        else {
+          print("removed ", removed);
+          print("added", added);
+
+          if (added) {
+            const mon = monitors.get_item(position) as Gdk.Monitor | null;
+            if (mon) new Bar(mon);
+          }
+        }
+      },
+    );
+  }
 };
 
 App.start({
