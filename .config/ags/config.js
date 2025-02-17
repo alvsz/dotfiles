@@ -41,21 +41,21 @@ App.config({
   windows: windows,
 });
 
-const display = Gdk.Display.get_default();
-const n = display.get_n_monitors();
+// const display = Gdk.Display.get_default();
+// const n = display.get_n_monitors();
 
-for (let i = 0; i < n; i++) {
-  const mon = display.get_monitor(i);
-  App.addWindow(Bar(mon, i));
-}
+// for (let i = 0; i < n; i++) {
+//   const mon = display.get_monitor(i);
+//   App.addWindow(Bar(mon, i));
+// }
 
-display.connect("monitor-added", (self, mon) => {
-  print("monitor added!");
-
-  const n = self.get_n_monitors();
-
-  for (let i = 0; i < n; i++) {
-    const m = self.get_monitor(i);
-    if (mon == m) App.addWindow(Bar(mon, i));
-  }
-});
+// display.connect("monitor-added", (self, mon) => {
+//   print("monitor added!");
+//
+//   const n = self.get_n_monitors();
+//
+//   for (let i = 0; i < n; i++) {
+//     const m = self.get_monitor(i);
+//     if (mon == m) App.addWindow(Bar(mon, i));
+//   }
+// });
