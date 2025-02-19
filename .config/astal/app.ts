@@ -12,6 +12,7 @@ import {
   AuthenticationDialog,
 } from "./service/polkitAgent";
 import PolkitDialog from "./window/Polkit";
+import Lock from "./window/Lockscreen";
 
 const main = () => {
   App.get_monitors().map((m) => new Bar(m));
@@ -27,7 +28,7 @@ const main = () => {
     },
   );
 
-  monitorFile("./style/", (file: string) => {
+  monitorFile("./style/", (file) => {
     print("scss updated", file);
     exec(`sass ./style/style.scss ./style.css`);
     App.apply_css("./style.css", true);
@@ -60,9 +61,14 @@ const main = () => {
   }
 };
 
+const lock = new Lock();
+
 App.start({
   instanceName: "astal",
   requestHandler(request, res) {
+    if (request == "lock") {
+      lock.lock_now();
+    }
     print(request);
     res("ok");
   },

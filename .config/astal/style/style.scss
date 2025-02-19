@@ -4,6 +4,7 @@
 @use "./calendar.scss";
 @use "./notification-popups.scss";
 @use "./polkit.scss";
+@use "./lockscreen.scss";
 
 @function css($color) {
   @return string.unquote($color);

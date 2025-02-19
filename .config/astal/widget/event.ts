@@ -4,16 +4,7 @@ import { property, register } from "astal/gobject";
 import { CollectionObject } from "../service/evolutionDataServer";
 import eventTemplate from "./event.blp";
 import EDataServer from "gi://EDataServer?version=1.2";
-
-const setCss = (widget: Gtk.Widget, css: string) => {
-  if (!css.includes("{") || !css.includes("}")) css = `* { ${css} }`;
-
-  const cssProvider = new Gtk.CssProvider();
-  cssProvider.load_from_data(css, css.length);
-  widget
-    .get_style_context()
-    .add_provider(cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
-};
+import { setCss } from "../util";
 
 @register({
   GTypeName: "EventWidget",

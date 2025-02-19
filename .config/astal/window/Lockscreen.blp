@@ -1,0 +1,46 @@
+using Gtk 4.0;
+using AccountsService 1.0;
+
+template $Lockscreen: Window {
+  styles ["Lockscreen"]
+
+  Box {
+    orientation: vertical;
+    homogeneous: false;
+    halign: center;
+    valign: center;
+
+    Image {
+      file: bind template.user as <AccountsService.User>.icon-file;
+    }
+    Label {
+      label: bind template.user as <AccountsService.User>.real-name;
+      styles ["user-name"]
+    }
+    Entry password {
+      placeholder-text: bind template.lock as <$Lock>.prompt;
+      visibility: false;
+      sensitive: bind template.lock as <$Lock>.can_authenticate;
+      activate => $on_authenticate();
+      notify::text => $on_change();
+    }
+    Label error {
+      halign: center;
+      visible: bind $is_error_visible(template.lock as <$Lock>.error) as <bool>;
+      label: bind template.lock as <$Lock>.error;
+      styles ["error"]
+    }
+    Button auth {
+      label: "Autenticar";
+      halign: center;
+      sensitive: bind template.lock as <$Lock>.can_authenticate;
+      clicked => $on_authenticate();
+      styles ["auth", "suggested-action"]
+    }
+    Label info {
+      visible: bind $is_info_visible(template.lock as <$Lock>.info) as <bool>;
+      label: bind template.lock as <$Lock>.info;
+      styles ["info"]
+    }
+  }
+}
