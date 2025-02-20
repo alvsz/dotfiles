@@ -57,13 +57,15 @@ export default class Lock extends GObject.Object {
 
   private on_locked() {
     print("locked");
+    this.pam.start_authenticate();
 
     setTimeout(() => {
       this.lock.unlock();
-    }, 10000);
+    }, 30000);
   }
 
   private on_unlocked() {
+    print("unlocked");
     this.windows.forEach((w, m) => {
       w.hide();
       w.destroy();
@@ -97,26 +99,20 @@ export default class Lock extends GObject.Object {
     this.lock.connect("unlocked", this.on_unlocked.bind(this));
     this.lock.connect("failed", this.on_failed.bind(this));
 
-    this.pam.start_authenticate();
-
     this.pam.connect("auth-error", (_, msg) => {
       print("error", msg);
       this.set_error(msg);
+      this.set_can_authenticate(true);
     });
 
     this.pam.connect("auth-info", (_, msg) => {
       print("info", msg);
       this.set_info(msg);
+      this.set_can_authenticate(true);
     });
 
     this.pam.connect("auth-prompt-hidden", (_, msg) => {
       print("hidden", msg);
-      this.set_prompt(msg);
-      this.set_can_authenticate(true);
-    });
-
-    this.pam.connect("auth-prompt-visible", (_, msg) => {
-      print("visible", msg);
       this.set_prompt(msg);
       this.set_can_authenticate(true);
     });
@@ -128,6 +124,7 @@ export default class Lock extends GObject.Object {
     });
 
     this.pam.connect("success", () => {
+      print("success");
       this.lock.unlock();
     });
   }
@@ -144,10 +141,14 @@ export default class Lock extends GObject.Object {
   }
 
   authenticate(pass: string) {
+    print("authenticate", this.can_authenticate);
     if (!this._can_authenticate) return;
 
     this.set_can_authenticate(false);
+    this.set_info("");
+    this.set_error("");
     this.pam.supply_secret(pass);
+    this.pam.start_authenticate();
   }
 }
 
