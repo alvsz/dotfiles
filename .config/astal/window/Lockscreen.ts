@@ -59,9 +59,9 @@ export default class Lock extends GObject.Object {
     print("locked");
     this.pam.start_authenticate();
 
-    setTimeout(() => {
-      this.lock.unlock();
-    }, 30000);
+    // setTimeout(() => {
+    //   this.lock.unlock();
+    // }, 30000);
   }
 
   private on_unlocked() {
