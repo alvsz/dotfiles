@@ -1,31 +1,41 @@
 #!/bin/env sh
 
-# /usr/lib/gsd-xsettings &
+launch() {
+	# /usr/lib/gsd-xsettings &
 
-agsv1 &
+	agsv1 &
 
-astal-notifd -d &
+	astal-notifd -d &
 
-ags run --gtk4 -d ~/.config/astal &
+	ags run --gtk4 -d ~/.config/astal &
 
-systemctl --user start gammastep-indicator
+	systemctl --user start gammastep-indicator
 
-pgrep udiskie || udiskie --tray &
+	pgrep udiskie || udiskie --tray &
 
-org.gnome.Geary --gapplication-service &
+	org.gnome.Geary --gapplication-service &
 
-pgrep swayidle || swayidle timeout 600 "gtklock.py" lock "gtklock.py" timeout 420 'dpms off' resume 'dpms on' &
+	pgrep swayidle || swayidle timeout 600 "astal lock" lock "astal lock" timeout 420 'dpms off' resume 'dpms on' &
 
-pgrep swww-daemon || swww-daemon &
+	pgrep swww-daemon || swww-daemon &
 
-pgrep kdeconnectd || kdeconnectd &
+	pgrep kdeconnectd || kdeconnectd &
 
-sleep 5
-pgrep kdeconnect-indi || kdeconnect-indicator &
+	sleep 5
+	pgrep kdeconnect-indi || kdeconnect-indicator &
 
-if [ "${HOSTNAME}" = "archlinux" ]; then
-	# pgrep openrgb ||
-	openrgb --startminimized &
-	openrgb -p 'padrao'
-	# openrgb -c 800080
-fi
+	if [ "${HOSTNAME}" = "archlinux" ]; then
+		# pgrep openrgb ||
+		openrgb --startminimized &
+		openrgb -p 'padrao'
+		# openrgb -c 800080
+	fi
+}
+
+# if pgrep dwl; then
+# 	echo "já tem um dwl rodando"
+# else
+launch
+# fi
+
+# if pgrep dwl
