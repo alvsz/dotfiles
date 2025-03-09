@@ -1,0 +1,13 @@
+#!/bin/env sh
+
+account=$(secret-tool search service duckdns 2>&1)
+
+SUBDOMAINS=$(echo "${account}" | grep 'attribute\.domain' | cut -d ' ' -f 3)
+TOKEN=$(secret-tool lookup service duckdns)
+IPV4=$(ifconfig | grep wlan0 -A 1 | tail -1 | awk '{print $2}')
+
+DRESPONSE=$(curl -sS --max-time 60 "https://www.duckdns.org/update?domains=${SUBDOMAINS}&token=${TOKEN}&ip=${IPV4}&verbose=true")
+RESPONSE=$(echo "${DRESPONSE}" | awk 'NR==1')
+IPCHANGE=$(echo "${DRESPONSE}" | awk 'NR==4')
+
+printf '%s\n' "$RESPONSE $IPCHANGE"
