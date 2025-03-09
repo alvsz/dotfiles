@@ -88,3 +88,7 @@ rules() {
 	/^WM_CLASS/{sub(/.* =/, "instance:"); sub(/,/, "\nclass:"); print}
 	/^WM_NAME/{sub(/.* =/, "title:"); print}'
 }
+
+ip_camera() {
+	ffmpeg -i http://"$1"/video -vf format=yuv420p -f v4l2 /dev/video0
+}
