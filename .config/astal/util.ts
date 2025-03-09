@@ -1,4 +1,20 @@
-import { Gtk } from "astal/gtk4";
+import { Gdk, Gtk } from "astal/gtk4";
+
+export const lookup_icon = (
+  name: string,
+  fallbacks: string[] = [],
+  size = 16,
+) => {
+  const d = Gdk.Display.get_default();
+
+  if (d) {
+    const it = Gtk.IconTheme.get_for_display(d);
+    return it
+      .lookup_icon(name, fallbacks, size, 1, null, null)
+      .get_file()
+      ?.get_path();
+  } else return null;
+};
 
 export const setCss = (widget: Gtk.Widget, css: string) => {
   if (!css.includes("{") || !css.includes("}")) css = `* { ${css} }`;

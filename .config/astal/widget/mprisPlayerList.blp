@@ -32,7 +32,8 @@ template $mprisPlayer: Box {
       Image {
         halign: end;
         valign: start;
-        icon-name: bind template.player as <AstalMpris.Player>.entry;
+        icon-name: bind $format_player_icon(template.player as <AstalMpris.Player>.entry) as <string>;
+        // file: bind $format_player_icon(template.player as <AstalMpris.Player>.entry) as <string>;
         tooltip-text: bind template.player as <AstalMpris.Player>.identity;
       }
     }

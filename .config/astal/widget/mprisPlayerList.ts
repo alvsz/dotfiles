@@ -4,6 +4,7 @@ import GObject, { property, register } from "astal/gobject";
 import Mpris from "gi://AstalMpris";
 import template from "./mprisPlayerList.blp";
 import icons from "../icons";
+import { lookup_icon } from "../util";
 
 @register({
   GTypeName: "mprisPlayer",
@@ -39,6 +40,26 @@ class mprisPlayer extends Gtk.Box {
 
   protected format_position() {
     return this.lengthStr(this.player.position);
+  }
+
+  protected format_player_icon() {
+    const name = this.player.bus_name.substring(23).split(".")[0];
+    let icon;
+
+    if (lookup_icon(name)) {
+      icon = name;
+    } else {
+      const palavras = this.player.identity.split(" ");
+
+      palavras.forEach((element) => {
+        if (lookup_icon(element.toLowerCase())) {
+          icon = element;
+        }
+      });
+    }
+
+    if (icon) return icon;
+    else return icons.mpris.fallback;
   }
 
   protected on_previous() {
