@@ -1,7 +1,0 @@
-#!/bin/sh
-
-dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY XAUTHORITY
-
-exec dwm
-# >"${XDG_RUNTIME_DIR}/dwm.log"
-# 2> ${XDG_RUNTIME_DIR}/dwm.log
