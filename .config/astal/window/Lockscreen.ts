@@ -188,12 +188,14 @@ class Lockscreen extends Gtk.Window {
     if (text.length == 0) return;
 
     this._password.sensitive = false;
+    // this._password.secondary_icon_sensitive = false;
     this._auth.sensitive = false;
     this.lock.authenticate(text);
   }
 
   protected on_change(self: Gtk.Entry) {
     const text = self.get_text();
+    // this._password.secondary_icon_sensitive = text.length > 0;
     this._auth.sensitive = text.length > 0;
   }
 

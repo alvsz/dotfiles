@@ -1,9 +1,5 @@
 @use "sass:string";
-@use "./base.scss";
-
-@function css($color) {
-  @return string.unquote($color);
-}
+@use "./base.scss" as *;
 
 .popups {
   background-color: transparent;

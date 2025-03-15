@@ -1,18 +1,10 @@
 @use "sass:string";
-@use "./base.scss";
+@use "./base.scss" as *;
 @use "./bar.scss";
 @use "./calendar.scss";
 @use "./notification-popups.scss";
 @use "./polkit.scss";
 @use "./lockscreen.scss";
-
-@function css($color) {
-  @return string.unquote($color);
-}
-
-@function gtkalpha($c, $a) {
-  @return string.unquote("alpha(#{$c},#{$a})");
-}
 
 window {
   font: 11pt Inter;

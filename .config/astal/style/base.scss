@@ -4,6 +4,10 @@
   @return string.unquote($color);
 }
 
+@function gtkalpha($c, $a) {
+  @return string.unquote("alpha(#{$c},#{$a})");
+}
+
 .basewindow {
   margin-top: 10px;
   border-radius: 0.6em;

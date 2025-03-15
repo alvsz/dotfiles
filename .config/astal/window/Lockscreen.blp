@@ -21,6 +21,7 @@ template $Lockscreen: Window {
       placeholder-text: bind template.lock as <$Lock>.prompt;
       visibility: false;
       sensitive: bind template.lock as <$Lock>.can_authenticate;
+      // secondary-icon-name: "go-next-symbolic";
       activate => $on_authenticate();
       notify::text => $on_change();
     }
