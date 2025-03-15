@@ -9,6 +9,7 @@ return {
       "python",
       "arduino",
       "blueprint",
+      "vala",
       -- add more arguments for adding more treesitter parsers
     },
   },
