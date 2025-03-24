@@ -124,40 +124,71 @@ export class EvolutionDataServer extends GObject.Object {
   @signal(Object) declare calendar_removed: (a: Object) => void;
   @signal(Object) declare calendar_changed: (a: Object) => void;
 
+  declare calendars: Map<string, EDataServer.Source>;
+  declare tasklists: Map<string, EDataServer.Source>;
+
   private _sourceRegistry!: EDataServer.SourceRegistry;
 
   constructor() {
     super();
+
+    this.calendars = new Map<string, EDataServer.Source>();
+    this.tasklists = new Map<string, EDataServer.Source>();
+
     this._initRegistry().catch(logError);
   }
 
   async _initRegistry() {
     this._sourceRegistry =
       (await _getSourceRegistry()) as EDataServer.SourceRegistry;
+
     this._sourceRegistry.connect("source-added", (self, source) => {
-      if (source.has_extension(EDataServer.SOURCE_EXTENSION_TASK_LIST))
+      // print("source added", source);
+      if (source.has_extension(EDataServer.SOURCE_EXTENSION_TASK_LIST)) {
+        this.tasklists.set(source.uid, source);
         this.emit("tasklist-added", source);
-      if (source.has_extension(EDataServer.SOURCE_EXTENSION_CALENDAR))
+      }
+      if (source.has_extension(EDataServer.SOURCE_EXTENSION_CALENDAR)) {
         this.emit("calendar-added", source);
+      }
     });
+
     this._sourceRegistry.connect("source-removed", (self, source) => {
-      if (source.has_extension(EDataServer.SOURCE_EXTENSION_TASK_LIST))
+      // print("source removed", source);
+      if (source.has_extension(EDataServer.SOURCE_EXTENSION_TASK_LIST)) {
+        this.tasklists.delete(source.uid);
         this.emit("tasklist-removed", source);
-      if (source.has_extension(EDataServer.SOURCE_EXTENSION_CALENDAR))
+      }
+      if (source.has_extension(EDataServer.SOURCE_EXTENSION_CALENDAR)) {
+        this.calendars.delete(source.uid);
         this.emit("calendar-removed", source);
+      }
     });
+
     this._sourceRegistry.connect("source-changed", (self, source) => {
+      // print("source changed", source);
       if (source.has_extension(EDataServer.SOURCE_EXTENSION_TASK_LIST))
         this.emit("tasklist-chanded", source);
+
       if (source.has_extension(EDataServer.SOURCE_EXTENSION_CALENDAR))
         this.emit("calendar-chanded", source);
     });
+
     this._sourceRegistry
       .list_sources(EDataServer.SOURCE_EXTENSION_TASK_LIST)
-      .forEach((source) => this.emit("tasklist-added", source));
+      .forEach((source) => {
+        // print("tasklist listed", source);
+        this.tasklists.set(source.uid, source);
+        this.emit("tasklist-added", source);
+      });
+
     this._sourceRegistry
       .list_sources(EDataServer.SOURCE_EXTENSION_CALENDAR)
-      .forEach((source) => this.emit("calendar-added", source));
+      .forEach((source) => {
+        // print("calendar listed", source);
+        this.calendars.set(source.uid, source);
+        this.emit("calendar-added", source);
+      });
   }
 }
 
@@ -416,6 +447,21 @@ export class CollectionTypeService extends GObject.Object {
       `${type}-changed`,
       this._CollectionChanged.bind(this),
     );
+
+    switch (type) {
+      case "calendar": {
+        evolutionDataServer.calendars.forEach((source, uid) => {
+          // @ts-ignore
+          this._CollectionAdded(null, source);
+        });
+      }
+      case "tasklist": {
+        evolutionDataServer.tasklists.forEach((source, uid) => {
+          // @ts-ignore
+          this._CollectionAdded(null, source);
+        });
+      }
+    }
   }
 
   @property(Object) get collections() {
