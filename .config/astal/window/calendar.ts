@@ -65,24 +65,30 @@ export default class Calendar extends Astal.Window {
 
     this._month_name.label = time.format("%B %Y") || "";
 
-    this.remove_children();
-
-    this.caldav_service.calendars.forEach(async (list) => {
+    const events = this.caldav_service.calendars.map(async (list) => {
       if (!list) return;
 
       try {
         const start = new Date(y, m - 1, d, 0, 0, 0);
         const end = new Date(y, m - 1, d, 23, 59, 59);
 
-        (await list.getEventsInRange(start, end)).map(
-          (event: CollectionObject) => {
-            this._events.visible = true;
-            this._events.append(new EventWidget(event));
-          },
-        );
+        return await list.getEventsInRange(start, end);
       } catch (e) {
         logError(e);
       }
+    });
+
+    Promise.all(events).then((results) => {
+      const evs = results.flat();
+
+      this.remove_children();
+
+      evs.forEach((event) => {
+        if (!event) return;
+
+        this._events.visible = true;
+        this._events.prepend(new EventWidget(event));
+      });
     });
   }
 
