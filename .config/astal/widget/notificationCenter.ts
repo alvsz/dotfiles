@@ -14,13 +14,16 @@ export default class NotificationCenter extends Gtk.Box {
   declare notifs: Map<number, Notification>;
   declare _notifs: Gtk.Box;
   @property(Notifd.Notifd) declare notifd: Notifd.Notifd;
+  @property(Boolean) declare hidden: boolean;
 
-  constructor() {
+  constructor(hidden: boolean) {
     super();
+    this.hidden = hidden;
     this.notifs = new Map<number, Notification>();
   }
 
   protected on_notified(self: Notifd.Notifd, id: number, replaced: boolean) {
+    print(this.hidden);
     if (replaced && this.notifs.has(id)) {
       const notif = this.notifs.get(id);
       if (notif) {
@@ -29,7 +32,11 @@ export default class NotificationCenter extends Gtk.Box {
         this.reorder_child_after(notif, null);
       }
     } else {
-      const notif = new Notification(self.get_notification(id), false);
+      const notif = new Notification(
+        self.get_notification(id),
+        false,
+        this.hidden,
+      );
       notif.reveal_child = true;
       this.notifs.set(id, notif);
       this._notifs.prepend(notif);

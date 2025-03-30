@@ -54,7 +54,7 @@ window.Lockscreen {
       @extend .horizontalSpacer;
     }
 
-    box.vertical {
+    box.vertical:not(.labels) {
       @extend .verticalSpacer;
     }
 
@@ -65,8 +65,10 @@ window.Lockscreen {
     }
 
     .cava {
-      min-height: 6rem;
-      min-width: 6rem;
+      /* color: css("@accent_color"); */
+      min-height: 4rem;
+      min-width: 3rem;
+      margin: 1rem 1rem;
     }
 
     scale {

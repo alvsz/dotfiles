@@ -21,9 +21,13 @@ export default class Notification extends Gtk.Revealer {
   declare popup: boolean;
   declare _actions: Gtk.Box;
   declare _notification: Notifd.Notification;
+  private _not_hidden: boolean;
 
   @property(Notifd.Notification) get notification() {
     return this._notification;
+  }
+  @property(Boolean) get not_hidden() {
+    return this._not_hidden;
   }
 
   set notification(notif: Notifd.Notification) {
@@ -31,10 +35,12 @@ export default class Notification extends Gtk.Revealer {
     this.notify("notification");
   }
 
-  constructor(notif: Notifd.Notification, p: boolean) {
+  constructor(notif: Notifd.Notification, p: boolean, h: boolean) {
     super();
     this.notification = notif;
     this.popup = p;
+    this._not_hidden = !h;
+    this.notify("not-hidden");
 
     for (let a of this.notification.actions) {
       const b = new Gtk.Button({

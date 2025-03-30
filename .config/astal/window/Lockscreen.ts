@@ -3,14 +3,14 @@ import { App, Gdk, Gtk } from "astal/gtk4";
 import GObject, { property, register } from "astal/gobject";
 
 import Auth from "gi://AstalAuth";
-import Mpris from "gi://AstalMpris";
-import Cava from "gi://AstalCava";
 
 import AccountsService from "gi://AccountsService";
 import Gtk4SessionLock from "gi://Gtk4SessionLock";
 
-import icons from "../icons";
 import Template from "./Lockscreen.blp";
+
+import LockscreenMpris from "../widget/lockscreenMpris";
+LockscreenMpris;
 
 @register({
   GTypeName: "Lock",
@@ -69,9 +69,9 @@ export default class Lock extends GObject.Object {
 
     this.pam.start_authenticate();
 
-    // setTimeout(() => {
-    //   this.lock.unlock();
-    // }, 30000);
+    setTimeout(() => {
+      this.lock.unlock();
+    }, 30000);
   }
 
   private on_unlocked() {
@@ -166,17 +166,12 @@ export default class Lock extends GObject.Object {
     "clock",
     //
     "date",
-    "cava",
   ],
 })
 class Lockscreen extends Gtk.Window {
   @property(AccountsService.User) declare user: AccountsService.User;
   @property(String) declare username: string;
   @property(Lock) declare lock: Lock;
-  @property(Mpris.Player) declare player: Mpris.Player;
-  @property(Cava.Cava) declare cava: Cava.Cava;
-  private mpris: Mpris.Mpris;
-  declare _cava: Gtk.DrawingArea;
 
   declare _password: Gtk.Entry;
   declare _auth: Gtk.Button;
@@ -187,50 +182,6 @@ class Lockscreen extends Gtk.Window {
     const now = GLib.DateTime.new_now_local();
     this._clock.label = now.format("%R") || "";
     this._date.label = now.format("%A, %d de %B") || "";
-  }
-
-  protected format_play_button() {
-    if (this.player?.playback_status == Mpris.PlaybackStatus.PLAYING)
-      return icons.mpris.pause;
-    else return icons.mpris.play;
-  }
-
-  protected on_value_changed(self: Gtk.Adjustment) {
-    if (Math.abs(self.value - this.player?.position) > 1) {
-      this.player?.set_position(self.value);
-    }
-  }
-
-  protected format_length() {
-    return this.lengthStr(this.player?.length);
-  }
-
-  protected format_position() {
-    return this.lengthStr(this.player?.position);
-  }
-
-  protected on_previous() {
-    this.player?.previous();
-  }
-
-  protected on_playpause() {
-    this.player?.play_pause();
-  }
-
-  protected on_next() {
-    this.player?.next();
-  }
-
-  protected spacer_visible() {
-    return this.player?.can_go_next === this.player?.can_go_previous;
-  }
-
-  private lengthStr(length: number) {
-    if (length === -1) return "--:--";
-    const min = Math.floor(length / 60);
-    const sec = Math.floor(length % 60);
-    const sec0 = sec < 10 ? "0" : "";
-    return `${min}:${sec0}${sec}`;
   }
 
   constructor(monitor: Gdk.Monitor, lock: Lock, user: AccountsService.User) {
@@ -256,27 +207,6 @@ class Lockscreen extends Gtk.Window {
     this._password.grab_focus();
 
     this.update_clock();
-
-    this.mpris = Mpris.get_default();
-    this.mpris.connect(
-      "player-added",
-      (self: Mpris.Mpris, player: Mpris.Player) =>
-        (this.player = self.get_players()[0]),
-    );
-    this.mpris.connect(
-      "player-closed",
-      (self: Mpris.Mpris, player: Mpris.Player) =>
-        (this.player = self.get_players()[0]),
-    );
-    this.player = this.mpris.get_players()[0];
-
-    this._cava.set_draw_func((self, cr, width, height) => {
-      print("redraw", self, cr, width, height);
-    });
-
-    this.cava.connect("notify", (self) => {
-      this._cava.queue_draw();
-    });
   }
 
   protected on_authenticate() {

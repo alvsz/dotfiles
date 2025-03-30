@@ -43,6 +43,7 @@ template $Notification: Revealer {
       Button {
         halign: end;
         icon-name: "window-close-symbolic";
+        visible: bind template.not_hidden;
         clicked => $on_clicked();
       }
     }
@@ -84,6 +85,7 @@ template $Notification: Revealer {
           justify: fill;
           max-width-chars: 31;
           label: bind template.notification as <AstalNotifd.Notification>.body;
+          visible: bind template.not_hidden;
           styles ["body"]
         }
       }

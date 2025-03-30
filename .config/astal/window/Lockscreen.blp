@@ -1,14 +1,8 @@
 using Gtk 4.0;
 using AccountsService 1.0;
-using AstalMpris 0.1;
-using AstalCava 0.1;
 
 template $Lockscreen: Window {
   styles ["Lockscreen"]
-  cava: AstalCava.Cava {
-    bars: 6;
-    active: bind template.lock as <$Lock>.locked;
-  };
 
   Box {
     orientation: vertical;
@@ -55,101 +49,9 @@ template $Lockscreen: Window {
             valign: start;
             styles ["clock"]
           }
-          Box mpris {
-            orientation: vertical;
-            homogeneous: false;
-            halign: fill;
-            valign: fill;
-            styles ["mpris"]
-
-            Box {
-              orientation: horizontal;
-              Image {
-                valign: center;
-                halign: start;
-                file: bind template.player as <AstalMpris.Player>.cover-art;
-                styles ["cover-art"]
-              }
-              Box {
-                orientation: vertical;
-                valign: center;
-
-                Label {
-                  label: bind template.player as <AstalMpris.Player>.title;
-                  hexpand: true;
-                  wrap: false;
-                  ellipsize: end;
-                  halign: start;
-                  max-width-chars: 30;
-                  styles ["heading"]
-                }
-                Label {
-                  hexpand: true;
-                  wrap: false;
-                  ellipsize: end;
-                  halign: start;
-                  max-width-chars: 30;
-                  label: bind template.player as <AstalMpris.Player>.artist;
-                }
-              }
-              DrawingArea cava {
-                styles ["cava"]
-              }
-            }
-
-            CenterBox {
-              start-widget: Label {
-                halign: center;
-                valign: center;
-                label: bind $format_position(template.player as <AstalMpris.Player>.position) as <string>;
-                styles ["position"]
-              };
-
-              center-widget: Scale {
-                valign: center;
-                halign: fill;
-                hexpand: true;
-                adjustment: Adjustment {
-                  value: bind template.player as <AstalMpris.Player>.position;
-                  lower: 0;
-                  upper: bind template.player as <AstalMpris.Player>.length;
-                  value-changed => $on_value_changed();
-                };
-              };
-
-              end-widget: Label {
-                halign: center;
-                valign: center;
-                label: bind $format_length(template.player as <AstalMpris.Player>.length) as <string>;
-                styles ["length"]
-              };
-            }
-            Box {
-              orientation: horizontal;
-              homogeneous: true;
-              Label {
-                label: "";
-                visible: bind $spacer_visible(template.player as <AstalMpris.Player>) as <bool>;
-              }
-              Button previous {
-                icon-name: "media-skip-backward-symbolic";
-                visible: bind template.player as <AstalMpris.Player>.can-go-previous;
-                clicked => $on_previous();
-              }
-              Button playpause {
-                icon-name: bind $format_play_button(template.player as <AstalMpris.Player>.playback-status) as <string>;
-                visible: bind template.player as <AstalMpris.Player>.can-pause;
-                clicked => $on_playpause();
-              }
-              Button next {
-                icon-name: "media-skip-forward-symbolic";
-                visible: bind template.player as <AstalMpris.Player>.can-go-next;
-                clicked => $on_next();
-              }
-              Label {
-                label: "c";
-              }
-            }
+          $LockscreenMpris { }
+          $NotificationCenter {
+            hidden: true;
           }
         };
       }

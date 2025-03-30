@@ -136,7 +136,9 @@ template $Calendar: Astal.Window {
     }
 
     ScrolledWindow {
-      child: $NotificationCenter { };
+      child: $NotificationCenter {
+        hidden: false;
+      };
       hscrollbar-policy: never;
       vexpand: true;
       styles ["undershoot-top", "undershoot-bottom"]
