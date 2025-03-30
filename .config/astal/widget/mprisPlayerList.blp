@@ -75,6 +75,7 @@ template $mprisPlayer: Box {
         }
         Button playpause {
           icon-name: bind $format_play_button(template.player as <AstalMpris.Player>.playback-status) as <string>;
+          visible: bind template.player as <AstalMpris.Player>.can-pause;
           clicked => $on_playpause();
         }
         Button next {

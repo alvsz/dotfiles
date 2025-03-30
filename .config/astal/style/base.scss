@@ -17,18 +17,18 @@
   border: 2px solid css("@headerbar_border_color");
 
   > *:first-child {
-    padding: 1em;
+    padding: 1rem;
 
     button {
-      border-radius: 6px;
-      padding: 0.3em 0.6em;
+      border-radius: 0.6rem;
+      padding: 0.3rem 0.6rem;
     }
   }
 }
 
 .verticalSpacer {
   > * {
-    margin: 0.4em 0em 0em 0em;
+    margin: 0.4rem 0em 0em 0em;
   }
   > *:first-child {
     margin-top: 0em;
@@ -37,29 +37,29 @@
 
 .horizontalSpacer {
   > * {
-    margin: 0em 0em 0em 0.3em;
+    margin: 0em 0em 0em 0.3rem;
   }
   > *:first-child {
-    margin-left: 0em;
+    margin-left: 0rem;
   }
 }
 
 .bar-module {
-  min-height: 1em;
+  min-height: 1rem;
   background-color: css("@window_bg_color");
-  border-radius: 0.5em;
-  padding: 0.1em 0.4em 0.1em 0.4em;
+  border-radius: 0.5rem;
+  padding: 0.1rem 0.4rem 0.1rem 0.4rem;
 
   > * {
     @extend .horizontalSpacer;
   }
   > *:first-child {
-    margin-left: 0em;
+    margin-left: 0rem;
   }
 }
 
 .module {
   background-color: css("alpha(currentColor, 0.04)");
-  padding: 0.3em;
-  border-radius: 0.6em;
+  padding: 0.3rem;
+  border-radius: 0.6rem;
 }

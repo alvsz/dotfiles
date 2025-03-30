@@ -68,8 +68,7 @@ App.start({
   requestHandler(request, res) {
     if (request == "lock") {
       lock.lock_now();
-    }
-    print(request);
+    } else print(request);
     res("ok");
   },
   css: style,

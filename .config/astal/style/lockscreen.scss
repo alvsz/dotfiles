@@ -2,33 +2,86 @@
 @use "./base.scss" as *;
 
 window.Lockscreen {
-  entry {
-    min-width: 18rem;
+  .unlock-page {
+    entry {
+      min-width: 18rem;
+
+      image {
+        -gtk-icon-size: 1.5rem;
+        background-color: css("@accent_bg_color");
+        border-radius: 0.5rem;
+        margin: 0.5rem 0rem;
+      }
+    }
+
+    .info {
+      font-style: italic;
+    }
 
     image {
-      -gtk-icon-size: 1.5rem;
-      background-color: css("@accent_bg_color");
-      border-radius: 0.5rem;
-      margin: 0.5rem 0rem;
+      -gtk-icon-size: 10rem;
+    }
+
+    label.user-name {
+      font-weight: bolder;
+      margin: 0.5rem;
+      margin-bottom: 3rem;
+    }
+
+    button.auth {
+      margin: 0.3rem;
+      padding: 0.5rem 2rem;
     }
   }
 
-  .info {
-    font-style: italic;
+  .preview-page {
+    label.date {
+      padding: 1rem;
+      font-size: 1.8rem;
+    }
+
+    label.clock {
+      font-family: "URW Bookman";
+      font-weight: bolder;
+      font-size: 9rem;
+    }
   }
 
-  image {
-    -gtk-icon-size: 10rem;
-  }
+  .mpris {
+    @extend .module;
 
-  label.user-name {
-    font-weight: bolder;
-    margin: 0.5rem;
-    margin-bottom: 3rem;
-  }
+    box.horizontal {
+      @extend .horizontalSpacer;
+    }
 
-  button.auth {
-    margin: 0.3rem;
-    padding: 0.5rem 2rem;
+    box.vertical {
+      @extend .verticalSpacer;
+    }
+
+    .cover-art {
+      background-color: css("alpha(currentColor, 0.05)");
+      border-radius: 0.6rem;
+      -gtk-icon-size: 6rem;
+    }
+
+    .cava {
+      min-height: 6rem;
+      min-width: 6rem;
+    }
+
+    scale {
+      /* padding: 0.2rem 0rem; */
+
+      trough {
+        highlight {
+          padding: 0.3rem;
+          background-color: css("@theme_fg_color");
+        }
+      }
+
+      slider {
+        all: unset;
+      }
+    }
   }
 }
