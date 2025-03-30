@@ -113,6 +113,7 @@ audio/vnd.dts.hd=mpv.desktop;
 audio/x-adpcm=mpv.desktop;
 audio/m3u=mpv.desktop;
 image/avif=imv-dir.desktop;
+video/webm=mpv.desktop;
 
 [Default Applications]
 image/jpeg=org.gnome.Loupe.desktop
@@ -186,7 +187,7 @@ video/vnd.divx=org.gnome.Totem.desktop
 video/vnd.mpegurl=org.gnome.Totem.desktop
 video/vnd.rn-realvideo=org.gnome.Totem.desktop
 video/vnd.vivo=org.gnome.Totem.desktop
-video/webm=org.gnome.Totem.desktop
+video/webm=mpv.desktop
 video/x-anim=org.gnome.Totem.desktop
 video/x-avi=org.gnome.Totem.desktop
 video/x-flc=org.gnome.Totem.desktop
