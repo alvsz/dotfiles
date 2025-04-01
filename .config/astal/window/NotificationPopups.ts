@@ -1,5 +1,5 @@
-import { App, Astal, Gtk } from "astal/gtk4";
-import { property, register } from "astal/gobject";
+import { App, Astal } from "astal/gtk4";
+import { register } from "astal/gobject";
 import Notifd from "gi://AstalNotifd";
 
 import NotificationCenter from "../widget/notificationCenter";

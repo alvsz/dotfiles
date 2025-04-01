@@ -29,7 +29,6 @@ class mprisPlayer extends Gtk.Box {
 
   protected on_value_changed(self: Gtk.Adjustment) {
     if (Math.abs(self.value - this.player.position) > 1) {
-      print("setando posição, importante!!!");
       this.player.set_position(self.value);
     }
   }

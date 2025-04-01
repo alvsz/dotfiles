@@ -149,6 +149,7 @@ export class EvolutionDataServer extends GObject.Object {
         this.emit("tasklist-added", source);
       }
       if (source.has_extension(EDataServer.SOURCE_EXTENSION_CALENDAR)) {
+        this.calendars.set(source.uid, source);
         this.emit("calendar-added", source);
       }
     });

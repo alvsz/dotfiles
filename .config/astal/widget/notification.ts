@@ -61,16 +61,12 @@ export default class Notification extends Gtk.Revealer {
     this.add_css_class(urgency[this.notification.urgency]);
   }
 
-  protected on_invoked(self: Notifd.Notification, action_id: string) {
-    print(self, action_id);
-  }
+  protected on_invoked(self: Notifd.Notification, action_id: string) {}
 
   protected on_resolved(
     self: Notifd.Notification,
     reason: Notifd.ClosedReason,
-  ) {
-    print(self, reason);
-  }
+  ) {}
 
   protected get_app_icon() {
     if (this.notification.app_icon) return this.notification.app_icon;

@@ -11,6 +11,8 @@ import Template from "./Lockscreen.blp";
 
 import LockscreenMpris from "../widget/lockscreenMpris";
 LockscreenMpris;
+import LockscreenNotifications from "../widget/lockscreenNotifications";
+LockscreenNotifications;
 
 @register({
   GTypeName: "Lock",
@@ -69,9 +71,9 @@ export default class Lock extends GObject.Object {
 
     this.pam.start_authenticate();
 
-    setTimeout(() => {
-      this.lock.unlock();
-    }, 30000);
+    // setTimeout(() => {
+    //   this.lock.unlock();
+    // }, 30000);
   }
 
   private on_unlocked() {

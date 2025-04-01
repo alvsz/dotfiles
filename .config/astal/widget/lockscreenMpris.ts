@@ -56,10 +56,6 @@ export default class LockscreenMpris extends Gtk.Box {
     return this.player?.can_go_next === this.player?.can_go_previous;
   }
 
-  protected player_active() {
-    return this.player.playback_status === Mpris.PlaybackStatus.PLAYING;
-  }
-
   private lengthStr(length: number) {
     if (length === -1) return "--:--";
     const min = Math.floor(length / 60);

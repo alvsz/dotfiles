@@ -45,6 +45,16 @@ window.Lockscreen {
       font-weight: bolder;
       font-size: 9rem;
     }
+
+    .notifs {
+      /* background-color: transparent; */
+
+      .notification {
+        margin: 0.4em 0em 0em 0em;
+        background-color: css("@window_bg_color");
+        min-width: 25em;
+      }
+    }
   }
 
   .mpris {

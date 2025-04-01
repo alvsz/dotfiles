@@ -1,4 +1,4 @@
-import { App, Astal, Gtk } from "astal/gtk4";
+import { Gtk } from "astal/gtk4";
 import template from "./notificationCenter.blp";
 import { property, register } from "astal/gobject";
 import Notifd from "gi://AstalNotifd";
@@ -23,7 +23,6 @@ export default class NotificationCenter extends Gtk.Box {
   }
 
   protected on_notified(self: Notifd.Notifd, id: number, replaced: boolean) {
-    print(this.hidden);
     if (replaced && this.notifs.has(id)) {
       const notif = this.notifs.get(id);
       if (notif) {
@@ -60,18 +59,14 @@ export default class NotificationCenter extends Gtk.Box {
     }
   }
 
-  protected on_dnd(self: Notifd.Notifd) {
-    print("dnd mudou!!!! notifcenter", self.get_dont_disturb());
-  }
+  protected on_dnd(self: Notifd.Notifd) {}
 
   protected on_clear() {
     this.notifd.get_notifications().forEach((n) => n.dismiss());
   }
 
   protected on_dnd_active(self: Gtk.Switch) {
-    print("notifd: ", this.notifd.get_dont_disturb());
     const active = self.get_active();
-    print("switch mudou", active);
     this.notifd.set_dont_disturb(active);
     this.notifd.dont_disturb = active;
   }
