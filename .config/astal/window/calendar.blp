@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using libTrem 0.1;
 
 template $Calendar: Astal.Window {
   layer: overlay;
@@ -54,13 +55,13 @@ template $Calendar: Astal.Window {
           valign: start;
           halign: fill;
           Image {
-            icon-name: bind template.weather as <$Weather>.icon-name;
+            icon-name: bind template.weather as <libTrem.Weather>.icon-name;
             styles ["main-icon"]
           }
           Label {
             halign: start;
             hexpand: true;
-            label: bind template.weather as <$Weather>.temp;
+            label: bind template.weather as <libTrem.Weather>.temp;
             styles ["temp"]
           }
           Box {
@@ -69,13 +70,13 @@ template $Calendar: Astal.Window {
             valign: fill;
             halign: end;
             Label {
-              label: bind template.weather as <$Weather>.city-name;
+              label: bind template.weather as <libTrem.Weather>.city-name;
               justify: right;
               halign: end;
               styles ["city-name"]
             }
             Label {
-              label: bind template.weather as <$Weather>.sky;
+              label: bind template.weather as <libTrem.Weather>.sky;
               styles ["sky"]
             }
           }
@@ -89,7 +90,7 @@ template $Calendar: Astal.Window {
             icon-name: "raindrop-symbolic";
           }
           Label {
-            label:  bind template.weather as <$Weather>.humidity;
+            label:  bind template.weather as <libTrem.Weather>.humidity;
           }
         }
         Box {
@@ -98,13 +99,13 @@ template $Calendar: Astal.Window {
           valign: center;
           halign: center;
           Image {
-            icon-name: bind $is_daytime(template.weather as <$Weather>.is-daytime) as <string>;
+            icon-name: bind $is_daytime(template.weather as <libTrem.Weather>.is-daytime) as <string>;
           }
           Label {
-            label:  bind $format_daytime(template.weather as <$Weather>.is-daytime) as <string>;
+            label:  bind $format_daytime(template.weather as <libTrem.Weather>.is-daytime) as <string>;
           }
           Image {
-            icon-name: bind $is_not_daytime(template.weather as <$Weather>.is-daytime) as <string>;
+            icon-name: bind $is_not_daytime(template.weather as <libTrem.Weather>.is-daytime) as <string>;
           }
         }
         Box {
@@ -116,7 +117,7 @@ template $Calendar: Astal.Window {
             icon-name: "speedometer-symbolic";
           }
           Label {
-            label:  bind template.weather as <$Weather>.pressure;
+            label:  bind template.weather as <libTrem.Weather>.pressure;
           }
         }
         Box {
@@ -128,7 +129,7 @@ template $Calendar: Astal.Window {
             icon-name: "weather-windy-symbolic";
           }
           Label {
-            label:  bind template.weather as <$Weather>.wind;
+            label:  bind template.weather as <libTrem.Weather>.wind;
           }
         }
       }

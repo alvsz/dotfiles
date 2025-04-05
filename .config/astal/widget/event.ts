@@ -1,20 +1,19 @@
-import { GLib } from "astal";
 import { Gtk } from "astal/gtk4";
 import { property, register } from "astal/gobject";
-import { CollectionObject } from "../service/evolutionDataServer";
 import eventTemplate from "./event.blp";
 import EDataServer from "gi://EDataServer?version=1.2";
 import { setCss } from "../util";
+import libTrem from "gi://libTrem";
 
 @register({
   GTypeName: "EventWidget",
   Template: eventTemplate,
 })
 export default class EventWidget extends Gtk.Box {
-  @property(CollectionObject) declare event: CollectionObject;
+  @property(libTrem.Event) declare event: libTrem.Event;
   declare color: String;
 
-  constructor(ev: CollectionObject) {
+  constructor(ev: libTrem.CollectionObject) {
     super();
     this.event = ev;
 
@@ -37,22 +36,22 @@ export default class EventWidget extends Gtk.Box {
   }
 
   protected format_time() {
-    const start_y = this.event.dtstart?.getFullYear();
-    const start_m = this.event.dtstart?.getMonth();
-    const start_d = this.event.dtstart?.getDate();
-    const start_h = this.event.dtstart?.getHours();
-    const start_min = this.event.dtstart?.getMinutes();
-    const start_sec = this.event.dtstart?.getSeconds();
+    const start_y = this.event.dtstart?.get_year();
+    const start_m = this.event.dtstart?.get_month();
+    const start_d = this.event.dtstart?.get_day_of_month();
+    const start_h = this.event.dtstart?.get_hour();
+    const start_min = this.event.dtstart?.get_minute();
+    const start_sec = this.event.dtstart?.get_seconds();
 
-    const end_y = this.event.dtend?.getFullYear();
-    const end_m = this.event.dtend?.getMonth();
-    const end_d = this.event.dtend?.getDate();
-    const end_h = this.event.dtend?.getHours();
-    const end_min = this.event.dtend?.getMinutes();
-    const end_sec = this.event.dtend?.getSeconds();
+    const end_y = this.event.dtend?.get_year();
+    const end_m = this.event.dtend?.get_month();
+    const end_d = this.event.dtend?.get_day_of_month();
+    const end_h = this.event.dtend?.get_hour();
+    const end_min = this.event.dtend?.get_minute();
+    const end_sec = this.event.dtend?.get_seconds();
 
-    const start = this.event.dtstart?.getTime() || 0;
-    const end = this.event.dtend?.getTime() || 0;
+    const start = this.event.dtstart?.to_unix() || 0;
+    const end = this.event.dtend?.to_unix() || 0;
 
     const whole_day =
       start_h === 0 &&
@@ -63,24 +62,17 @@ export default class EventWidget extends Gtk.Box {
       end_sec === 0;
 
     const single_day = whole_day
-      ? end - start === 86400000
+      ? end - start === 86400
       : start_y === end_y && start_m === end_m && start_d === end_d;
 
-    const start_date = GLib.DateTime.new_from_unix_local(start / 1000);
-
-    if (whole_day) {
+    if (whole_day)
       if (single_day) return "O dia inteiro";
-      else {
-        const end_date = GLib.DateTime.new_from_unix_local((end - 1) / 1000);
-        return `${start_date.format("%a %d")} - ${end_date.format("%a %d")}`;
-      }
-    } else {
-      const end_date = GLib.DateTime.new_from_unix_local(end / 1000);
-      if (single_day)
-        return `${start_date.format("%R")} - ${end_date.format("%R")}`;
       else
-        return `${start_date.format("%a %d, %R")} - ${end_date.format("%a %d, %R")}`;
-    }
+        return `${this.event.dtstart.format("%a %d")} - ${this.event.dtend.format("%a %d")}`;
+    else if (single_day)
+      return `${this.event.dtstart.format("%R")} - ${this.event.dtend.format("%R")}`;
+    else
+      return `${this.event.dtstart.format("%a %d, %R")} - ${this.event.dtend.format("%a %d, %R")}`;
   }
 
   protected summary_visible() {
@@ -92,6 +84,6 @@ export default class EventWidget extends Gtk.Box {
   }
 
   protected location_visible() {
-    return this.event.location ? this.event.location.length > 0 : false;
+    return this.event.location.length > 0;
   }
 }

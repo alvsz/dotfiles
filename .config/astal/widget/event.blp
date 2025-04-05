@@ -1,4 +1,5 @@
 using Gtk 4.0;
+using libTrem 0.1;
 
 template $EventWidget: Box {
   orientation: vertical;
@@ -12,8 +13,8 @@ template $EventWidget: Box {
     halign: start;
     wrap: true;
     max-width-chars: 40;
-    visible: bind $summary_visible(template.event as <$Event>.summary) as <bool>;
-    label: bind template.event as <$Event>.summary;
+    visible: bind $summary_visible(template.event as <libTrem.Event>.summary) as <bool>;
+    label: bind template.event as <libTrem.Event>.summary;
     styles ["summary"]
   }
   Label time {
@@ -21,7 +22,7 @@ template $EventWidget: Box {
     halign: start;
     wrap: true;
     max-width-chars: 40;
-    label: bind $format_time(template.event as <$Event>.dtstart) as <string>;
+    label: bind $format_time(template.event as <libTrem.Event>.dtstart) as <string>;
     styles ["time"]
   }
   Label {
@@ -29,8 +30,8 @@ template $EventWidget: Box {
     halign: start;
     wrap: true;
     max-width-chars: 40;
-    visible: bind $description_visible(template.event as <$Event>.description) as <bool>;
-    label: bind template.event as <$Event>.description;
+    visible: bind $description_visible(template.event as <libTrem.Event>.description) as <bool>;
+    label: bind template.event as <libTrem.Event>.description;
     styles ["description"]
   }
   Label {
@@ -38,8 +39,8 @@ template $EventWidget: Box {
     halign: start;
     wrap: true;
     max-width-chars: 40;
-    visible: bind $location_visible(template.event as <$Event>.location) as <bool>;
-    label: bind template.event as <$Event>.location;
+    visible: bind $location_visible(template.event as <libTrem.Event>.location) as <bool>;
+    label: bind template.event as <libTrem.Event>.location;
     styles ["location"]
   }
 
