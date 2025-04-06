@@ -1,0 +1,12 @@
+using Gtk 4.0;
+
+template $LockscreenNotifications: $NotificationCenter {
+  orientation: vertical;
+  hidden: true;
+  visible: true;
+  styles ["notifs"]
+
+  Box notifs {
+    orientation: vertical;
+  }
+}
