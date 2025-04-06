@@ -1,5 +1,5 @@
 import { Gtk } from "astal/gtk4";
-import { property, register } from "astal/gobject";
+import { GLib, property, register } from "astal/gobject";
 import eventTemplate from "./event.blp";
 import EDataServer from "gi://EDataServer?version=1.2";
 import { setCss } from "../util";

@@ -30,6 +30,7 @@ export default class Calendar extends Astal.Window {
     this.weather = new libTrem.Weather({
       app_id: App.application_id,
       contact_info: "joao.aac@disroot.org",
+      auto_update: true,
     });
     this.caldav_service = libTrem.CalendarService.new();
 
@@ -37,8 +38,7 @@ export default class Calendar extends Astal.Window {
       this._weather.visible = this.weather.available;
     });
 
-    this.on_day_selected().catch(logError);
-    this.on_day_selected().catch(logError);
+    this.caldav_service.connect("changed", () => this.on_day_selected());
   }
 
   protected remove_children() {
@@ -59,11 +59,11 @@ export default class Calendar extends Astal.Window {
 
     this._month_name.label = time.format("%B %Y") || "";
 
+    const start = GLib.DateTime.new_local(y, m, d, 0, 0, 0);
+    const end = GLib.DateTime.new_local(y, m, d, 23, 59, 59);
+
     const events = this.caldav_service.get_calendars().map((list) => {
       if (!list) return;
-
-      const start = GLib.DateTime.new_utc(y, m, d, 0, 0, 0);
-      const end = GLib.DateTime.new_utc(y, m, d, 23, 59, 59);
 
       return new Promise((resolve, reject) => {
         list.get_events_in_range(start, end, (_, res) => {
