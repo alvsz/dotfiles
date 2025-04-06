@@ -1,0 +1,11 @@
+[Unit]
+Description=update duckdns address
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=0
+ExecStart=/bin/env sh -c duckdns
+
+[Install]
+WantedBy=default.target
