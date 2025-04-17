@@ -38,7 +38,13 @@ export default class Calendar extends Astal.Window {
       this._weather.visible = this.weather.available;
     });
 
-    this.caldav_service.connect("changed", () => this.on_day_selected());
+    this.caldav_service.connect("changed", () => {
+      try {
+        this.on_day_selected();
+      } catch (e) {
+        logError(e);
+      }
+    });
   }
 
   protected remove_children() {

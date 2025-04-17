@@ -1,10 +1,10 @@
-import Gdk from "gi://Gdk";
+// import Gdk from "gi://Gdk";
 
 import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 // import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 
-import Bar from "./js/windows/bar.js";
+// import Bar from "./js/windows/bar.js";
 import AppMenu from "./js/windows/appmenu.js";
 import Calendar from "./js/windows/calendar.js";
 import Dashboard from "./js/windows/dashboard.js";

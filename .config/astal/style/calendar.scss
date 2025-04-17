@@ -3,6 +3,7 @@
 
 window.Calendar {
   @extend .basewindow;
+
   > box {
     @extend .horizontalSpacer;
     > * {
