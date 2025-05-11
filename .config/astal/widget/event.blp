@@ -11,6 +11,7 @@ template $EventWidget: Box {
   Label {
     justify: left;
     halign: start;
+    hexpand: true;
     wrap: true;
     max-width-chars: 40;
     visible: bind $summary_visible(template.event as <libTrem.Event>.summary) as <bool>;
@@ -20,6 +21,7 @@ template $EventWidget: Box {
   Label time {
     justify: left;
     halign: start;
+    hexpand: true;
     wrap: true;
     max-width-chars: 40;
     label: bind $format_time(template.event as <libTrem.Event>.dtstart) as <string>;
@@ -27,7 +29,8 @@ template $EventWidget: Box {
   }
   Label {
     justify: left;
-    halign: start;
+    halign: fill;
+    hexpand: true;
     wrap: true;
     max-width-chars: 40;
     visible: bind $description_visible(template.event as <libTrem.Event>.description) as <bool>;
@@ -36,7 +39,8 @@ template $EventWidget: Box {
   }
   Label {
     justify: left;
-    halign: start;
+    halign: fill;
+    hexpand: true;
     wrap: true;
     max-width-chars: 40;
     visible: bind $location_visible(template.event as <libTrem.Event>.location) as <bool>;
