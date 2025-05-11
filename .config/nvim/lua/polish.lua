@@ -20,6 +20,12 @@ function RGBA_to_hex_in_line()
   if modified_line ~= line then vim.api.nvim_set_current_line(modified_line) end
 end
 
+function Console_log_word()
+  local word = vim.fn.expand "<cword>"
+  local log_line = [[console.log("]] .. word .. [[: ", ]] .. word .. [[);]]
+  vim.api.nvim_put({ log_line }, "l", true, true)
+end
+
 vim.cmd.set "guicursor=i:hor90"
 vim.cmd [[
                 augroup change_cursor
@@ -32,13 +38,12 @@ vim.cmd [[
   autocmd FileType c nnoremap <F10> :lua vim.fn.termopen(vim.fn.expand('%:p<')) <CR> :startinsert <CR>
   nnoremap <leader>rl :call luaeval('RGB_to_hex_in_line()')<CR>
   nnoremap <leader>ra :call luaeval('RGBA_to_hex_in_line()')<CR>
+  nnoremap <leader>rc :call luaeval('Console_log_word()')<CR>
 
   let g:arduino_args = '--config-file /home/mamba/.config/arduino-cli/arduino-cli.yaml'
   let g:arduino_dir = $XDG_DATA_HOME . "/arduino-cli/packages/arduino"
   let g:arduino_home_dir = $XDG_DATA_HOME . "/arduino-cli"
 ]]
-
-if vim.g.neovide then vim.o.guifont = "FiraCode Nerd Font,Symbols Nerd Font:h11" end
 
 require("neo-tree").setup {
   filesystem = {

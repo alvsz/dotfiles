@@ -1,3 +1,10 @@
+if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+
+-- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
+-- Configuration documentation can be found with `:h astrolsp`
+-- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
+--       as this provides autocomplete and documentation while editing
+
 ---@type LazySpec
 return {
   "AstroNvim/astrolsp",
@@ -5,7 +12,6 @@ return {
   opts = {
     -- Configuration table of features provided by AstroLSP
     features = {
-      autoformat = true, -- enable or disable auto formatting on start
       codelens = true, -- enable/disable codelens refresh on start
       inlay_hints = false, -- enable/disable inlay hints on start
       semantic_tokens = true, -- enable/disable semantic token highlighting
@@ -19,12 +25,10 @@ return {
           -- "go",
         },
         ignore_filetypes = { -- disable format on save for specified filetypes
-          -- "cpp",
           -- "python",
         },
       },
       disabled = { -- disable formatting capabilities for the listed language servers
-        -- disable lua_ls formatting capability if you want to use StyLua to format your lua code
         "lua_ls",
         "tsserver",
         "ts_ls",
@@ -42,25 +46,7 @@ return {
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
     config = {
-      arduino_language_server = {
-        cmd = {
-          "arduino-language-server",
-          -- "-cli",
-          -- "/bin/arduino-cli",
-          "-cli-config",
-          ("%s/arduino-cli/arduino-cli.yaml"):format(vim.fn.getenv "XDG_CONFIG_HOME"),
-          -- [[-clangd clangd]],
-        },
-        filetypes = { "arduino" },
-      },
-      -- clangd = {
-      -- filetypes = {
-      --   "c",
-      --   -- "arduino",
-      --   "cpp",
-      -- },
-      -- -- capabilities = { offsetEncoding = "utf-8" }
-      -- },
+      -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
     },
     -- customize how language servers are attached
     handlers = {
