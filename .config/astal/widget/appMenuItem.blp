@@ -12,16 +12,27 @@ template $appMenuItem: Button {
     Box {
       orientation: vertical;
       Label {
+        justify: left;
+        halign: start;
+        hexpand: true;
+        wrap: true;
+        xalign: 0;
         label: bind template.application as <AstalApps.Application>.name;
         valign: center;
         styles ["title"]
       }
       Label {
+        justify: left;
+        halign: start;
+        hexpand: true;
+        xalign: 0;
+        wrap: true;
         label: bind template.application as <AstalApps.Application>.description;
         valign: center;
       }
     }
   };
+  styles ["app"]
 
   clicked => $on_clicked();
 }

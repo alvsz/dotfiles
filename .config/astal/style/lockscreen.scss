@@ -18,7 +18,7 @@ window.Lockscreen {
       font-style: italic;
     }
 
-    image {
+    .user-image {
       -gtk-icon-size: 10rem;
     }
 
@@ -33,6 +33,10 @@ window.Lockscreen {
       padding: 0.5rem 2rem;
     }
   }
+
+  // button.time {
+  //   all: unset;
+  // }
 
   .preview-page {
     label.date {

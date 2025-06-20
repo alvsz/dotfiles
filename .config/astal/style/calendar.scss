@@ -129,5 +129,12 @@ window.Calendar {
         all: unset;
       }
     }
+
+    .cava {
+      /* color: css("@accent_color"); */
+      min-height: 4rem;
+      min-width: 3rem;
+      margin: 1rem 1rem;
+    }
   }
 }

@@ -17,19 +17,28 @@ export default class AppMenu extends Astal.Window {
   declare _placeholder: Gtk.Label;
   private apps = new AstalApps.Apps();
 
-  protected on_activate() {
-    const c = this._list.get_children() as Gtk.Button[];
-    c[0]?.activate();
-  }
-
-  protected on_change(self: Gtk.Entry) {
-    const text = self.get_text();
+  private update_list(text: string) {
     this._list.set_children(
       this.apps
         .fuzzy_query(text)
         .map((app) => [new appMenuItem(app, this.name)])
         .flat(),
     );
+  }
+
+  protected on_activate(self: Gtk.Entry) {
+    const text = self.get_text();
+    const query = this.apps.fuzzy_query(text);
+
+    if (query[0]) {
+      this.hide();
+      query[0].launch();
+    }
+  }
+
+  protected on_change(self: Gtk.Entry) {
+    const text = self.get_text();
+    this.update_list(text);
 
     this._placeholder.visible = this._list.children.length === 0;
   }
@@ -39,6 +48,15 @@ export default class AppMenu extends Astal.Window {
       application: App,
     });
 
+    App.connect("window-toggled", (_, window: Gtk.Window) => {
+      if (window != this) return;
+
+      this.apps.reload();
+      this._entry.set_text("");
+      if (this.is_visible()) this._entry.grab_focus();
+    });
+
+    this.update_list("");
     this._entry.primary_icon_name = icons.apps.search;
     this._entry.secondary_icon_name = icons.apps.refresh;
   }

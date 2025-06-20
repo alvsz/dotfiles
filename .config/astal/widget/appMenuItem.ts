@@ -15,8 +15,10 @@ export default class appMenuItem extends Gtk.Button {
   private window_name: string;
 
   protected on_clicked() {
-    print("clicou", this.window_name);
-    App.get_window(this.window_name)?.hide();
+    const w = App.get_window(this.window_name);
+    if (!w || !w.is_visible()) return;
+
+    w.hide();
     this.application.launch();
   }
 

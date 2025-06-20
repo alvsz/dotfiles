@@ -1,0 +1,44 @@
+@use "sass:string";
+@use "./base.scss" as *;
+
+window.AppMenu {
+  @extend .basewindow;
+
+  min-width: 40em;
+  min-height: 30em;
+
+  .placeholder {
+    font-style: italic;
+  }
+
+  .list {
+    @extend .verticalSpacer;
+  }
+
+  entry {
+    margin-bottom: 1em;
+    padding: 0.4em;
+    border-radius: 0.5em;
+
+    image {
+      background-color: css("@accent_color");
+      border-radius: 0.5em;
+      padding: 0.5em;
+      color: css("@window_bg_color");
+    }
+  }
+
+  .app {
+    box {
+      @extend .horizontalSpacer;
+
+      .title {
+        font-weight: bold;
+      }
+
+      image {
+        -gtk-icon-size: 3rem;
+      }
+    }
+  }
+}

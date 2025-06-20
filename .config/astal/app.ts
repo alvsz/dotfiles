@@ -13,11 +13,13 @@ import {
 } from "./service/polkitAgent";
 import PolkitDialog from "./window/Polkit";
 import Lock from "./window/Lockscreen";
+import AppMenu from "./window/AppMenu";
 
 const main = () => {
   App.get_monitors().map((m) => new Bar(m));
   new Calendar();
   new NotificationPopups();
+  new AppMenu();
 
   const agent = new AuthenticationAgent();
   agent.enable();
