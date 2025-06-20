@@ -32,6 +32,7 @@ alias scrape="curl -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:113.0) Gecko
 
 alias arduino-cli="arduino-cli --config-file ${XDG_CONFIG_HOME}/arduino-cli/arduino-cli.yaml"
 alias static_file_server="python -m http.server 8000"
+alias paste_image="xclip -selection clpboard -t image/png -o"
 
 alias nsxiv="nsxiv ${XEMBED+"-e $XEMBED"}"
 alias mpv="mpv ${XEMBED+"--wid=$XEMBED"}"
@@ -92,3 +93,11 @@ rules() {
 ip_camera() {
 	ffmpeg -i http://"$1"/video -vf format=yuv420p -f v4l2 /dev/video0
 }
+
+# whisper () {
+# 	index="$1"
+# 	duration=900000
+# 	((result = index * duration))
+# 	# printf "%s\n\n\n" "${result}"
+# 	./build/bin/whisper-cli -m /home/mamba/Downloads/whisper.cpp/models/ggml-large-v3.bin -l pt -ot "${result}" -d "${duration}" -f ~/Downloads/output2.wav
+# }
