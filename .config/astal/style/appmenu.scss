@@ -4,14 +4,14 @@
 window.AppMenu {
   @extend .basewindow;
 
-  min-width: 40em;
-  min-height: 30em;
+  min-width: 50rem;
+  min-height: 40em;
 
   .placeholder {
     font-style: italic;
   }
 
-  .list {
+  box.vertical {
     @extend .verticalSpacer;
   }
 
@@ -32,12 +32,20 @@ window.AppMenu {
     box {
       @extend .horizontalSpacer;
 
-      .title {
-        font-weight: bold;
-      }
-
       image {
         -gtk-icon-size: 3rem;
+      }
+    }
+  }
+
+  .provider {
+    @extend .module;
+    @extend .horizontalSpacer;
+    button {
+      @extend .horizontalSpacer;
+
+      image {
+        -gtk-icon-size: 2em;
       }
     }
   }

@@ -3,6 +3,7 @@ import { Gtk } from "astal/gtk4";
 import GdkPixbuf from "gi://GdkPixbuf?version=2.0";
 
 const KEY_FILE_GROUP = "Shell Search Provider";
+const TIMEOUT = 50;
 
 const SearchProviderIface = `
 <node>
@@ -93,7 +94,7 @@ interface Metas {
   clipboardText?: GLib.Variant<"s">;
 }
 
-interface ResultMetas {
+export interface ResultMetas {
   id: string;
   name: string;
   description: string;
@@ -143,69 +144,6 @@ export class RemoteSearchProvider {
     this.can_launch_search = false;
   }
 
-  // search(query: string) {
-  //   const s = query.split(" ");
-  //   let result: Map<string, GLib.Variant>[];
-  //
-  //   try {
-  //     this.proxy.call(
-  //       "GetInitialResultSet",
-  //       new GLib.Variant("(as)", [s]),
-  //       0,
-  //       -1,
-  //       null,
-  //       (self, res) => {
-  //         try {
-  //           const v = self?.call_finish(res);
-  //           if (v != null) {
-  //             this.proxy.call(
-  //               "GetResultMetas",
-  //               v,
-  //               0,
-  //               -1,
-  //               null,
-  //               (self1, res) => {
-  //                 try {
-  //                   const v1 = self1?.call_finish(res);
-  //                   if (v1 != null) {
-  //                     print(
-  //                       "v1 de ",
-  //                       this.app_info.get_name(),
-  //                       "também não é null!!!",
-  //                     );
-  //                     const value = v1.deep_unpack() as Metas[][];
-  //
-  //                     value[0].forEach((obj) => {
-  //                       print(
-  //                         obj.name.deep_unpack(),
-  //                         "\n\t",
-  //                         obj.id.deep_unpack(),
-  //                         "\n\t",
-  //                         obj.description?.deep_unpack(),
-  //                         "\n\t",
-  //                         obj.clipboardText,
-  //                         "\n\t",
-  //                         obj.icon.deep_unpack(),
-  //                         "\n\t",
-  //                         obj.gicon,
-  //                         "\n\t",
-  //                         obj["icon-data"],
-  //                       );
-  //                     });
-  //                   }
-  //                 } catch {}
-  //               },
-  //             );
-  //           }
-  //         } catch {}
-  //       },
-  //     );
-  //   } catch (e) {
-  //     log(`Received error from D-Bus search provider ${this.id}: ${e}`);
-  //     // logError(e);
-  //   }
-  // }
-
   createIcon(meta: Metas) {
     let gicon = null;
 
@@ -233,15 +171,15 @@ export class RemoteSearchProvider {
         number,
         any,
       ];
-      gicon = GdkPixbuf.Pixbuf.new_from_data(
-        data,
+      const b = GLib.Bytes.new(data);
+      gicon = GdkPixbuf.Pixbuf.new_from_bytes(
+        b,
         GdkPixbuf.Colorspace.RGB,
         hasAlpha,
         bitsPerSample,
         width,
         height,
         rowStride,
-        null,
       );
 
       return Gtk.Image.new_from_pixbuf(gicon);
@@ -257,7 +195,7 @@ export class RemoteSearchProvider {
         "GetInitialResultSet",
         new GLib.Variant("(as)", [terms]),
         0,
-        -1,
+        TIMEOUT,
         cancellable,
         (self, res) => {
           try {
@@ -283,9 +221,9 @@ export class RemoteSearchProvider {
     return new Promise((resolve, _reject) => {
       this.proxy.call(
         "GetSubsearchResultSetAsync",
-        new GLib.Variant("(as,as)", [previousResults, newTerms]),
+        new GLib.Variant("(asas)", [previousResults, newTerms]),
         0,
-        -1,
+        TIMEOUT,
         cancellable,
         (self, res) => {
           try {
@@ -312,7 +250,7 @@ export class RemoteSearchProvider {
         "GetResultMetas",
         ids,
         0,
-        -1,
+        TIMEOUT,
         cancellable,
         (self, res) => {
           let metas;
@@ -332,8 +270,8 @@ export class RemoteSearchProvider {
 
           for (let i = 0; i < metas.length; i++) {
             resultMetas.push({
-              id: metas[i].id.deep_unpack() as string,
-              name: metas[i].name.deep_unpack() as string,
+              id: metas[i].id?.deep_unpack() as string,
+              name: metas[i].name?.deep_unpack() as string,
               description: metas[i].description?.deep_unpack() as string,
               icon: this.createIcon(metas[i]),
               clipboardText: metas[i].clipboardText?.deep_unpack() as string,
@@ -350,7 +288,7 @@ export class RemoteSearchProvider {
       "ActivateResult",
       new GLib.Variant("(s)", [id]),
       0,
-      -1,
+      200,
       null,
       null,
     );
@@ -380,11 +318,7 @@ export class RemoteSearchProvider2 extends RemoteSearchProvider {
     try {
       this.proxy.call(
         "ActivateResult",
-        new GLib.Variant("(s, as, u)", [
-          id,
-          terms,
-          Math.floor(Date.now() / 1000),
-        ]),
+        new GLib.Variant("(sasu)", [id, terms, Math.floor(Date.now() / 1000)]),
         0,
         -1,
         null,
@@ -398,8 +332,8 @@ export class RemoteSearchProvider2 extends RemoteSearchProvider {
   launchSearch(terms: string[]) {
     try {
       this.proxy.call(
-        "LaunchSearchAsync",
-        new GLib.Variant("(as, u)", [terms, Math.floor(Date.now() / 1000)]),
+        "LaunchSearch",
+        new GLib.Variant("(asu)", [terms, Math.floor(Date.now() / 1000)]),
         0,
         -1,
         null,

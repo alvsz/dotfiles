@@ -19,7 +19,6 @@ template $appMenuItem: Button {
         xalign: 0;
         label: bind template.application as <AstalApps.Application>.name;
         valign: center;
-        styles ["title"]
       }
       Label {
         justify: left;
@@ -29,6 +28,7 @@ template $appMenuItem: Button {
         wrap: true;
         label: bind template.application as <AstalApps.Application>.description;
         valign: center;
+        styles ["body"]
       }
     }
   };

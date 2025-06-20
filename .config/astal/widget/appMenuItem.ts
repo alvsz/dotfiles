@@ -14,7 +14,7 @@ export default class appMenuItem extends Gtk.Button {
   @property(AstalApps.Application) declare application: AstalApps.Application;
   private window_name: string;
 
-  protected on_clicked() {
+  on_clicked() {
     const w = App.get_window(this.window_name);
     if (!w || !w.is_visible()) return;
 

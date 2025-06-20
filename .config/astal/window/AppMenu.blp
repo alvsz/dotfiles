@@ -2,7 +2,8 @@ using Gtk 4.0;
 using Astal 4.0;
 
 template $AppMenu: Astal.Window {
-  keymode: exclusive;
+   keymode: exclusive;
+//  keymode: on_demand;
   layer: overlay;
   anchor: none;
   visible: false;
@@ -26,21 +27,25 @@ template $AppMenu: Astal.Window {
       child: Box {
         orientation: vertical;
 
-        Astal.Box list {
+        Astal.Box providers {
           orientation: vertical;
-          styles ["list"]
+          visible: false;
+          styles ["providers"]
+        }
+        Astal.Box app_list {
+          orientation: vertical;
+          styles ["app_list"]
         }
         Label placeholder {
           label: "  Sem resultados";
           visible: false;
           styles ["placeholder"]
         }
-
       };
     }
-
-
-
+  }
+  EventControllerKey {
+    key-pressed => $on_key_pressed();
   }
 }
 
