@@ -7,6 +7,7 @@ import EventWidget from "../widget/event";
 import NotificationCenter from "../widget/notificationCenter";
 NotificationCenter;
 import mprisPlayerList from "../widget/mprisPlayerList";
+import AstalCava from "gi://AstalCava?version=0.1";
 mprisPlayerList;
 
 @register({
@@ -45,6 +46,8 @@ export default class Calendar extends Astal.Window {
         logError(e);
       }
     });
+
+    // (this._weather.parent as Gtk.Box).append(new libTrem.LockscreenMpris());
   }
 
   protected remove_children() {

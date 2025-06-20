@@ -168,6 +168,9 @@ export default class Lock extends GObject.Object {
     "clock",
     //
     "date",
+    "time",
+    "stack",
+    "authpage",
   ],
 })
 class Lockscreen extends Gtk.Window {
@@ -179,6 +182,9 @@ class Lockscreen extends Gtk.Window {
   declare _auth: Gtk.Button;
   declare _clock: Gtk.Label;
   declare _date: Gtk.Label;
+  declare _stack: Gtk.Stack;
+  declare _time: Gtk.Box;
+  declare _authpage: Gtk.Box;
 
   private update_clock() {
     const now = GLib.DateTime.new_now_local();
@@ -202,11 +208,12 @@ class Lockscreen extends Gtk.Window {
     this.lock.connect("notify::can-authenticate", () => {
       if (this.lock.can_authenticate) {
         this._password.set_text("");
-        this._password.grab_focus();
+        if (this._stack.get_visible_child() == this._authpage)
+          this._password.grab_focus();
       }
     });
 
-    this._password.grab_focus();
+    this._time.grab_focus();
 
     this.update_clock();
   }
@@ -232,5 +239,54 @@ class Lockscreen extends Gtk.Window {
 
   protected is_error_visible() {
     return this.lock.error.length > 0;
+  }
+
+  protected on_clicked() {
+    if (this._stack.get_visible_child() != this._authpage) {
+      this._stack.set_visible_child(this._authpage);
+      this._password.grab_focus();
+    }
+  }
+
+  protected on_go_back() {
+    this._stack.set_visible_child(this._time);
+    this._time.grab_focus();
+  }
+
+  protected on_key_pressed(
+    self: Gtk.EventControllerKey,
+    keyval: number,
+    keycode: number,
+    state: Gdk.ModifierType,
+  ) {
+    switch (keyval) {
+      case Gdk.KEY_space ||
+        Gdk.KEY_KP_Enter ||
+        Gdk.KEY_ISO_Enter ||
+        Gdk.KEY_3270_Enter ||
+        Gdk.KEY_Return:
+        this._stack.set_visible_child(this._authpage);
+        this._password.grab_focus();
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  protected on_button_pressed() {
+    print("button");
+  }
+
+  protected on_key_pressed_password(
+    self: Gtk.EventControllerKey,
+    keyval: number,
+    keycode: number,
+    state: Gdk.ModifierType,
+  ) {
+    if (keyval == Gdk.KEY_Escape) {
+      this._stack.set_visible_child(this._time);
+      this._time.grab_focus();
+    }
   }
 }

@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using AccountsService 1.0;
+//using libTrem 0.1;
 
 template $Lockscreen: Window {
   styles ["Lockscreen"]
@@ -11,13 +12,6 @@ template $Lockscreen: Window {
     valign: fill;
     hexpand: true;
     vexpand: true;
-
-    StackSwitcher {
-      stack: stack;
-      halign: fill;
-      valign: start;
-      hexpand: true;
-    }
 
     Stack stack {
       hhomogeneous: true;
@@ -32,11 +26,12 @@ template $Lockscreen: Window {
       StackPage {
         name: "time";
         title: "Coisas coisaveis";
-        child: Box {
+        child: Box time {
           orientation: vertical;
           homogeneous: false;
           halign: center;
           valign: center;
+          focusable: true;
           styles ["preview-page"]
 
           Label date {
@@ -49,15 +44,20 @@ template $Lockscreen: Window {
             valign: start;
             styles ["clock"]
           }
-          $LockscreenMpris { }
+          //libTrem.LockscreenMpris { }
+          //$LockscreenMpris { }
           $LockscreenNotifications { }
+
+          EventControllerKey {
+            key-pressed => $on_key_pressed();            
+          }
         };
       }
 
       StackPage {
         name: "normal";
         title: "Testes testáveis";
-        child: Box {
+        child: Box authpage {
           orientation: vertical;
           homogeneous: false;
           halign: center;
@@ -66,18 +66,35 @@ template $Lockscreen: Window {
 
           Image {
             file: bind template.user as <AccountsService.User>.icon-file;
+          styles ["user-image"]
           }
           Label {
             label: bind template.user as <AccountsService.User>.real-name;
             styles ["user-name"]
           }
-          Entry password {
-            placeholder-text: bind template.lock as <$Lock>.prompt;
-            visibility: false;
-            sensitive: bind template.lock as <$Lock>.can_authenticate;
-            // secondary-icon-name: "go-next-symbolic";
-            activate => $on_authenticate();
-            notify::text => $on_change();
+          Box {
+            orientation: horizontal;
+            homogeneous: false;
+            halign: fill;
+            
+            Button {
+              icon-name: "go-previous-symbolic";
+              halign: start;
+              clicked => $on_go_back();
+            }
+
+            Entry password {
+              placeholder-text: bind template.lock as <$Lock>.prompt;
+              visibility: false;
+              sensitive: bind template.lock as <$Lock>.can_authenticate;
+              halign: center;
+              activate => $on_authenticate();
+              notify::text => $on_change();
+
+              EventControllerKey {
+                key-pressed => $on_key_pressed_password();            
+              }
+            }
           }
           Label error {
             halign: center;
