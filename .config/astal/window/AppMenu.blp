@@ -1,0 +1,45 @@
+using Gtk 4.0;
+using Astal 4.0;
+
+template $AppMenu: Astal.Window {
+  keymode: exclusive;
+  layer: overlay;
+  anchor: none;
+  visible: false;
+  styles ["AppMenu"]
+
+  Box {
+    orientation: vertical;
+
+    Entry entry {
+      halign: fill;
+      hexpand: true;
+      placeholder-text: "Pesquisar";
+      activate => $on_activate();
+      notify::text => $on_change();
+    }
+
+    ScrolledWindow {
+      hscrollbar-policy: never;
+      vexpand: true;
+
+      child: Box {
+        orientation: vertical;
+
+        Astal.Box list {
+          orientation: vertical;
+        }
+        Label placeholder {
+          label: "  Sem resultados";
+          visible: false;
+          styles ["placeholder"]
+        }
+
+      };
+    }
+
+
+
+  }
+}
+

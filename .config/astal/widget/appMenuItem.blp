@@ -1,0 +1,28 @@
+using Gtk 4.0;
+using AstalApps 0.1;
+
+template $appMenuItem: Button {
+  child: Box {
+    Image {
+      icon-name: bind $get_app_icon(template.application as <AstalApps.Application>.icon-name) as <string>;
+      halign: center;
+      styles ["app-icon"]
+    }
+
+    Box {
+      orientation: vertical;
+      Label {
+        label: bind template.application as <AstalApps.Application>.name;
+        valign: center;
+        styles ["title"]
+      }
+      Label {
+        label: bind template.application as <AstalApps.Application>.description;
+        valign: center;
+      }
+    }
+  };
+
+  clicked => $on_clicked();
+}
+
