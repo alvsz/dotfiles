@@ -15,20 +15,29 @@ const main = () => {
   // print(s.get_value("sort-order").recursiveUnpack());
 
   p = setup_search(s);
-
-  p.forEach((provider) => {
-    // print(provider.app_info.get_name(), provider.id);
-
-    provider.search("Documentos");
-  });
 };
 
 App.start({
   main: main,
   instanceName: "portal",
   requestHandler(request, res) {
-    print("query: ", request);
-    p.forEach((provider) => provider.search(request));
+    print("\nquery: ", request);
+    p.forEach((provider) => {
+      provider
+        .getInitialResultSet(request.split(" "), null)
+        .then((v) => {
+          if (v)
+            provider
+              .getResultMetas(v, null)
+              .then((m) => {
+                m.forEach((o) => {
+                  print(o.id, o.name, o.description, o.icon, o.clipboardText);
+                });
+              })
+              .catch(logError);
+        })
+        .catch(logError);
+    });
 
     res("oii");
   },

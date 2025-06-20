@@ -1,4 +1,6 @@
 import { GLib, Gio } from "astal";
+import { Gtk } from "astal/gtk4";
+import GdkPixbuf from "gi://GdkPixbuf?version=2.0";
 
 const KEY_FILE_GROUP = "Shell Search Provider";
 
@@ -81,6 +83,24 @@ function* collectFromDatadirs(subdir: string) {
   }
 }
 
+interface Metas {
+  id: GLib.Variant<"s">;
+  name: GLib.Variant<"s">;
+  icon: GLib.Variant<"(sv)">;
+  gicon: GLib.Variant<"s">;
+  "icon-data": GLib.Variant<"(iiibiiay)">;
+  description?: GLib.Variant<"s">;
+  clipboardText?: GLib.Variant<"s">;
+}
+
+interface ResultMetas {
+  id: string;
+  name: string;
+  description: string;
+  icon: Gtk.Image;
+  clipboardText: string;
+}
+
 export class RemoteSearchProvider {
   declare proxy: Gio.DBusProxy;
   declare app_info: Gio.DesktopAppInfo;
@@ -123,152 +143,225 @@ export class RemoteSearchProvider {
     this.can_launch_search = false;
   }
 
-  search(query: string) {
-    const s = query.split(" ");
-    let result: Map<string, GLib.Variant>[];
+  // search(query: string) {
+  //   const s = query.split(" ");
+  //   let result: Map<string, GLib.Variant>[];
+  //
+  //   try {
+  //     this.proxy.call(
+  //       "GetInitialResultSet",
+  //       new GLib.Variant("(as)", [s]),
+  //       0,
+  //       -1,
+  //       null,
+  //       (self, res) => {
+  //         try {
+  //           const v = self?.call_finish(res);
+  //           if (v != null) {
+  //             this.proxy.call(
+  //               "GetResultMetas",
+  //               v,
+  //               0,
+  //               -1,
+  //               null,
+  //               (self1, res) => {
+  //                 try {
+  //                   const v1 = self1?.call_finish(res);
+  //                   if (v1 != null) {
+  //                     print(
+  //                       "v1 de ",
+  //                       this.app_info.get_name(),
+  //                       "também não é null!!!",
+  //                     );
+  //                     const value = v1.deep_unpack() as Metas[][];
+  //
+  //                     value[0].forEach((obj) => {
+  //                       print(
+  //                         obj.name.deep_unpack(),
+  //                         "\n\t",
+  //                         obj.id.deep_unpack(),
+  //                         "\n\t",
+  //                         obj.description?.deep_unpack(),
+  //                         "\n\t",
+  //                         obj.clipboardText,
+  //                         "\n\t",
+  //                         obj.icon.deep_unpack(),
+  //                         "\n\t",
+  //                         obj.gicon,
+  //                         "\n\t",
+  //                         obj["icon-data"],
+  //                       );
+  //                     });
+  //                   }
+  //                 } catch {}
+  //               },
+  //             );
+  //           }
+  //         } catch {}
+  //       },
+  //     );
+  //   } catch (e) {
+  //     log(`Received error from D-Bus search provider ${this.id}: ${e}`);
+  //     // logError(e);
+  //   }
+  // }
 
-    try {
-      this.proxy.call(
-        "GetInitialResultSet",
-        new GLib.Variant("(as)", [s]),
-        0,
-        -1,
+  createIcon(meta: Metas) {
+    let gicon = null;
+
+    if (meta["icon"]) {
+      gicon = Gio.icon_deserialize(meta.icon);
+      if (gicon) return Gtk.Image.new_from_gicon(gicon);
+    } else if (meta["gicon"]) {
+      gicon = Gio.icon_new_for_string(meta.gicon.deep_unpack());
+      if (gicon) return Gtk.Image.new_from_gicon(gicon);
+    } else if (meta["icon-data"]) {
+      const [
+        width,
+        height,
+        rowStride,
+        hasAlpha,
+        bitsPerSample,
+        _nChannels,
+        data,
+      ] = meta["icon-data"].deep_unpack() as [
+        number,
+        number,
+        number,
+        boolean,
+        number,
+        number,
+        any,
+      ];
+      gicon = GdkPixbuf.Pixbuf.new_from_data(
+        data,
+        GdkPixbuf.Colorspace.RGB,
+        hasAlpha,
+        bitsPerSample,
+        width,
+        height,
+        rowStride,
         null,
-        (self, res) => {
-          const v = self?.call_finish(res);
-          if (v != null) {
-            print("não é null!!!!");
-
-            this.proxy.call("GetResultMetas", v, 0, -1, null, (self1, res) => {
-              const v1 = self1?.call_finish(res);
-              if (v1 != null) print("v1 também não é null!!!");
-              print(v1?.deep_unpack());
-            });
-          }
-          print(v?.deep_unpack());
-        },
       );
-    } catch (e) {
-      log(`Received error from D-Bus search provider ${this.id}: ${e}`);
-      // logError(e);
+
+      return Gtk.Image.new_from_pixbuf(gicon);
     }
   }
 
-  // createIcon(size, meta) {
-  //   let gicon = null;
-  //   let icon = null;
-  //
-  //   if (meta["icon"]) {
-  //     gicon = Gio.icon_deserialize(meta["icon"]);
-  //   } else if (meta["gicon"]) {
-  //     gicon = Gio.icon_new_for_string(meta["gicon"]);
-  //   } else if (meta["icon-data"]) {
-  //     const [
-  //       width,
-  //       height,
-  //       rowStride,
-  //       hasAlpha,
-  //       bitsPerSample,
-  //       nChannels_,
-  //       data,
-  //     ] = meta["icon-data"];
-  //     gicon = Shell.util_create_pixbuf_from_data(
-  //       data,
-  //       GdkPixbuf.Colorspace.RGB,
-  //       hasAlpha,
-  //       bitsPerSample,
-  //       width,
-  //       height,
-  //       rowStride,
-  //     );
-  //   }
-  //
-  //   if (gicon) icon = new St.Icon({ gicon, icon_size: size });
-  //   return icon;
-  // }
+  async getInitialResultSet(
+    terms: string[],
+    cancellable: Gio.Cancellable | null,
+  ): Promise<GLib.Variant | null> {
+    return new Promise((resolve, _reject) => {
+      this.proxy.call(
+        "GetInitialResultSet",
+        new GLib.Variant("(as)", [terms]),
+        0,
+        -1,
+        cancellable,
+        (self, res) => {
+          try {
+            const results = self?.call_finish(res);
+            if (results) resolve(results);
+            else resolve(null);
+          } catch (error) {
+            log(
+              `Received error from D-Bus search provider ${this.id}: ${error}`,
+            );
+            resolve(null);
+          }
+        },
+      );
+    });
+  }
 
-  // filterResults(results, maxNumber) {
-  //   if (results.length <= maxNumber) return results;
-  //
-  //   let regularResults = results.filter((r) => !r.startsWith("special:"));
-  //   let specialResults = results.filter((r) => r.startsWith("special:"));
-  //
-  //   return regularResults
-  //     .slice(0, maxNumber)
-  //     .concat(specialResults.slice(0, maxNumber));
-  // }
+  async getSubsearchResultSet(
+    previousResults: string[],
+    newTerms: string[],
+    cancellable: Gio.Cancellable | null,
+  ): Promise<GLib.Variant | null> {
+    return new Promise((resolve, _reject) => {
+      this.proxy.call(
+        "GetSubsearchResultSetAsync",
+        new GLib.Variant("(as,as)", [previousResults, newTerms]),
+        0,
+        -1,
+        cancellable,
+        (self, res) => {
+          try {
+            const results = self?.call_finish(res);
+            if (results) resolve(results);
+            else resolve(null);
+          } catch (error) {
+            log(
+              `Received error from D-Bus search provider ${this.id}: ${error}`,
+            );
+            resolve(null);
+          }
+        },
+      );
+    });
+  }
 
-  // async getInitialResultSet(terms, cancellable) {
-  //   try {
-  //     const [results] = await this.proxy.GetInitialResultSetAsync(
-  //       terms,
-  //       cancellable,
-  //     );
-  //     return results;
-  //   } catch (error) {
-  //     if (!error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-  //       log(`Received error from D-Bus search provider ${this.id}: ${error}`);
-  //     return [];
-  //   }
-  // }
+  async getResultMetas(
+    ids: GLib.Variant,
+    cancellable: Gio.Cancellable | null,
+  ): Promise<ResultMetas[]> {
+    return new Promise((resolve, _reject) => {
+      this.proxy.call(
+        "GetResultMetas",
+        ids,
+        0,
+        -1,
+        cancellable,
+        (self, res) => {
+          let metas;
 
-  // async getSubsearchResultSet(previousResults, newTerms, cancellable) {
-  //   try {
-  //     const [results] = await this.proxy.GetSubsearchResultSetAsync(
-  //       previousResults,
-  //       newTerms,
-  //       cancellable,
-  //     );
-  //     return results;
-  //   } catch (error) {
-  //     if (!error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-  //       log(`Received error from D-Bus search provider ${this.id}: ${error}`);
-  //     return [];
-  //   }
-  // }
+          try {
+            const result = self?.call_finish(res).deep_unpack() as Metas[][];
+            metas = result[0];
+          } catch (error) {
+            log(
+              `Received error from D-Bus search provider ${this.id} during GetResultMetas: ${error}`,
+            );
+            resolve([]);
+            return;
+          }
 
-  // async getResultMetas(ids, cancellable) {
-  //   let metas;
-  //   try {
-  //     [metas] = await this.proxy.GetResultMetasAsync(ids, cancellable);
-  //   } catch (error) {
-  //     if (!error.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-  //       log(
-  //         `Received error from D-Bus search provider ${this.id} during GetResultMetas: ${error}`,
-  //       );
-  //     return [];
-  //   }
-  //
-  //   let resultMetas = [];
-  //   for (let i = 0; i < metas.length; i++) {
-  //     for (let prop in metas[i]) {
-  //       // we can use the serialized icon variant directly
-  //       if (prop !== "icon") metas[i][prop] = metas[i][prop].deepUnpack();
-  //     }
-  //
-  //     resultMetas.push({
-  //       id: metas[i]["id"],
-  //       name: metas[i]["name"],
-  //       description: metas[i]["description"],
-  //       createIcon: (size) => this.createIcon(size, metas[i]),
-  //       clipboardText: metas[i]["clipboardText"],
-  //     });
-  //   }
-  //   return resultMetas;
-  // }
+          let resultMetas = [];
 
-  // activateResult(id) {
-  //   this.proxy.ActivateResultAsync(id).catch(logError);
-  // }
+          for (let i = 0; i < metas.length; i++) {
+            resultMetas.push({
+              id: metas[i].id.deep_unpack() as string,
+              name: metas[i].name.deep_unpack() as string,
+              description: metas[i].description?.deep_unpack() as string,
+              icon: this.createIcon(metas[i]),
+              clipboardText: metas[i].clipboardText?.deep_unpack() as string,
+            } as ResultMetas);
+          }
+          resolve(resultMetas);
+        },
+      );
+    });
+  }
 
-  // launchSearch(_terms) {
-  //   // the provider is not compatible with the new version of the interface, launch
-  //   // the app itself but warn so we can catch the error in logs
-  //   log(
-  //     `Search provider ${this.appInfo.get_id()} does not implement LaunchSearch`,
-  //   );
-  //   this.appInfo.launch([], global.create_app_launch_context(0, -1));
-  // }
+  activateResult(id: string, _terms: string[]) {
+    this.proxy.call(
+      "ActivateResult",
+      new GLib.Variant("(s)", [id]),
+      0,
+      -1,
+      null,
+      null,
+    );
+  }
+
+  launchSearch(_terms: string[]) {
+    // the provider is not compatible with the new version of the interface, launch
+    // the app itself but warn so we can catch the error in logs
+    log(`Search provider ${this.id} does not implement LaunchSearch`);
+    this.app_info.launch();
+  }
 }
 
 export class RemoteSearchProvider2 extends RemoteSearchProvider {
@@ -283,17 +376,39 @@ export class RemoteSearchProvider2 extends RemoteSearchProvider {
     this.can_launch_search = true;
   }
 
-  // activateResult(id, terms) {
-  //   this.proxy
-  //     .ActivateResultAsync(id, terms, global.get_current_time())
-  //     .catch(logError);
-  // }
+  activateResult(id: string, terms: string[]) {
+    try {
+      this.proxy.call(
+        "ActivateResult",
+        new GLib.Variant("(s, as, u)", [
+          id,
+          terms,
+          Math.floor(Date.now() / 1000),
+        ]),
+        0,
+        -1,
+        null,
+        null,
+      );
+    } catch (e) {
+      logError(e);
+    }
+  }
 
-  // launchSearch(terms) {
-  //   this.proxy
-  //     .LaunchSearchAsync(terms, global.get_current_time())
-  //     .catch(logError);
-  // }
+  launchSearch(terms: string[]) {
+    try {
+      this.proxy.call(
+        "LaunchSearchAsync",
+        new GLib.Variant("(as, u)", [terms, Math.floor(Date.now() / 1000)]),
+        0,
+        -1,
+        null,
+        null,
+      );
+    } catch (e) {
+      logError(e);
+    }
+  }
 }
 
 export const setup_search = (search_settings: Gio.Settings) => {
