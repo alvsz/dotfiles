@@ -92,70 +92,32 @@
 @define-color sidebar_border_color @window_fg_color;
 @define-color sidebar_backdrop_color @window_bg_color;
 
-button.titlebutton {
-  color: transparent;
-  min-width: 15px;
-  min-height: 15px;
-}
-
-button.titlebutton:backdrop {
-  opacity: 0.5;
-}
-
 windowcontrols > button {
   color: transparent;
-  min-width: 15px;
-  min-height: 15px;
   border-radius: 100%;
-  padding: 0;
-  margin: 0 5px;
+  padding: 0 3px;
 }
 
-windowcontrols > button > image {
-  padding: 0;
-}
-
-button.titlebutton.close,
-windowcontrols > button.close,
-button.titlebutton.close:hover:backdrop,
-windowcontrols > button.close:hover:backdrop {
+windowcontrols > button.close > image {
   background-color: #cc241d;
 }
 
-button.titlebutton.close:hover,
-windowcontrols > button.close:hover {
+windowcontrols > button.close:hover > image {
   background-color: #fb4934;
 }
 
-button.titlebutton.maximize,
-windowcontrols > button.maximize,
-button.titlebutton.maximize:hover:backdrop,
-windowcontrols > button.maximize:hover:backdrop {
+windowcontrols > button.maximize > image {
   background-color: #98971a;
 }
 
-button.titlebutton.maximize:hover,
-windowcontrols > button.maximize:hover {
+windowcontrols > button.maximize:hover > image {
   background-color: #b8bb26;
 }
 
-button.titlebutton.minimize,
-windowcontrols > button.minimize,
-button.titlebutton.minimize:hover:backdrop,
-windowcontrols > button.minimize:hover:backdrop {
+windowcontrols > button.minimize > image {
   background-color: #d79921;
 }
 
-button.titlebutton.minimize:hover,
-windowcontrols > button.minimize:hover {
+windowcontrols > button.minimize:hover > image {
   background-color: #fabd2f;
-}
-
-button.titlebutton.close:backdrop,
-button.titlebutton.maximize:backdrop,
-button.titlebutton.minimize:backdrop,
-windowcontrols > button.close:backdrop,
-windowcontrols > button.maximize:backdrop,
-windowcontrols > button.minimize:backdrop {
-  background-color: #665c54;
 }

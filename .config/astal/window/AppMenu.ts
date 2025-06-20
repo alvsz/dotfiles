@@ -78,8 +78,15 @@ export default class AppMenu extends Astal.Window {
       schema: "org.gnome.desktop.search-providers",
     });
     s.connect("changed", (self) => {
-      print("mudou as configurações");
       this.providers = setup_search(self);
+      // this.temp = [];
+      // this._providers.set_children([]);
+      //
+      // this.providers.forEach((p) => {
+      //   const s = new searchProviderApp(p, this.name);
+      //   this.temp.push(s);
+      //   this._providers.append(s);
+      // });
     });
     this.providers = setup_search(s);
 
