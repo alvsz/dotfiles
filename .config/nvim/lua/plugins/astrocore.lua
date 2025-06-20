@@ -19,12 +19,9 @@ return {
     },
     -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
     diagnostics = {
-      virtual_text = {
-        severity = {
-          max = vim.diagnostic.severity.WARN,
-        },
-      },
+      virtual_text = true,
       virtual_lines = {
+        current_line = true,
         severity = {
           min = vim.diagnostic.severity.ERROR,
         },
