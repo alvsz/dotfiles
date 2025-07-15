@@ -69,6 +69,31 @@ converter265 () {
 		-v verbose "${dest}"
 }
 
+converter265software () {
+	if [ $2 ]; then
+		dest="$2" 
+	else
+		dest="./x265/${1%.*}.mkv"
+		[ -d x265 ] || mkdir x265
+	fi
+
+	if [ $3 ]; then
+		preset="$3"
+	else
+		preset="ultrafast"
+	fi
+
+  echo $dest
+	ffmpeg \
+		-i "$1" \
+		-c:a aac \
+		-c:v libx265 \
+		-preset "${preset}" \
+		-threads $(nproc) \
+		-crf 20 \
+		-v verbose "${dest}"
+}
+
 converter265todos () {
    for myvid in *
    do
