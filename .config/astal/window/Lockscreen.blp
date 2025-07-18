@@ -91,9 +91,6 @@ template $Lockscreen: Window {
               activate => $on_authenticate();
               notify::text => $on_change();
 
-              EventControllerKey {
-                key-pressed => $on_key_pressed_password();            
-              }
             }
           }
           Label error {
@@ -113,6 +110,10 @@ template $Lockscreen: Window {
             visible: bind $is_info_visible(template.lock as <$Lock>.info) as <bool>;
             label: bind template.lock as <$Lock>.info;
             styles ["info"]
+          }
+
+          EventControllerKey {
+            key-pressed => $on_key_pressed_password();            
           }
         };
       }

@@ -25,3 +25,15 @@ export const setCss = (widget: Gtk.Widget, css: string) => {
     .get_style_context()
     .add_provider(cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
 };
+
+export const remove_children = (b: Gtk.Box) => {
+  b.visible = false;
+  let w = b.get_first_child();
+  let n = w?.get_next_sibling();
+
+  while (w) {
+    b.remove(w);
+    w = n || null;
+    n = w?.get_next_sibling();
+  }
+};

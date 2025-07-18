@@ -3,7 +3,6 @@ using Astal 4.0;
 
 template $AppMenu: Astal.Window {
    keymode: exclusive;
-//  keymode: on_demand;
   layer: overlay;
   anchor: none;
   visible: false;
@@ -27,12 +26,12 @@ template $AppMenu: Astal.Window {
       child: Box {
         orientation: vertical;
 
-        Astal.Box providers {
+        Box providers {
           orientation: vertical;
           visible: false;
           styles ["providers"]
         }
-        Astal.Box app_list {
+        Box app_list {
           orientation: vertical;
           styles ["app_list"]
         }

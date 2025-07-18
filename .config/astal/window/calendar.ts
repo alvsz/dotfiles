@@ -1,13 +1,13 @@
 import { App, Astal, Gtk } from "astal/gtk4";
 import { GLib, property, register } from "astal/gobject";
-
 import libTrem from "gi://libTrem";
+
 import template from "./calendar.blp";
 import EventWidget from "../widget/event";
 import NotificationCenter from "../widget/notificationCenter";
 NotificationCenter;
 import mprisPlayerList from "../widget/mprisPlayerList";
-import AstalCava from "gi://AstalCava?version=0.1";
+import { remove_children } from "../util";
 mprisPlayerList;
 
 @register({
@@ -46,20 +46,6 @@ export default class Calendar extends Astal.Window {
         logError(e);
       }
     });
-
-    // (this._weather.parent as Gtk.Box).append(new libTrem.LockscreenMpris());
-  }
-
-  protected remove_children() {
-    this._events.visible = false;
-    let w = this._events.get_first_child();
-    let n = w?.get_next_sibling();
-
-    while (w) {
-      this._events.remove(w);
-      w = n || null;
-      n = w?.get_next_sibling();
-    }
   }
 
   protected async on_day_selected() {
@@ -89,7 +75,7 @@ export default class Calendar extends Astal.Window {
       .then((results) => {
         const evs = results.flat() as libTrem.Event[];
 
-        this.remove_children();
+        remove_children(this._events);
 
         evs.forEach((event) => {
           if (!event) return;

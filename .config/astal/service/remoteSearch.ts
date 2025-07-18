@@ -1,64 +1,10 @@
 import { GLib, Gio } from "astal";
 import { Gtk } from "astal/gtk4";
-import GdkPixbuf from "gi://GdkPixbuf?version=2.0";
+// import GdkPixbuf from "gi://GdkPixbuf?version=2.0";
+import libTrem from "gi://libTrem?version=0.1";
 
 const KEY_FILE_GROUP = "Shell Search Provider";
-const TIMEOUT = 50;
-
-const SearchProviderIface = `
-<node>
-<interface name="org.gnome.Shell.SearchProvider">
-<method name="GetInitialResultSet">
-    <arg type="as" direction="in" />
-    <arg type="as" direction="out" />
-</method>
-<method name="GetSubsearchResultSet">
-    <arg type="as" direction="in" />
-    <arg type="as" direction="in" />
-    <arg type="as" direction="out" />
-</method>
-<method name="GetResultMetas">
-    <arg type="as" direction="in" />
-    <arg type="aa{sv}" direction="out" />
-</method>
-<method name="ActivateResult">
-    <arg type="s" direction="in" />
-</method>
-</interface>
-</node>`;
-
-const SearchProvider2Iface = `
-<node>
-<interface name="org.gnome.Shell.SearchProvider2">
-<method name="GetInitialResultSet">
-    <arg type="as" direction="in" />
-    <arg type="as" direction="out" />
-</method>
-<method name="GetSubsearchResultSet">
-    <arg type="as" direction="in" />
-    <arg type="as" direction="in" />
-    <arg type="as" direction="out" />
-</method>
-<method name="GetResultMetas">
-    <arg type="as" direction="in" />
-    <arg type="aa{sv}" direction="out" />
-</method>
-<method name="ActivateResult">
-    <arg type="s" direction="in" />
-    <arg type="as" direction="in" />
-    <arg type="u" direction="in" />
-</method>
-<method name="LaunchSearch">
-    <arg type="as" direction="in" />
-    <arg type="u" direction="in" />
-</method>
-</interface>
-</node>`;
-
-const SearchProviderProxyInfo =
-  Gio.DBusInterfaceInfo.new_for_xml(SearchProviderIface);
-const SearchProvider2ProxyInfo =
-  Gio.DBusInterfaceInfo.new_for_xml(SearchProvider2Iface);
+// const TIMEOUT = 50;
 
 function* collectFromDatadirs(subdir: string) {
   let dataDirs = GLib.get_system_data_dirs();
@@ -84,16 +30,6 @@ function* collectFromDatadirs(subdir: string) {
   }
 }
 
-interface Metas {
-  id: GLib.Variant<"s">;
-  name: GLib.Variant<"s">;
-  icon: GLib.Variant<"(sv)">;
-  gicon: GLib.Variant<"s">;
-  "icon-data": GLib.Variant<"(iiibiiay)">;
-  description?: GLib.Variant<"s">;
-  clipboardText?: GLib.Variant<"s">;
-}
-
 export interface ResultMetas {
   id: string;
   name: string;
@@ -102,252 +38,9 @@ export interface ResultMetas {
   clipboardText: string;
 }
 
-export class RemoteSearchProvider {
-  declare proxy: Gio.DBusProxy;
-  declare app_info: Gio.DesktopAppInfo;
-  declare id: string | null;
-  declare is_remote_provider: boolean;
-  declare can_launch_search: boolean;
-  declare default_enabled: boolean;
-
-  constructor(
-    appInfo: Gio.DesktopAppInfo,
-    dbusName: string,
-    dbusPath: string,
-    autoStart: boolean,
-    proxyInfo: any,
-  ) {
-    if (!proxyInfo) proxyInfo = SearchProviderProxyInfo;
-
-    let gFlags = Gio.DBusProxyFlags.DO_NOT_LOAD_PROPERTIES;
-    if (autoStart)
-      gFlags |= Gio.DBusProxyFlags.DO_NOT_AUTO_START_AT_CONSTRUCTION;
-    else gFlags |= Gio.DBusProxyFlags.DO_NOT_AUTO_START;
-
-    try {
-      this.proxy = Gio.DBusProxy.new_for_bus_sync(
-        Gio.BusType.SESSION,
-        gFlags,
-        proxyInfo,
-        dbusName,
-        dbusPath,
-        proxyInfo.name,
-        null,
-      );
-    } catch (e) {
-      logError(e);
-    }
-
-    this.app_info = appInfo;
-    this.id = appInfo.get_id();
-    this.is_remote_provider = true;
-    this.can_launch_search = false;
-  }
-
-  createIcon(meta: Metas) {
-    let gicon = null;
-
-    if (meta["icon"]) {
-      gicon = Gio.icon_deserialize(meta.icon);
-      if (gicon) return Gtk.Image.new_from_gicon(gicon);
-    } else if (meta["gicon"]) {
-      gicon = Gio.icon_new_for_string(meta.gicon.deep_unpack());
-      if (gicon) return Gtk.Image.new_from_gicon(gicon);
-    } else if (meta["icon-data"]) {
-      const [
-        width,
-        height,
-        rowStride,
-        hasAlpha,
-        bitsPerSample,
-        _nChannels,
-        data,
-      ] = meta["icon-data"].deep_unpack() as [
-        number,
-        number,
-        number,
-        boolean,
-        number,
-        number,
-        any,
-      ];
-      const b = GLib.Bytes.new(data);
-      gicon = GdkPixbuf.Pixbuf.new_from_bytes(
-        b,
-        GdkPixbuf.Colorspace.RGB,
-        hasAlpha,
-        bitsPerSample,
-        width,
-        height,
-        rowStride,
-      );
-
-      return Gtk.Image.new_from_pixbuf(gicon);
-    }
-  }
-
-  async getInitialResultSet(
-    terms: string[],
-    cancellable: Gio.Cancellable | null,
-  ): Promise<GLib.Variant | null> {
-    return new Promise((resolve, _reject) => {
-      this.proxy.call(
-        "GetInitialResultSet",
-        new GLib.Variant("(as)", [terms]),
-        0,
-        TIMEOUT,
-        cancellable,
-        (self, res) => {
-          try {
-            const results = self?.call_finish(res);
-            if (results) resolve(results);
-            else resolve(null);
-          } catch (error) {
-            log(
-              `Received error from D-Bus search provider ${this.id}: ${error}`,
-            );
-            resolve(null);
-          }
-        },
-      );
-    });
-  }
-
-  async getSubsearchResultSet(
-    previousResults: string[],
-    newTerms: string[],
-    cancellable: Gio.Cancellable | null,
-  ): Promise<GLib.Variant | null> {
-    return new Promise((resolve, _reject) => {
-      this.proxy.call(
-        "GetSubsearchResultSetAsync",
-        new GLib.Variant("(asas)", [previousResults, newTerms]),
-        0,
-        TIMEOUT,
-        cancellable,
-        (self, res) => {
-          try {
-            const results = self?.call_finish(res);
-            if (results) resolve(results);
-            else resolve(null);
-          } catch (error) {
-            log(
-              `Received error from D-Bus search provider ${this.id}: ${error}`,
-            );
-            resolve(null);
-          }
-        },
-      );
-    });
-  }
-
-  async getResultMetas(
-    ids: GLib.Variant,
-    cancellable: Gio.Cancellable | null,
-  ): Promise<ResultMetas[]> {
-    return new Promise((resolve, _reject) => {
-      this.proxy.call(
-        "GetResultMetas",
-        ids,
-        0,
-        TIMEOUT,
-        cancellable,
-        (self, res) => {
-          let metas;
-
-          try {
-            const result = self?.call_finish(res).deep_unpack() as Metas[][];
-            metas = result[0];
-          } catch (error) {
-            log(
-              `Received error from D-Bus search provider ${this.id} during GetResultMetas: ${error}`,
-            );
-            resolve([]);
-            return;
-          }
-
-          let resultMetas = [];
-
-          for (let i = 0; i < metas.length; i++) {
-            resultMetas.push({
-              id: metas[i].id?.deep_unpack() as string,
-              name: metas[i].name?.deep_unpack() as string,
-              description: metas[i].description?.deep_unpack() as string,
-              icon: this.createIcon(metas[i]),
-              clipboardText: metas[i].clipboardText?.deep_unpack() as string,
-            } as ResultMetas);
-          }
-          resolve(resultMetas);
-        },
-      );
-    });
-  }
-
-  activateResult(id: string, _terms: string[]) {
-    this.proxy.call(
-      "ActivateResult",
-      new GLib.Variant("(s)", [id]),
-      0,
-      200,
-      null,
-      null,
-    );
-  }
-
-  launchSearch(_terms: string[]) {
-    // the provider is not compatible with the new version of the interface, launch
-    // the app itself but warn so we can catch the error in logs
-    log(`Search provider ${this.id} does not implement LaunchSearch`);
-    this.app_info.launch();
-  }
-}
-
-export class RemoteSearchProvider2 extends RemoteSearchProvider {
-  constructor(
-    appInfo: Gio.DesktopAppInfo,
-    dbusName: string,
-    dbusPath: string,
-    autoStart: boolean,
-  ) {
-    super(appInfo, dbusName, dbusPath, autoStart, SearchProvider2ProxyInfo);
-
-    this.can_launch_search = true;
-  }
-
-  activateResult(id: string, terms: string[]) {
-    try {
-      this.proxy.call(
-        "ActivateResult",
-        new GLib.Variant("(sasu)", [id, terms, Math.floor(Date.now() / 1000)]),
-        0,
-        -1,
-        null,
-        null,
-      );
-    } catch (e) {
-      logError(e);
-    }
-  }
-
-  launchSearch(terms: string[]) {
-    try {
-      this.proxy.call(
-        "LaunchSearch",
-        new GLib.Variant("(asu)", [terms, Math.floor(Date.now() / 1000)]),
-        0,
-        -1,
-        null,
-        null,
-      );
-    } catch (e) {
-      logError(e);
-    }
-  }
-}
-
 export const setup_search = (search_settings: Gio.Settings) => {
   let object_paths: { [key: string]: any } = {};
-  let loaded_providers: RemoteSearchProvider[] = [];
+  let loaded_providers: libTrem.RemoteSearchProvider[] = [];
 
   function load_remote_search_providers(file: Gio.File) {
     const keyfile = new GLib.KeyFile();
@@ -371,8 +64,9 @@ export const setup_search = (search_settings: Gio.Settings) => {
       if (object_paths[object_path]) return;
 
       let app_info = null;
+      let desktop_id = null;
       try {
-        const desktop_id = keyfile.get_string(KEY_FILE_GROUP, "DesktopId");
+        desktop_id = keyfile.get_string(KEY_FILE_GROUP, "DesktopId");
         app_info = Gio.DesktopAppInfo.new(desktop_id);
         if (!app_info.should_show()) return;
       } catch (e) {
@@ -392,19 +86,18 @@ export const setup_search = (search_settings: Gio.Settings) => {
       } catch {}
 
       if (version >= 2)
-        remoteProvider = new RemoteSearchProvider2(
-          app_info,
+        remoteProvider = libTrem.RemoteSearchProvider2.new(
+          desktop_id,
           bus_name,
           object_path,
           autostart,
         );
       else
-        remoteProvider = new RemoteSearchProvider(
-          app_info,
+        remoteProvider = libTrem.RemoteSearchProvider.new(
+          desktop_id,
           bus_name,
           object_path,
           autostart,
-          null,
         );
 
       remoteProvider.default_enabled = true;
@@ -454,8 +147,8 @@ export const setup_search = (search_settings: Gio.Settings) => {
 
     // if no provider is found in the order, use alphabetical order
     if (idxA === -1 && idxB === -1) {
-      let nameA = providerA.app_info.get_name();
-      let nameB = providerB.app_info.get_name();
+      let nameA = providerA.get_name();
+      let nameB = providerB.get_name();
 
       return GLib.utf8_collate(nameA, nameB);
     }

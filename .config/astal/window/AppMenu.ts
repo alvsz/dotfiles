@@ -6,8 +6,10 @@ import template from "./AppMenu.blp";
 import icons from "../icons";
 import AstalApps from "gi://AstalApps?version=0.1";
 import appMenuItem from "../widget/appMenuItem";
-import { RemoteSearchProvider, setup_search } from "../service/remoteSearch";
+import { setup_search } from "../service/remoteSearch";
 import searchProviderApp from "../widget/searchProviderItem";
+import { remove_children } from "../util";
+import libTrem from "gi://libTrem?version=0.1";
 
 @register({
   GTypeName: "AppMenu",
@@ -16,21 +18,23 @@ import searchProviderApp from "../widget/searchProviderItem";
 })
 export default class AppMenu extends Astal.Window {
   declare _entry: Gtk.Entry;
-  declare _providers: Astal.Box;
-  declare _app_list: Astal.Box;
+  declare _providers: Gtk.Box;
+  declare _app_list: Gtk.Box;
   declare _placeholder: Gtk.Label;
 
   private apps = new AstalApps.Apps();
-  private providers: RemoteSearchProvider[];
+  private providers: libTrem.RemoteSearchProvider[];
   private app_query: AstalApps.Application[] = [];
   private temp: searchProviderApp[] = [];
 
   private update_list(text: string) {
     this.app_query = this.apps.fuzzy_query(text);
 
-    this._app_list.set_children(
-      this.app_query.map((app) => [new appMenuItem(app, this.name)]).flat(),
+    remove_children(this._app_list);
+    this.app_query.forEach((app) =>
+      this._app_list.append(new appMenuItem(app, this.name)),
     );
+    this._app_list.show();
   }
 
   protected on_activate(self: Gtk.Entry) {
@@ -54,7 +58,7 @@ export default class AppMenu extends Astal.Window {
     const text = self.get_text();
     this.update_list(text);
 
-    this._placeholder.visible = this._app_list.children.length === 0;
+    this._placeholder.visible = Boolean(this._app_list.get_first_child());
 
     if (text.length === 0) this._providers.hide();
     else this.lookup_providers(text.split(" "));
@@ -79,15 +83,8 @@ export default class AppMenu extends Astal.Window {
     });
     s.connect("changed", (self) => {
       this.providers = setup_search(self);
-      // this.temp = [];
-      // this._providers.set_children([]);
-      //
-      // this.providers.forEach((p) => {
-      //   const s = new searchProviderApp(p, this.name);
-      //   this.temp.push(s);
-      //   this._providers.append(s);
-      // });
     });
+
     this.providers = setup_search(s);
 
     this.providers.forEach((p) => {
