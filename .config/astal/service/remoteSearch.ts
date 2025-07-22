@@ -30,13 +30,13 @@ function* collectFromDatadirs(subdir: string) {
   }
 }
 
-export interface ResultMetas {
-  id: string;
-  name: string;
-  description: string;
-  icon: Gtk.Image;
-  clipboardText: string;
-}
+// export interface ResultMetas {
+//   id: string;
+//   name: string;
+//   description: string;
+//   icon: Gtk.Image;
+//   clipboardText: string;
+// }
 
 export const setup_search = (search_settings: Gio.Settings) => {
   let object_paths: { [key: string]: any } = {};
@@ -86,14 +86,14 @@ export const setup_search = (search_settings: Gio.Settings) => {
       } catch {}
 
       if (version >= 2)
-        remoteProvider = libTrem.RemoteSearchProvider2.new(
+        remoteProvider = libTrem.RemoteSearchProvider.new_v2(
           desktop_id,
           bus_name,
           object_path,
           autostart,
         );
       else
-        remoteProvider = libTrem.RemoteSearchProvider.new(
+        remoteProvider = libTrem.RemoteSearchProvider.new_v1(
           desktop_id,
           bus_name,
           object_path,

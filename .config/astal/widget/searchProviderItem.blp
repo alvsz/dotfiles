@@ -1,0 +1,32 @@
+using Gtk 4.0;
+
+template $searchProviderItem: Button {
+  child: Box {
+    Box {
+      orientation: vertical;
+      Label {
+        justify: left;
+        halign: start;
+        hexpand: true;
+        wrap: true;
+        xalign: 0;
+        label: bind template.title;
+        valign: center;
+      }
+      Label {
+        justify: left;
+        halign: start;
+        hexpand: true;
+        xalign: 0;
+        wrap: true;
+        label: bind template.description;
+        valign: center;
+        styles ["body"]
+      }
+    }
+  };
+  styles ["app"]
+
+  clicked => $on_clicked();
+}
+

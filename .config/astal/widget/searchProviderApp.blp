@@ -1,0 +1,33 @@
+using Gtk 4.0;
+
+template $searchProviderApp: Box {
+  orientation: horizontal;
+  visible: false;
+
+  Button {
+    valign: start;
+    vexpand: false;
+    halign: start;
+    hexpand: false;
+
+    child: Box {
+      orientation: horizontal;
+
+      Image {
+        gicon: bind template.icon;
+      }
+      Label {
+        label: bind template.title;
+      }
+    };
+    clicked => $on_clicked();
+  }
+
+  Box results {
+    orientation: vertical;
+    styles ["results"]
+  }
+
+  styles ["provider"]
+}
+
