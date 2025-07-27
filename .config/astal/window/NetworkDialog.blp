@@ -1,0 +1,67 @@
+using Gtk 4.0;
+using Astal 4.0;
+using libTrem 0.1;
+
+template $NetworkDialog: Astal.Window {
+  layer: overlay;
+  keymode: exclusive;
+  visible: true;
+  styles ["NetworkDialog"]
+
+  Box {
+    orientation: vertical;
+    homogeneous: false;
+
+    Label {
+      label: bind template.dialog as <libTrem.NetworkSecretDialog>.title;
+      halign: center;
+      styles ["title"]
+    }
+    Label message {
+      label: bind template.dialog as <libTrem.NetworkSecretDialog>.message;
+      visible: bind $message_visible(template.dialog as <libTrem.NetworkSecretDialog>.message) as <bool>;
+      halign: center;
+      wrap: true;
+      justify: center;
+      max-width-chars: 33;
+      styles ["message"]
+    }
+    Box passwords {
+      orientation: vertical;
+      homogeneous: false;
+    }
+    Label info {
+      label: "Alternativamente, você pode conectar pressionando o botão \"WPS\" no seu roteador";
+      visible: bind $info_visible(template.dialog as <libTrem.NetworkSecretDialog>.flags) as <bool>;
+      wrap: true;
+      halign: center;
+      justify: center;
+      max-width-chars: 33;
+      styles ["info"]
+    }
+    Box {
+      orientation: horizontal;
+      homogeneous: true;
+      halign: fill;
+      hexpand: true;
+      Button {
+        label: "Cancelar";
+        halign: fill;
+        clicked => $on_cancel();
+        styles ["cancel", "destructive-action"]
+      }
+      Button auth {
+        label: "Autenticar";
+        sensitive: false;
+        halign: fill;
+        clicked => $on_authenticate();
+        styles ["auth", "suggested-action"]
+      }
+    }
+  }
+
+  EventControllerKey {
+    key-pressed => $on_key_pressed();
+  }
+}
+

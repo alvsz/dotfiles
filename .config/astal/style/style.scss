@@ -6,6 +6,7 @@
 @use "./polkit.scss";
 @use "./lockscreen.scss";
 @use "./appmenu.scss";
+@use "./network.scss";
 
 window {
   font: 11pt Inter;

@@ -12,7 +12,7 @@ import Dashboard from "./js/windows/dashboard.js";
 import NetworkAgentDialog from "./js/windows/networkSecretDialog.js";
 
 // import polkitAgent from "./js/services/polkitAgent.js";
-import networkAgent from "./js/services/networkAgent.js";
+// import networkAgent from "./js/services/networkAgent.js";
 
 import { cssPath, scssWatcher } from "./js/utils.js";
 
@@ -30,9 +30,9 @@ scssWatcher();
 //   App.addWindow(Polkit(polkitAgent._currentDialog));
 // });
 
-networkAgent.connect("initiate", (_, dialog) => {
-  App.addWindow(NetworkAgentDialog(dialog));
-});
+// networkAgent.connect("initiate", (_, dialog) => {
+//   App.addWindow(NetworkAgentDialog(dialog));
+// });
 
 const windows = [Dashboard()];
 

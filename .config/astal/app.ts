@@ -7,13 +7,12 @@ import style from "./style/style.scss";
 import Bar from "./window/Bar";
 import Calendar from "./window/calendar";
 import NotificationPopups from "./window/NotificationPopups";
-import {
-  AuthenticationAgent,
-  AuthenticationDialog,
-} from "./service/polkitAgent";
+import { AuthenticationAgent } from "./service/polkitAgent";
 import PolkitDialog from "./window/Polkit";
 import Lock from "./window/Lockscreen";
 import AppMenu from "./window/AppMenu";
+import libTrem from "gi://libTrem?version=0.1";
+import NetworkDialog from "./window/NetworkDialog";
 
 const main = () => {
   App.get_monitors().map((m) => new Bar(m));
@@ -21,14 +20,16 @@ const main = () => {
   new NotificationPopups();
   new AppMenu();
 
-  const agent = new AuthenticationAgent();
-  agent.enable();
-  agent.connect(
-    "initiate",
-    (self: AuthenticationAgent, a: AuthenticationDialog) => {
-      new PolkitDialog(a, self);
-    },
-  );
+  const auth_agent = new AuthenticationAgent();
+  auth_agent.enable();
+  auth_agent.connect("initiate", (self, a) => new PolkitDialog(a, self));
+
+  // const network_agent = libTrem.NetworkSecretHandler.new(App.application_id);
+  // network_agent.enable();
+  // network_agent.connect(
+  //   "initiate",
+  //   (source, dialog) => new NetworkDialog(dialog),
+  // );
 
   monitorFile("./style/", (file) => {
     print("scss updated", file);

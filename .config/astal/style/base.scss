@@ -26,6 +26,41 @@
   }
 }
 
+.dialog {
+  @extend .basewindow;
+  /* padding: 1em; */
+
+  .title {
+    font-weight: bold;
+    margin: 1rem;
+    font-size: 1.1rem;
+  }
+
+  label {
+    margin: 0rem 1rem;
+  }
+
+  entry {
+    min-width: 18rem;
+  }
+
+  .info {
+    font-style: italic;
+  }
+
+  box.horizontal {
+    margin-top: 1em;
+  }
+
+  button.cancel {
+    margin-right: 0.3rem;
+  }
+
+  button.auth {
+    margin-left: 0.3rem;
+  }
+}
+
 .verticalSpacer {
   > * {
     margin: 0.4rem 0em 0em 0em;
