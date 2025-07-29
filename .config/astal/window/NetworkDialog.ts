@@ -53,8 +53,6 @@ export default class NetworkDialog extends Astal.Window {
     let initial_focus = false;
     this.secrets = dialog.get_secrets().map((s) => {
       const reactive = s.key != null;
-      if (s.validate) s.valid = s.validate(s);
-      else if (s.valid) s.valid = s.val.length > 0;
 
       const password = new PasswordEntry(s);
 
@@ -66,10 +64,10 @@ export default class NetworkDialog extends Astal.Window {
       password.connect("notify::text", (source) => {
         const text = source.get_text();
         s.val = text;
-        if (s.validate) s.valid = s.validate(s);
-        else s.valid = s.val.length > 0;
         this.update_auth_button();
       });
+
+      this._passwords.append(password);
 
       if (reactive) {
         if (!initial_focus) {
@@ -79,8 +77,6 @@ export default class NetworkDialog extends Astal.Window {
       } else {
         s.valid = true;
       }
-
-      this._passwords.append(password);
       return password;
     });
   }

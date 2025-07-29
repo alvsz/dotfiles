@@ -2,9 +2,10 @@ import { GLib, exec, subprocess } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import { property, register } from "astal/gobject";
 import template from "./dwlBox.blp";
+import libTrem from "gi://libTrem?version=0.1";
 
 const ntags = 7;
-const proc = subprocess("dwlcmd follow");
+// const proc = subprocess("dwlcmd follow");
 
 @register({
   GTypeName: "DwlBox",
@@ -23,12 +24,15 @@ export default class dwlBox extends Gtk.Box {
   declare _client_box: Gtk.Box;
   declare _tags: Gtk.Box;
   declare _layout_button: Gtk.Button;
+  declare dwlIpc: libTrem.DwlIpc;
   @property(Gdk.Monitor) declare monitor: Gdk.Monitor;
 
   constructor() {
     super();
 
-    proc.connect("stdout", () => {
+    this.dwlIpc = new libTrem.DwlIpc();
+
+    this.dwlIpc.connect("frame", () => {
       const status = exec("dwlcmd run 'return get_status()'");
       const s = JSON.parse(status);
 

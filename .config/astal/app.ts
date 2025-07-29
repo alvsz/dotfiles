@@ -22,14 +22,11 @@ const main = () => {
 
   const auth_agent = new AuthenticationAgent();
   auth_agent.enable();
-  auth_agent.connect("initiate", (self, a) => new PolkitDialog(a, self));
+  auth_agent.connect("initiate", (self, a) => print(new PolkitDialog(a, self)));
 
-  // const network_agent = libTrem.NetworkSecretHandler.new(App.application_id);
-  // network_agent.enable();
-  // network_agent.connect(
-  //   "initiate",
-  //   (source, dialog) => new NetworkDialog(dialog),
-  // );
+  const network_agent = libTrem.NetworkSecretHandler.new(App.application_id);
+  network_agent.enable(null);
+  network_agent.connect("initiate", (self, d) => print(new NetworkDialog(d)));
 
   monitorFile("./style/", (file) => {
     print("scss updated", file);

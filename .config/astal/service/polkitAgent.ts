@@ -5,6 +5,7 @@ import Polkit from "gi://Polkit";
 import GjsPolkit from "gi://GjsPolkit";
 import { App } from "astal/gtk4";
 import { GObject, property, register, signal } from "astal/gobject";
+import libTrem from "gi://libTrem?version=0.1";
 
 const FALLBACK_ICON = "avatar-default-symbolic";
 
@@ -198,13 +199,13 @@ export class AuthenticationAgent extends GObject.Object {
   ) => void;
   @signal() declare done: () => void;
 
-  declare _nativeAgent: GjsPolkit.PolkitAuthenticationAgent;
+  declare _nativeAgent: libTrem.PolkitAuthenticationAgent;
   declare _currentDialog: AuthenticationDialog | null;
 
   constructor() {
     super();
 
-    this._nativeAgent = new GjsPolkit.PolkitAuthenticationAgent();
+    this._nativeAgent = new libTrem.PolkitAuthenticationAgent({});
     this._nativeAgent.connect("initiate", this._onInitiate.bind(this));
     this._nativeAgent.connect("cancel", this._onCancel.bind(this));
   }
@@ -230,7 +231,7 @@ export class AuthenticationAgent extends GObject.Object {
   }
 
   _onInitiate(
-    _: GjsPolkit.PolkitAuthenticationAgent,
+    _: libTrem.PolkitAuthenticationAgent,
     actionId: string,
     message: string,
     iconName: string,
@@ -248,7 +249,7 @@ export class AuthenticationAgent extends GObject.Object {
     this.emit("initiate", this._currentDialog);
   }
 
-  _onCancel(_: GjsPolkit.PolkitAuthenticationAgent) {
+  _onCancel(_: libTrem.PolkitAuthenticationAgent) {
     this._completeRequest(false);
   }
 

@@ -51,9 +51,6 @@ class searchProviderItem extends Gtk.Button {
       const i = Gtk.Image.new_from_gicon(meta.icon);
       (this.child as Gtk.Box).prepend(i);
     }
-
-    this.show();
-    this.get_parent()?.show();
   }
 }
 

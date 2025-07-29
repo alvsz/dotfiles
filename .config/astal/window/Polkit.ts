@@ -33,6 +33,13 @@ export default class PolkitDialog extends Astal.Window {
   constructor(dialog: AuthenticationDialog, agent: AuthenticationAgent) {
     super({ application: App });
 
+    if (agent._currentDialog !== dialog) {
+      this.close();
+      return;
+    }
+
+    print("construindo", dialog, agent);
+
     this.dialog = dialog;
 
     dialog.connect("success", (_: AuthenticationDialog, success: boolean) => {
