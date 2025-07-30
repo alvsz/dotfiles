@@ -54,14 +54,21 @@ get_status = function()
 	return cjson.encode(status)
 end
 
+toggle_bar = function()
+	local monitors = dwl.get_monitors()
+
+	for _, j in ipairs(monitors) do
+		if j.focused then
+			os.execute("ags toggle Bar-" .. j.name)
+		end
+	end
+end
+
 dwl.cfg = {
 	autostart = function()
 		io.popen("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
 		io.popen("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=wlroots")
-		-- io.popen("alacritty")
 		io.popen("~/.config/dwl/autostart.sh")
-
-		-- print("autostart")
 	end,
 
 	printstatus = function()

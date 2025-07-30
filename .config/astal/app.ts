@@ -26,7 +26,7 @@ const main = () => {
 
   const network_agent = libTrem.NetworkSecretHandler.new(App.application_id);
   network_agent.enable(null);
-  network_agent.connect("initiate", (self, d) => print(new NetworkDialog(d)));
+  network_agent.connect("initiate", (_, d) => print(new NetworkDialog(d)));
 
   monitorFile("./style/", (file) => {
     print("scss updated", file);
@@ -34,31 +34,9 @@ const main = () => {
     App.apply_css("./style.css", true);
   });
 
-  const display = Gdk.Display.get_default();
-  if (display) {
-    const monitors = display.get_monitors();
-    monitors.connect(
-      "notify::items-changed",
-      (
-        self: Gio.ListModel<Gdk.Monitor>,
-        position: number,
-        removed: number,
-        added: number,
-      ) => {
-        print("items changed", self, position, removed, added);
-        if (added > 1 || removed > 1) print("bugou total");
-        else {
-          print("removed ", removed);
-          print("added", added);
-
-          if (added) {
-            const mon = monitors.get_item(position) as Gdk.Monitor | null;
-            if (mon) new Bar(mon);
-          }
-        }
-      },
-    );
-  }
+  libTrem.DwlIpc.get_default()?.connect("monitor-added", (source, address) => {
+    // new Bar();
+  });
 };
 
 const lock = new Lock();
