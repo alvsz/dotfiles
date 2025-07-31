@@ -26,9 +26,8 @@
   }
 }
 
-.dialog {
+window.dialog {
   @extend .basewindow;
-  /* padding: 1em; */
 
   .title {
     font-weight: bold;
@@ -42,9 +41,15 @@
 
   entry {
     min-width: 18rem;
+    margin: 0em 1em;
   }
 
-  .info {
+  label.message {
+    margin-bottom: 1em;
+  }
+
+  label.info {
+    margin-top: 0.5rem;
     font-style: italic;
   }
 

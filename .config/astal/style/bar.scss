@@ -21,12 +21,16 @@ window.Bar {
       }
 
       .tags {
-        button.focus {
+        button.occupied {
           color: css("@success_color");
         }
-        // background-color: green;
-        // padding: 0 1em;
-        // border: 2px solid turquoise;
+        button.focus {
+          color: css("@warning_color");
+        }
+        button.urgent {
+          color: css("@error_color");
+        }
+        @extend .horizontalSpacer;
       }
 
       .layout {

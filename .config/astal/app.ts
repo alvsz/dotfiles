@@ -34,8 +34,20 @@ const main = () => {
     App.apply_css("./style.css", true);
   });
 
-  libTrem.DwlIpc.get_default()?.connect("monitor-added", (source, address) => {
-    // new Bar();
+  const dwl = libTrem.DwlIpc.get_default();
+
+  if (!dwl) return;
+
+  dwl.connect("monitor-added", (_, address) => {
+    dwl
+      .run_command(`return dwl.get_monitor(${address}).name`)
+      .connect("done", (_, err, message) => {
+        if (err != 0) return;
+
+        const mon = App.get_monitors().find((m) => m.connector == message);
+
+        if (mon) new Bar(mon);
+      });
   });
 };
 
