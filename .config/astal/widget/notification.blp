@@ -32,7 +32,8 @@ template $Notification: Revealer {
         xalign: 0;
         ellipsize: end;
         hexpand: true;
-        max-width-chars: 40;
+        max-width-chars: 1;
+        wrap-mode: word_char;
         label: bind $get_app_name(template.notification as <AstalNotifd.Notification>.app-name) as <string>;
         styles ["app-name"]
       }
@@ -51,6 +52,7 @@ template $Notification: Revealer {
     Box {
       homogeneous: false;
       orientation: horizontal;
+      hexpand: true;
       styles ["content"]
 
       Image {
@@ -69,11 +71,13 @@ template $Notification: Revealer {
         homogeneous: false;
         orientation: vertical;
         Label {
-          halign: start;
+          halign: fill;
+          hexpand: true;
           xalign: 0;
           wrap: true;
           justify: left;
-          max-width-chars: 26;
+          max-width-chars: 1;
+          wrap-mode: word_char;
           label: bind template.notification as <AstalNotifd.Notification>.summary;
           styles ["summary"]
         }
@@ -84,7 +88,8 @@ template $Notification: Revealer {
           wrap: true;
           use-markup: true;
           justify: left;
-          max-width-chars: 31;
+          max-width-chars: 1;
+          wrap-mode: word_char;
           label: bind template.notification as <AstalNotifd.Notification>.body;
           visible: bind template.not_hidden;
           styles ["body"]

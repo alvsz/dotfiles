@@ -26,14 +26,14 @@ template $mprisPlayer: Box {
         hexpand: true;
         wrap: true;
         halign: start;
-        max-width-chars: 26;
+        max-width-chars: 1;
+        wrap-mode: word_char;
         styles ["heading"]
       }
       Image {
         halign: end;
         valign: start;
         icon-name: bind $format_player_icon(template.player as <AstalMpris.Player>.entry) as <string>;
-        // file: bind $format_player_icon(template.player as <AstalMpris.Player>.entry) as <string>;
         tooltip-text: bind template.player as <AstalMpris.Player>.identity;
       }
     }
@@ -41,7 +41,8 @@ template $mprisPlayer: Box {
       hexpand: true;
       wrap: true;
       halign: start;
-      max-width-chars: 26;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       label: bind template.player as <AstalMpris.Player>.artist;
     }
     Scale {

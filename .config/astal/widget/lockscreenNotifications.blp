@@ -1,10 +1,15 @@
 using Gtk 4.0;
+using AstalNotifd 0.1;
 
 template $LockscreenNotifications: $NotificationCenter {
   orientation: vertical;
-  hidden: true;
   visible: true;
   styles ["notifs"]
+
+  notifd: AstalNotifd.Notifd notifd {
+    notified => $on_notified();
+    resolved => $on_resolved();
+  };
 
   Box notifs {
     orientation: vertical;

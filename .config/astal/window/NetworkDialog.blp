@@ -6,7 +6,7 @@ template $NetworkDialog: Astal.Window {
   layer: overlay;
   keymode: exclusive;
   visible: true;
-  styles ["NetworkDialog"]
+  styles ["NetworkDialog", "dialog"]
 
   Box {
     orientation: vertical;
@@ -23,7 +23,8 @@ template $NetworkDialog: Astal.Window {
       halign: center;
       wrap: true;
       justify: center;
-      max-width-chars: 33;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       styles ["message"]
     }
     Box passwords {
@@ -36,7 +37,8 @@ template $NetworkDialog: Astal.Window {
       wrap: true;
       halign: center;
       justify: center;
-      max-width-chars: 33;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       styles ["info"]
     }
     Box {

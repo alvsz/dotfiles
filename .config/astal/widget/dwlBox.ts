@@ -55,12 +55,12 @@ export default class dwlBox extends Gtk.Box {
 
     if (!mon) return;
     this.mon = mon;
-    const focused_client = this.dwl.get_clients().find((c) => c.get_focused());
+    const clients = this.dwl
+      .get_clients()
+      .filter((c) => c.monitor == mon.address);
+    const focused_client = clients.find((c) => c.focused);
 
-    const focused = focused_client?.get_monitor() == mon?.address;
-
-    if (focused) {
-      if (!focused_client) return;
+    if (focused_client) {
       this._client_box.visible = true;
       this._client_icon.icon_name = focused_client.app_id;
       this._client_title.label = focused_client.title;
@@ -70,7 +70,7 @@ export default class dwlBox extends Gtk.Box {
       this._client_box.visible = false;
     }
 
-    this._layout_button.label = mon?.get_layout();
+    this._layout_button.label = mon.get_layout();
 
     for (let i = 0; i < ntags; i++) {
       const tags = mon.get_seltags();
@@ -81,12 +81,27 @@ export default class dwlBox extends Gtk.Box {
 
       if (!b) return;
 
-      b.set_icon_name(
-        sel ? "weather-clear-symbolic" : "weather-overcast-symbolic",
-      );
+      const occupied = clients.some((c) => (c.tags & mask) !== 0);
+      const urgent = clients.some((c) => c.urgent && (c.tags & mask) !== 0);
+
+      let icon = "weather-overcast-symbolic";
+      if (urgent) {
+        icon = "weather-severe-alert-symbolic";
+      } else if (sel) {
+        icon = "weather-clear-symbolic";
+      } else if (occupied) {
+        icon = "weather-fog-symbolic";
+      }
+      b.set_icon_name(icon);
+
+      if (occupied) b.add_css_class("occupied");
+      else b.remove_css_class("occupied");
 
       if (sel) b.add_css_class("focus");
       else b.remove_css_class("focus");
+
+      if (urgent) b.add_css_class("urgent");
+      else b.remove_css_class("urgent");
     }
   }
 }

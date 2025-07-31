@@ -16,13 +16,25 @@ export default class NotificationCenter extends Gtk.Box {
   @property(Notifd.Notifd) declare notifd: Notifd.Notifd;
   @property(Boolean) declare hidden: boolean;
 
+  protected async get_old_notifications() {
+    setTimeout(() => {
+      this.notifd
+        .get_notifications()
+        .forEach((n) => this.on_notified(this.notifd, n.id, false));
+    }, 1000);
+  }
+
   constructor(hidden: boolean) {
     super();
     this.hidden = hidden;
     this.notifs = new Map<number, Notification>();
+
+    this.get_old_notifications();
   }
 
   protected on_notified(self: Notifd.Notifd, id: number, replaced: boolean) {
+    if (!this.notifs) this.notifs = new Map<number, Notification>();
+
     if (replaced && this.notifs.has(id)) {
       const notif = this.notifs.get(id);
       if (notif) {
@@ -47,6 +59,7 @@ export default class NotificationCenter extends Gtk.Box {
     id: number,
     reason: Notifd.ClosedReason,
   ) {
+    if (!this.notifs) this.notifs = new Map<number, Notification>();
     const notif = this.notifs.get(id);
 
     if (notif) {

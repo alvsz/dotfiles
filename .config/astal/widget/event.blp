@@ -13,7 +13,8 @@ template $EventWidget: Box {
     halign: fill;
     hexpand: true;
     wrap: true;
-    max-width-chars: 40;
+    wrap-mode: word_char;
+    max-width-chars: 1;
     xalign: 0;
     visible: bind $summary_visible(template.event as <libTrem.Event>.summary) as <bool>;
     label: bind template.event as <libTrem.Event>.summary;
@@ -24,7 +25,8 @@ template $EventWidget: Box {
     halign: fill;
     hexpand: true;
     wrap: true;
-    max-width-chars: 40;
+    max-width-chars: 1;
+    wrap-mode: word_char;
     xalign: 0;
     label: bind $format_time(template.event as <libTrem.Event>.dtstart) as <string>;
     styles ["time"]
@@ -34,7 +36,8 @@ template $EventWidget: Box {
     halign: fill;
     hexpand: true;
     wrap: true;
-    max-width-chars: 40;
+    max-width-chars: 1;
+    wrap-mode: word_char;
     xalign: 0;
     visible: bind $description_visible(template.event as <libTrem.Event>.description) as <bool>;
     label: bind template.event as <libTrem.Event>.description;
@@ -45,7 +48,8 @@ template $EventWidget: Box {
     halign: fill;
     hexpand: true;
     wrap: true;
-    max-width-chars: 40;
+    max-width-chars: 1;
+    wrap-mode: word_char;
     xalign: 0;
     visible: bind $location_visible(template.event as <libTrem.Event>.location) as <bool>;
     label: bind template.event as <libTrem.Event>.location;

@@ -1,6 +1,5 @@
 using Gtk 4.0;
 using AccountsService 1.0;
-//using libTrem 0.1;
 
 template $Lockscreen: Window {
   styles ["Lockscreen"]
@@ -44,8 +43,7 @@ template $Lockscreen: Window {
             valign: start;
             styles ["clock"]
           }
-          //libTrem.LockscreenMpris { }
-          //$LockscreenMpris { }
+          $LockscreenMpris { }
           $LockscreenNotifications { }
 
           EventControllerKey {

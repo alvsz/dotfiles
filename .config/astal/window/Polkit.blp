@@ -21,8 +21,10 @@ template $PolkitDialog: Astal.Window {
       visible: bind $message_visible(template.dialog as <$AuthenticationDialog>.message) as <bool>;
       halign: center;
       wrap: true;
+      hexpand: true;
       justify: center;
-      max-width-chars: 33;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       styles ["message"]
     }
     Image {
@@ -33,7 +35,10 @@ template $PolkitDialog: Astal.Window {
     Label {
       label: bind $format_name(template.dialog as <$AuthenticationDialog>.user-name) as <string>;
       halign: center;
-      max-width-chars: 33;
+      hexpand: true;
+      wrap: true;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       styles ["user-name"]
     }
     Entry password {
@@ -49,8 +54,10 @@ template $PolkitDialog: Astal.Window {
       visible: bind $info_visible(template.dialog as <$AuthenticationDialog>.info) as <bool>;
       wrap: true;
       halign: center;
+      hexpand: true;
       justify: center;
-      max-width-chars: 33;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       styles ["info"]
     }
     Label error {
@@ -59,7 +66,9 @@ template $PolkitDialog: Astal.Window {
       wrap: true;
       halign: center;
       justify: center;
-      max-width-chars: 30;
+      hexpand: true;
+      max-width-chars: 1;
+      wrap-mode: word_char;
       styles ["error"]
     }
     Box {

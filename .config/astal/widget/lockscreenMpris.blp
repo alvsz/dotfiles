@@ -31,20 +31,23 @@ template $LockscreenMpris: Box {
         hexpand: true;
         wrap: false;
         ellipsize: end;
-        halign: start;
-        max-width-chars: 30;
+        halign: fill;
+        max-width-chars: 1;
+        xalign: 0;
         styles ["heading"]
       }
       Label {
         hexpand: true;
         wrap: false;
         ellipsize: end;
-        halign: start;
-        max-width-chars: 30;
+        halign: fill;
+        max-width-chars: 1;
+        xalign: 0;
         label: bind template.player as <AstalMpris.Player>.artist;
       }
     }
     DrawingArea cava {
+      halign: end;
       styles ["cava"]
     }
   }
