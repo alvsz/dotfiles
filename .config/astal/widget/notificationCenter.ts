@@ -72,15 +72,7 @@ export default class NotificationCenter extends Gtk.Box {
     }
   }
 
-  protected on_dnd(self: Notifd.Notifd) {}
-
   protected on_clear() {
     this.notifd.get_notifications().forEach((n) => n.dismiss());
-  }
-
-  protected on_dnd_active(self: Gtk.Switch) {
-    const active = self.get_active();
-    this.notifd.set_dont_disturb(active);
-    this.notifd.dont_disturb = active;
   }
 }

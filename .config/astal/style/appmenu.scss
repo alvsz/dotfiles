@@ -15,6 +15,10 @@ window.AppMenu {
     @extend .verticalSpacer;
   }
 
+  box.horizontal {
+    @extend .horizontalSpacer;
+  }
+
   entry {
     margin-bottom: 1em;
     padding: 0.4em;
@@ -30,8 +34,6 @@ window.AppMenu {
 
   .app {
     box {
-      @extend .horizontalSpacer;
-
       image {
         -gtk-icon-size: 3rem;
       }
@@ -39,14 +41,22 @@ window.AppMenu {
   }
 
   .provider {
-    @extend .module;
-    @extend .horizontalSpacer;
     button {
       @extend .horizontalSpacer;
 
       image {
         -gtk-icon-size: 2em;
       }
+    }
+
+    separator {
+      // margin-left: 0.1rem;
+      padding-top: 0.1rem;
+      background-color: gtkalpha(css("@theme_fg_color"), 0.1);
+    }
+
+    .results {
+      margin-left: 0.8rem;
     }
   }
 }

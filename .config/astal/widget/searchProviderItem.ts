@@ -8,6 +8,8 @@ import template2 from "./searchProviderApp.blp";
 import { Gio } from "astal";
 import { remove_children } from "../util";
 
+const MAX_RESULTS = 4;
+
 @register({
   GTypeName: "searchProviderItem",
   Template: template,
@@ -64,6 +66,7 @@ export default class searchProviderApp extends Gtk.Box {
   private window_name: string;
   private query: string[] = [];
   declare _results: Gtk.Box;
+  @property(String) declare title_format: string;
 
   @property(String) declare title: string;
   @property(Gio.Icon) declare icon;
@@ -81,7 +84,7 @@ export default class searchProviderApp extends Gtk.Box {
           }
 
           const a = s.map((rm, n) =>
-            n < 4
+            n < MAX_RESULTS
               ? new searchProviderItem(
                   rm,
                   this.provider,
@@ -125,5 +128,7 @@ export default class searchProviderApp extends Gtk.Box {
     this.title = provider.get_name();
     this.icon = provider.get_icon();
     this.window_name = window_name;
+
+    this.title_format = `Mostrar mais em ${this.title}`;
   }
 }
