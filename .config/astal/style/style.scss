@@ -12,12 +12,13 @@ window {
 }
 
 .notification {
-  background-color: gtkalpha(css("@theme_fg_color"), 0.04);
-  border-radius: 0.5em;
-  border: 0.1em solid css("@headerbar_border_color");
+  @extend .module;
+  // background-color: gtkalpha(css("@theme_fg_color"), 0.04);
+  // border-radius: 0.5em;
+  // border: 0.1em solid css("@headerbar_border_color");
 
   .header {
-    padding: 0.4em;
+    padding: 0.3em;
     color: gtkalpha(css("@theme_fg_color"), 0.5);
 
     .app-icon {
@@ -38,7 +39,7 @@ window {
     }
 
     button {
-      padding: 0.3em;
+      // padding: 0.3em;
       min-width: 0;
       min-height: 0;
     }
@@ -55,6 +56,7 @@ window {
 
     .vertical {
       .summary {
+        // font-weight: bolder;
         font-size: 1.2em;
         color: css("@theme_fg_color");
       }
@@ -73,6 +75,6 @@ window {
 
   .actions {
     @extend .horizontalSpacer;
-    padding: 0.3em;
+    // padding: 0.3em;
   }
 }

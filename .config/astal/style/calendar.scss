@@ -86,7 +86,7 @@ window.Calendar {
   }
 
   .notification-center {
-    .header {
+    > .header {
       @extend .module;
       @extend .horizontalSpacer;
     }

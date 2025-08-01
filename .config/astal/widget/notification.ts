@@ -43,13 +43,25 @@ export default class Notification extends Gtk.Revealer {
     this.notify("not-hidden");
 
     for (let a of this.notification.actions) {
-      const b = new Gtk.Button({
-        child: new Gtk.Label({
+      let c: Gtk.Widget;
+
+      if (a.label.length > 0) {
+        c = new Gtk.Label({
           label: a.label,
           wrap: true,
           justify: Gtk.Justification.CENTER,
-        }),
+          hexpand: true,
+          halign: Gtk.Align.FILL,
+        });
+      } else {
+        c = Gtk.Image.new_from_icon_name("media-playback-start-symbolic");
+      }
+
+      const b = new Gtk.Button({
+        child: c,
       });
+
+      if (a.id == "default") c.add_css_class("suggested-action");
 
       b.connect("clicked", () => {
         this.notification.invoke(a.id);

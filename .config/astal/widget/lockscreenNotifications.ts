@@ -29,11 +29,7 @@ export default class LockscreenNotifications extends NotificationCenter {
   }
 
   constructor() {
-    super(true);
+    super(true, false);
     if (!this.notifd) this.notifd = AstalNotifd.Notifd.get_default();
-
-    // this.notifd
-    //   .get_notifications()
-    //   .forEach((n) => this.on_notified(this.notifd, n.id, false));
   }
 }

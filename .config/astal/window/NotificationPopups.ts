@@ -55,7 +55,7 @@ export default class NotificationPopups extends Astal.Window {
       layer: Astal.Layer.OVERLAY,
       anchor: Astal.WindowAnchor.TOP,
       exclusivity: Astal.Exclusivity.NORMAL,
-      child: new Popups(false),
+      child: new Popups(false, true),
       visible: true,
       cssClasses: ["notification-popups"],
     });

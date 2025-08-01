@@ -13,17 +13,23 @@ template $DwlBox: Box {
         styles ["tags"]
     }
     Button layout_button {
+        label: bind template.layout;
         styles ["layout"]
     }
-    Box client_box {
+    Box {
         orientation: horizontal;
         homogeneous: false;
         spacing: 0;
+        tooltip-text: bind $get_client_tooltip(template.title) as <string>;
+        visible: bind template.focused;
         styles ["client"]
-        Image client_icon { }
-        Label client_title {
+        Image {
+            icon-name: bind template.app_id;
+        }
+        Label {
             max-width-chars: 40;
             ellipsize: end;
+            label: bind template.title;
         }
     }
 }

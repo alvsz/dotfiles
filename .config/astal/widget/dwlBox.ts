@@ -12,23 +12,20 @@ const ntags = 7;
   GTypeName: "DwlBox",
   Template: template,
   InternalChildren: [
-    "client_box",
-    "client_icon",
-    "client_title",
+    // iebrv
     "tags",
-    "layout_button",
   ],
 })
 export default class dwlBox extends Gtk.Box {
-  declare _client_icon: Gtk.Image;
-  declare _client_title: Gtk.Label;
-  declare _client_box: Gtk.Box;
   declare _tags: Gtk.Box;
-  declare _layout_button: Gtk.Button;
   declare dwl: libTrem.Dwl;
   declare mon: libTrem.DwlMonitor;
   declare tags: Array<Gtk.Button>;
   @property(Gdk.Monitor) declare monitor: Gdk.Monitor;
+  @property(String) declare title: string;
+  @property(Boolean) declare focused: boolean;
+  @property(String) declare app_id: string;
+  @property(String) declare layout: string;
 
   constructor() {
     super();
@@ -48,6 +45,10 @@ export default class dwlBox extends Gtk.Box {
     this.update();
   }
 
+  protected get_client_tooltip() {
+    return `${this.title} - ${this.app_id}`;
+  }
+
   private update() {
     const mon = this.dwl
       .get_monitors()
@@ -61,16 +62,14 @@ export default class dwlBox extends Gtk.Box {
     const focused_client = clients.find((c) => c.focused);
 
     if (focused_client) {
-      this._client_box.visible = true;
-      this._client_icon.icon_name = focused_client.app_id;
-      this._client_title.label = focused_client.title;
-
-      this._client_box.tooltip_text = `${focused_client.title} - ${focused_client.app_id}`;
+      this.focused = true;
+      this.app_id = focused_client.app_id;
+      this.title = focused_client.title;
     } else {
-      this._client_box.visible = false;
+      this.focused = false;
     }
 
-    this._layout_button.label = mon.get_layout();
+    this.layout = mon.get_layout();
 
     for (let i = 0; i < ntags; i++) {
       const tags = mon.get_seltags();

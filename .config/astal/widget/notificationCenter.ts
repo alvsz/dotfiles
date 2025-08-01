@@ -24,12 +24,12 @@ export default class NotificationCenter extends Gtk.Box {
     }, 1000);
   }
 
-  constructor(hidden: boolean) {
+  constructor(hidden: boolean, popup: boolean) {
     super();
     this.hidden = hidden;
     this.notifs = new Map<number, Notification>();
 
-    this.get_old_notifications();
+    if (!popup) this.get_old_notifications();
   }
 
   protected on_notified(self: Notifd.Notifd, id: number, replaced: boolean) {
