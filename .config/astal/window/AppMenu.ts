@@ -58,7 +58,8 @@ export default class AppMenu extends Astal.Window {
     const text = self.get_text();
     this.update_list(text);
 
-    this._placeholder.visible = Boolean(this._app_list.get_first_child());
+    this._placeholder.visible = !Boolean(this._app_list.get_first_child());
+    this._app_list.visible = !this._placeholder.visible;
 
     if (text.length === 0) this._providers.hide();
     else this.lookup_providers(text.split(" "));

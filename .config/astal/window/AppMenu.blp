@@ -25,10 +25,12 @@ template $AppMenu: Astal.Window {
 
       child: Box {
         orientation: vertical;
+        valign: start;
 
         Box providers {
           orientation: vertical;
           visible: false;
+          valign: start;
           styles ["providers"]
         }
         Box app_list {

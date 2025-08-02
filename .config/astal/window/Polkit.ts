@@ -14,6 +14,7 @@ import Template from "./Polkit.blp";
 })
 export default class PolkitDialog extends Astal.Window {
   @property(AuthenticationDialog) declare dialog: AuthenticationDialog;
+  @property(Boolean) declare loading: boolean;
   declare _message: Gtk.Label;
   declare _password: Gtk.Entry;
   declare _info: Gtk.Label;
@@ -38,11 +39,10 @@ export default class PolkitDialog extends Astal.Window {
       return;
     }
 
-    print("construindo", dialog, agent);
-
     this.dialog = dialog;
 
     dialog.connect("success", (_: AuthenticationDialog, success: boolean) => {
+      this.loading = false;
       if (!success) {
         this._error.visible = true;
         this._error.label = "não funcionou, tente novamente";
@@ -83,6 +83,7 @@ export default class PolkitDialog extends Astal.Window {
   }
 
   protected on_authenticate() {
+    this.loading = true;
     this.response(this._password.get_text());
   }
 

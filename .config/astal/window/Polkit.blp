@@ -1,5 +1,6 @@
 using Gtk 4.0;
 using Astal 4.0;
+using Adw 1;
 
 template $PolkitDialog: Astal.Window {
   layer: overlay;
@@ -59,6 +60,9 @@ template $PolkitDialog: Astal.Window {
       max-width-chars: 1;
       wrap-mode: word_char;
       styles ["info"]
+    }
+    Adw.Spinner {
+      visible: bind template.loading;
     }
     Label error {
       label: bind template.dialog as <$AuthenticationDialog>.error;
