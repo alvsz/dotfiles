@@ -86,14 +86,14 @@ export const setup_search = (search_settings: Gio.Settings) => {
       } catch {}
 
       if (version >= 2)
-        remoteProvider = libTrem.RemoteSearchProvider.new_v2(
+        remoteProvider = libTrem.RemoteSearchProvider.v2(
           desktop_id,
           bus_name,
           object_path,
           autostart,
         );
       else
-        remoteProvider = libTrem.RemoteSearchProvider.new_v1(
+        remoteProvider = libTrem.RemoteSearchProvider.v2(
           desktop_id,
           bus_name,
           object_path,
