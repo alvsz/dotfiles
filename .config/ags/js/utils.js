@@ -2,7 +2,7 @@ import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import App from "resource:///com/github/Aylur/ags/app.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 
-import * as vars from "./vars.js";
+// import * as vars from "./vars.js";
 
 export const cssPath = `${App.configDir}/style.css`;
 export const scssPath = `${App.configDir}/style.scss`;
@@ -43,14 +43,14 @@ export const jsWatcher = () => {
   );
 };
 
-export const forMonitors = (widget) => {
-  return vars.dwlIpc.value.map((mon) => {
-    print(mon);
-    return widget(mon.id);
-    // const id = vars.dwlIpc.value.indexOf(mon);
-    // return widget({ monitor: id });
-  });
-};
+// export const forMonitors = (widget) => {
+//   return vars.dwlIpc.value.map((mon) => {
+//     print(mon);
+//     return widget(mon.id);
+//     // const id = vars.dwlIpc.value.indexOf(mon);
+//     // return widget({ monitor: id });
+//   });
+// };
 
 export const getDefaultSink = () => {
   const defaultStream = Audio.control.get_default_sink();
