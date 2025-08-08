@@ -18,6 +18,8 @@ template $appMenuItem: Button {
         wrap: true;
         xalign: 0;
         label: bind template.application as <AstalApps.Application>.name;
+        max-width-chars: 1;
+        wrap-mode: word_char;
         valign: center;
       }
       Label {
@@ -27,6 +29,8 @@ template $appMenuItem: Button {
         xalign: 0;
         wrap: true;
         label: bind template.application as <AstalApps.Application>.description;
+        max-width-chars: 1;
+        wrap-mode: word_char;
         valign: center;
         styles ["body"]
       }

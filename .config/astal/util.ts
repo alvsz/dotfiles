@@ -37,3 +37,11 @@ export const remove_children = (b: Gtk.Box) => {
     n = w?.get_next_sibling();
   }
 };
+
+export const linkify = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/g;
+
+  return text.replace(urlRegex, (url) => {
+    return `<a href="${url}">${url}</a>`;
+  });
+};

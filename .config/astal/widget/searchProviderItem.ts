@@ -8,6 +8,12 @@ import template2 from "./searchProviderApp.blp";
 import { Gio } from "astal";
 import { remove_children } from "../util";
 
+Gio._promisify(
+  libTrem.RemoteSearchProvider.prototype,
+  "search",
+  "search_finish",
+);
+
 const MAX_RESULTS = 4;
 
 @register({
@@ -74,42 +80,28 @@ export default class searchProviderApp extends Gtk.Box {
   async search(text: string[]): Promise<number> {
     this.query = text;
 
-    return new Promise<number>((resolve, _reject) =>
-      this.provider.search(text, (self, res) => {
-        try {
-          const s = self?.search_finish(res);
-          if (!s) {
-            resolve(0);
-            return;
-          }
+    try {
+      const s = await this.provider.search(text);
+      if (!s) return 0;
 
-          const a = s.map((rm, n) =>
-            n < MAX_RESULTS
-              ? new searchProviderItem(
-                  rm,
-                  this.provider,
-                  text,
-                  this.window_name,
-                )
-              : null,
-          );
+      const a = s.map((rm, n) =>
+        n < MAX_RESULTS
+          ? new searchProviderItem(rm, this.provider, text, this.window_name)
+          : null,
+      );
 
-          if (a.length > 0) {
-            remove_children(this._results);
-            a.forEach((child) => (child ? this._results.append(child) : null));
-            this._results.show();
-            this.show();
-          } else this.hide();
+      if (a.length > 0) {
+        remove_children(this._results);
+        a.forEach((child) => (child ? this._results.append(child) : null));
+        this._results.show();
+        this.show();
+      } else this.hide();
 
-          resolve(a.length);
-        } catch (e) {
-          // logError(e);
-          this.hide();
-          resolve(0);
-          return;
-        }
-      }),
-    );
+      return a.length;
+    } catch (e) {
+      this.hide();
+      return 0;
+    }
   }
 
   protected on_clicked() {
