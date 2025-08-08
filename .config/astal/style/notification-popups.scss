@@ -1,13 +1,19 @@
 @use "sass:string";
 @use "./base.scss" as *;
 
-.popups {
-  background-color: transparent;
+window.notification-popups {
+  padding-top: 0.4rem;
 
-  .notification {
-    margin: 0.4em 0em 0em 0em;
-    background-color: css("@window_bg_color");
-    min-width: 28rem;
-    border: 0.1em solid css("@headerbar_border_color");
+  .notification-center {
+    background-color: transparent;
+
+    box.vertical {
+      @extend .verticalSpacer;
+    }
+    .notification {
+      background-color: css("@window_bg_color");
+      min-width: 28rem;
+      border: 0.1em solid css("@headerbar_border_color");
+    }
   }
 }

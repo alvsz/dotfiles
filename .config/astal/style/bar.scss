@@ -22,10 +22,10 @@ window.Bar {
 
       .tags {
         button.occupied {
-          color: css("@success_color");
+          color: css("@blue_2");
         }
         button.focus {
-          color: css("@warning_color");
+          color: css("@orange_1");
         }
         button.urgent {
           color: css("@error_color");

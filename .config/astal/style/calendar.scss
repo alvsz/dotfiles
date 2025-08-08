@@ -85,14 +85,18 @@ window.Calendar {
     }
   }
 
+  // scrolledwindow {
+  //   min-height: 30rem;
+  // }
+
   .notification-center {
+    @extend .verticalSpacer;
     > .header {
       @extend .module;
       @extend .horizontalSpacer;
     }
-
-    .notification {
-      margin: 0.4em 0em 0em 0em;
+    box.vertical {
+      @extend .verticalSpacer;
     }
   }
 

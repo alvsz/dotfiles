@@ -50,18 +50,18 @@ window.Lockscreen {
       font-size: 9rem;
     }
 
-    .notifs {
-      /* background-color: transparent; */
-
+    .notification-center {
+      box.vertical {
+        @extend .verticalSpacer;
+      }
       .notification {
-        margin: 0.4em 0em 0em 0em;
-        background-color: css("@window_bg_color");
         min-width: 25em;
       }
     }
   }
 
   .mpris {
+    margin: 0.4rem 0 0 0;
     @extend .module;
 
     box.horizontal {
