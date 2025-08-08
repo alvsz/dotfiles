@@ -9,13 +9,11 @@ import Gtk4SessionLock from "gi://Gtk4SessionLock";
 
 import Template from "./Lockscreen.blp";
 
-import LockscreenMpris from "../widget/lockscreenMpris";
-LockscreenMpris;
-import LockscreenNotifications from "../widget/lockscreenNotifications";
-LockscreenNotifications;
+import libTrem from "gi://libTrem?version=0.1";
 
 @register({
   GTypeName: "Lock",
+  Requires: [libTrem.LockscreenMpris, libTrem.NotificationCenter],
 })
 export default class Lock extends GObject.Object {
   private _locked = false;

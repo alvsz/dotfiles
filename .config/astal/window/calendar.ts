@@ -4,42 +4,63 @@ import libTrem from "gi://libTrem";
 
 import template from "./calendar.blp";
 import EventWidget from "../widget/event";
-import NotificationCenter from "../widget/notificationCenter";
-NotificationCenter;
 import mprisPlayerList from "../widget/mprisPlayerList";
 import { remove_children } from "../util";
-mprisPlayerList;
+import { Gio } from "astal";
+
+Gio._promisify(
+  libTrem.EventList.prototype,
+  "get_events_in_range",
+  "get_events_in_range_finish",
+);
+
+Gio._promisify(
+  libTrem.TodoList.prototype,
+  "get_tasks_until",
+  "get_tasks_until_finish",
+);
 
 @register({
   GTypeName: "Calendar",
   Template: template,
-  InternalChildren: ["calendar", "month_name", "events", "weather"],
+  Requires: [
+    libTrem.NotificationCenter,
+    mprisPlayerList,
+    libTrem.WeatherWidget,
+  ],
+  InternalChildren: ["calendar", "month_name", "events", "scrolled_window"],
 })
 export default class Calendar extends Astal.Window {
   declare _calendar: Gtk.Calendar;
   declare _month_name: Gtk.Label;
-  declare _weather: Gtk.Box;
   declare _events: Gtk.Box;
+  declare _weather: Gtk.Box;
+  declare _scrolled_window: Gtk.ScrolledWindow;
   declare caldav_service: libTrem.CalendarService;
-  @property(libTrem.Weather) declare weather: libTrem.Weather;
+  declare task_service: libTrem.TodoService;
+  @property(String) declare contact_info: string;
+  @property(Boolean) declare auto_update_weather: boolean;
 
   constructor() {
     super({
       application: App,
     });
 
-    this.weather = new libTrem.Weather({
-      app_id: App.application_id,
-      contact_info: "joao.aac@disroot.org",
-      auto_update: true,
-    });
+    this.contact_info = "joao.aac@disroot.org";
+    this.auto_update_weather = true;
+
     this.caldav_service = libTrem.CalendarService.new();
+    this.task_service = libTrem.TodoService.new();
 
-    this.weather.connect("notify::available", () => {
-      this._weather.visible = this.weather.available;
+    this.caldav_service.connect("changed", (s) => {
+      try {
+        this.on_day_selected();
+      } catch (e) {
+        logError(e);
+      }
     });
 
-    this.caldav_service.connect("changed", () => {
+    this.task_service.connect("changed", (s) => {
       try {
         this.on_day_selected();
       } catch (e) {
@@ -57,26 +78,16 @@ export default class Calendar extends Astal.Window {
     const start = GLib.DateTime.new_local(y, m, d, 0, 0, 0);
     const end = GLib.DateTime.new_local(y, m, d, 23, 59, 59);
 
-    const events = this.caldav_service.get_calendars().map((list) => {
-      if (!list) return;
-
-      return new Promise((resolve, reject) => {
-        list.get_events_in_range(start, end, (_, res) => {
-          try {
-            resolve(list.get_events_in_range_finish(res));
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
-    });
+    const events = this.caldav_service
+      .get_calendars()
+      .map((list) => list.get_events_in_range(start, end));
 
     Promise.all(events)
       .then((results) => {
-        const evs = results.flat() as libTrem.Event[];
-
+        const evs = results.flat();
         remove_children(this._events);
 
+        evs.sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec());
         evs.forEach((event) => {
           if (!event) return;
 
@@ -85,25 +96,5 @@ export default class Calendar extends Astal.Window {
         });
       })
       .catch(logError);
-  }
-
-  protected is_daytime() {
-    return this.weather.is_daytime
-      ? "daytime-sunset-symbolic"
-      : "daytime-sunrise-symbolic";
-  }
-  protected is_not_daytime() {
-    return this.weather.is_daytime
-      ? "daytime-sunrise-symbolic"
-      : "daytime-sunset-symbolic";
-  }
-
-  protected format_daytime() {
-    const sunset = this.weather.get_sunset();
-    const sunrise = this.weather.get_sunrise();
-
-    return this.weather.is_daytime
-      ? `${sunset} - ${sunrise}`
-      : `${sunrise} - ${sunset}`;
   }
 }

@@ -41,104 +41,18 @@ template $Calendar: Astal.Window {
         styles ["events"]
       }
 
-      Box weather {
-        orientation: vertical;
-        homogeneous: false;
-        valign: fill;
-        halign: fill;
-        visible: false;
-        styles ["weather"]
-
-        Box {
-          orientation: horizontal;
-          homogeneous: false;
-          valign: start;
-          halign: fill;
-          Image {
-            icon-name: bind template.weather as <libTrem.Weather>.icon-name;
-            styles ["main-icon"]
-          }
-          Label {
-            halign: start;
-            hexpand: true;
-            label: bind template.weather as <libTrem.Weather>.temp;
-            styles ["temp"]
-          }
-          Box {
-            orientation: vertical;
-            homogeneous: false;
-            valign: fill;
-            halign: end;
-            Label {
-              label: bind template.weather as <libTrem.Weather>.city-name;
-              justify: right;
-              halign: end;
-              styles ["city-name"]
-            }
-            Label {
-              label: bind template.weather as <libTrem.Weather>.sky;
-              styles ["sky"]
-            }
-          }
-        }
-        Box {
-          orientation: horizontal;
-          homogeneous: false;
-          valign: center;
-          halign: center;
-          Image {
-            icon-name: "raindrop-symbolic";
-          }
-          Label {
-            label:  bind template.weather as <libTrem.Weather>.humidity;
-          }
-        }
-        Box {
-          orientation: horizontal;
-          homogeneous: false;
-          valign: center;
-          halign: center;
-          Image {
-            icon-name: bind $is_daytime(template.weather as <libTrem.Weather>.is-daytime) as <string>;
-          }
-          Label {
-            label:  bind $format_daytime(template.weather as <libTrem.Weather>.is-daytime) as <string>;
-          }
-          Image {
-            icon-name: bind $is_not_daytime(template.weather as <libTrem.Weather>.is-daytime) as <string>;
-          }
-        }
-        Box {
-          orientation: horizontal;
-          homogeneous: false;
-          valign: center;
-          halign: center;
-          Image {
-            icon-name: "speedometer-symbolic";
-          }
-          Label {
-            label:  bind template.weather as <libTrem.Weather>.pressure;
-          }
-        }
-        Box {
-          orientation: horizontal;
-          homogeneous: false;
-          valign: center;
-          halign: center;
-          Image {
-            icon-name: "weather-windy-symbolic";
-          }
-          Label {
-            label:  bind template.weather as <libTrem.Weather>.wind;
-          }
-        }
+      libTrem.WeatherWidget {
+        app-id: bind template.application as <Gtk.Application>.application-id;
+        contact-info: bind template.contact-info;
+        auto-update: bind template.auto-update-weather;
       }
       $mprisPlayerList { }
     }
 
-    ScrolledWindow {
-      child: $NotificationCenter {
+    ScrolledWindow scrolled_window {
+      child: libTrem.NotificationCenter {
         hidden: false;
+        popup: false;
       };
       hscrollbar-policy: never;
       vexpand: true;
