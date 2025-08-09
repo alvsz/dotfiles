@@ -12,6 +12,7 @@ template $mprisPlayer: Box {
     valign: center;
     halign: start;
     file: bind template.player as <AstalMpris.Player>.cover-art;
+    visible: bind $cover_art_visible(template.player as <AstalMpris.Player>.cover-art) as <bool>;
     styles ["cover-art"]
   }
   Box {

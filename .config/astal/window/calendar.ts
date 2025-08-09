@@ -87,8 +87,7 @@ export default class Calendar extends Astal.Window {
         const evs = results.flat();
         remove_children(this._events);
 
-        evs.sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec());
-        evs.forEach((event) => {
+        evs.sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec()).forEach((event) => {
           if (!event) return;
 
           this._events.visible = true;

@@ -21,6 +21,10 @@ class mprisPlayer extends Gtk.Box {
     super({ player: player } as any);
   }
 
+  protected cover_art_visible() {
+    return this.player.cover_art != null;
+  }
+
   protected format_play_button() {
     if (this.player.playback_status == Mpris.PlaybackStatus.PLAYING)
       return icons.mpris.pause;
