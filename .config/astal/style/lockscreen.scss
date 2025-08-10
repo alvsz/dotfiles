@@ -51,6 +51,7 @@ window.Lockscreen {
     }
 
     .notification-center {
+    margin: 0.4rem 0 0 0;
       box.vertical {
         @extend .verticalSpacer;
       }
@@ -61,7 +62,6 @@ window.Lockscreen {
   }
 
   .mpris {
-    margin: 0.4rem 0 0 0;
     @extend .module;
 
     box.horizontal {

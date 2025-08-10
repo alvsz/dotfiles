@@ -91,7 +91,7 @@ export default class Calendar extends Astal.Window {
           if (!event) return;
 
           this._events.visible = true;
-          this._events.prepend(new EventWidget(event));
+          this._events.append(new EventWidget(event));
         });
       })
       .catch(logError);
