@@ -76,23 +76,35 @@ export default class Calendar extends Astal.Window {
     this._month_name.label = time.format("%B %Y") || "";
 
     const start = GLib.DateTime.new_local(y, m, d, 0, 0, 0);
+    const start_border = GLib.DateTime.new_local(y, m, d - 1, 0, 0, 0);
     const end = GLib.DateTime.new_local(y, m, d, 23, 59, 59);
+    const end_border = GLib.DateTime.new_local(y, m, d + 1, 23, 59, 59);
 
     const events = this.caldav_service
       .get_calendars()
-      .map((list) => list.get_events_in_range(start, end));
+      .map((list) => list.get_events_in_range(start_border, end_border));
 
     Promise.all(events)
       .then((results) => {
         const evs = results.flat();
         remove_children(this._events);
 
-        evs.sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec()).forEach((event) => {
-          if (!event) return;
+        evs
+          .filter((ev) => {
+            if (
+              ev.dtstart.to_unix() < end.to_unix() &&
+              ev.dtend.to_unix() > start.to_unix()
+            )
+              return true;
+            return false;
+          })
+          .sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec())
+          .forEach((event) => {
+            if (!event) return;
 
-          this._events.visible = true;
-          this._events.append(new EventWidget(event));
-        });
+            this._events.visible = true;
+            this._events.append(new EventWidget(event));
+          });
       })
       .catch(logError);
   }

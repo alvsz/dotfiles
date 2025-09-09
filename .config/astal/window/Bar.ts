@@ -9,18 +9,15 @@ import Template from "./Bar.blp";
 import icons from "../icons";
 
 import mprisButton from "../widget/barMprisButton";
-mprisButton;
 import networkIcon from "../widget/networkIcon";
-networkIcon;
 import sysTray from "../widget/sysTray";
-sysTray;
 import dwlBox from "../widget/dwlBox";
-dwlBox;
 
 @register({
   GTypeName: "Bar",
   Template: Template,
   InternalChildren: ["clock", "tray_toggle"],
+  Requires: [mprisButton, networkIcon, sysTray, dwlBox],
 })
 export default class Bar extends Astal.Window {
   declare _clock: Gtk.Label;
