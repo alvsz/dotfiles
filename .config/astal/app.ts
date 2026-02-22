@@ -7,6 +7,7 @@ import style from "./style/style.scss";
 import Bar from "./window/Bar";
 import Calendar from "./window/calendar";
 import NotificationPopups from "./window/NotificationPopups";
+import Dashboard from "./window/Dashboard";
 import { AuthenticationAgent } from "./service/polkitAgent";
 import PolkitDialog from "./window/Polkit";
 import Lock from "./window/Lockscreen";
@@ -19,13 +20,14 @@ const main = () => {
   new Calendar();
   new NotificationPopups();
   new AppMenu();
+  new Dashboard();
 
   const auth_agent = new AuthenticationAgent();
   auth_agent.enable();
   auth_agent.connect("initiate", (self, a) => print(new PolkitDialog(a, self)));
 
   const network_agent = libTrem.NetworkSecretHandler.new(App.application_id);
-  network_agent.enable(null);
+  network_agent.enable((source, res) => source?.enable_finish(res));
   network_agent.connect("initiate", (_, d) => print(new NetworkDialog(d)));
 
   monitorFile("./style/", (file) => {

@@ -9,7 +9,7 @@ import App from "resource:///com/github/Aylur/ags/app.js";
 // import Calendar from "./js/windows/calendar.js";
 import Dashboard from "./js/windows/dashboard.js";
 // import Polkit from "./js/windows/polkit.js";
-import NetworkAgentDialog from "./js/windows/networkSecretDialog.js";
+// import NetworkAgentDialog from "./js/windows/networkSecretDialog.js";
 
 // import polkitAgent from "./js/services/polkitAgent.js";
 // import networkAgent from "./js/services/networkAgent.js";

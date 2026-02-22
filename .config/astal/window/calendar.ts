@@ -4,7 +4,6 @@ import libTrem from "gi://libTrem";
 
 import template from "./calendar.blp";
 import EventWidget from "../widget/event";
-import mprisPlayerList from "../widget/mprisPlayerList";
 import { remove_children } from "../util";
 import { Gio } from "astal";
 
@@ -23,11 +22,7 @@ Gio._promisify(
 @register({
   GTypeName: "Calendar",
   Template: template,
-  Requires: [
-    libTrem.NotificationCenter,
-    mprisPlayerList,
-    libTrem.WeatherWidget,
-  ],
+  Requires: [libTrem.NotificationCenter, libTrem.WeatherWidget],
   InternalChildren: ["calendar", "month_name", "events", "scrolled_window"],
 })
 export default class Calendar extends Astal.Window {
@@ -38,6 +33,7 @@ export default class Calendar extends Astal.Window {
   declare _scrolled_window: Gtk.ScrolledWindow;
   declare caldav_service: libTrem.CalendarService;
   declare task_service: libTrem.TodoService;
+  declare events: libTrem.Event[];
   @property(String) declare contact_info: string;
   @property(Boolean) declare auto_update_weather: boolean;
 
@@ -51,10 +47,15 @@ export default class Calendar extends Astal.Window {
 
     this.caldav_service = libTrem.CalendarService.new();
     this.task_service = libTrem.TodoService.new();
+    this.events = [];
 
     this.caldav_service.connect("changed", (s) => {
       try {
-        this.on_day_selected();
+        this.on_month_selected();
+        this.events = this.caldav_service
+          .get_calendars()
+          .map((l) => l.get_events())
+          .flat();
       } catch (e) {
         logError(e);
       }
@@ -62,11 +63,13 @@ export default class Calendar extends Astal.Window {
 
     this.task_service.connect("changed", (s) => {
       try {
-        this.on_day_selected();
+        this.on_month_selected();
       } catch (e) {
         logError(e);
       }
     });
+
+    this.on_month_selected().catch(logError);
   }
 
   protected async on_day_selected() {
@@ -76,36 +79,46 @@ export default class Calendar extends Astal.Window {
     this._month_name.label = time.format("%B %Y") || "";
 
     const start = GLib.DateTime.new_local(y, m, d, 0, 0, 0);
-    const start_border = GLib.DateTime.new_local(y, m, d - 1, 0, 0, 0);
     const end = GLib.DateTime.new_local(y, m, d, 23, 59, 59);
-    const end_border = GLib.DateTime.new_local(y, m, d + 1, 23, 59, 59);
 
-    const events = this.caldav_service
-      .get_calendars()
-      .map((list) => list.get_events_in_range(start_border, end_border));
+    remove_children(this._events);
 
-    Promise.all(events)
-      .then((results) => {
-        const evs = results.flat();
-        remove_children(this._events);
-
-        evs
-          .filter((ev) => {
-            if (
-              ev.dtstart.to_unix() < end.to_unix() &&
-              ev.dtend.to_unix() > start.to_unix()
-            )
-              return true;
-            return false;
-          })
-          .sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec())
-          .forEach((event) => {
-            if (!event) return;
-
-            this._events.visible = true;
-            this._events.append(new EventWidget(event));
-          });
+    this.events
+      .filter((ev) => {
+        if (
+          ev.dtstart.to_unix() < end.to_unix() &&
+          ev.dtend.to_unix() > start.to_unix()
+        )
+          return true;
+        return false;
       })
-      .catch(logError);
+      .sort((a, b) => a.dtstart.to_unix_usec() - b.dtstart.to_unix_usec())
+      .forEach((event) => {
+        if (!event) return;
+
+        this._events.visible = true;
+        this._events.append(new EventWidget(event));
+      });
+  }
+
+  protected async on_month_selected() {
+    const time = this._calendar.get_date();
+    const [y, m, _d] = time.get_ymd();
+
+    this._month_name.label = time.format("%B %Y") || "";
+
+    const start_border = GLib.DateTime.new_local(y, m, 1, 0, 0, 0);
+    const end_border = start_border.add_months(1);
+    if (!end_border) return;
+
+    try {
+      this.caldav_service
+        .get_calendars()
+        .forEach((list) => list.get_events_in_range(start_border, end_border));
+    } catch (e) {
+      logError(e);
+    }
+
+    this.on_day_selected().catch(logError);
   }
 }

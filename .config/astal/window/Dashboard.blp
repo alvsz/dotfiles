@@ -1,0 +1,70 @@
+using Gtk 4.0;
+using Astal 4.0;
+using libTrem 0.1;
+
+template $Dashboard: Astal.Window {
+  layer: overlay;
+  halign: center;
+  valign: start;
+  visible: false;
+  styles ["Dashboard"]
+
+  Stack stack {
+    hhomogeneous: true;
+    vhomogeneous: false;
+    interpolate-size: true;
+    transition-type: slide_left_right;
+
+    Box base {
+      orientation: vertical;
+      homogeneous: false;
+      halign: fill;
+      valign: fill;
+      styles ["base"]
+
+      libTrem.UserCenter { }
+      $mprisPlayerList { }
+      libTrem.UPowerDevices { }
+      FlowBox {
+        max-children-per-line: 2;
+        min-children-per-line: 2;
+        selection-mode: none;
+        homogeneous: true;
+        Box {
+          orientation: horizontal;
+          homogeneous: false;
+          Button {
+            label: "wifi";
+            halign: fill;
+            hexpand: true;
+          }
+          Separator {
+            halign: end;
+          }
+          Button {
+            icon-name: "go-right";
+            clicked => $on_wifi_clicked();
+          }
+        }
+        Button {
+          label: "bluetooth";
+          clicked => $on_bluetooth_clicked();
+        }
+        Button {
+          label: "power profiles";
+          clicked => $on_power_profiles_clicked();
+        }
+      }
+    }
+    
+
+    libTrem.NetworkInfo wifis{
+      go-back => $on_go_back();
+    }
+
+    libTrem.BluetoothInfo bluetooths{
+      go-back => $on_go_back();
+    }
+  }
+
+}

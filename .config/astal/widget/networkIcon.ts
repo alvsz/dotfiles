@@ -1,4 +1,4 @@
-import { Gtk } from "astal/gtk4";
+import { Gtk, App } from "astal/gtk4";
 import { property, register } from "astal/gobject";
 
 import Network from "gi://AstalNetwork";

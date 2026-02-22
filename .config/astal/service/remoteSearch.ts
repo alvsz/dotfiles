@@ -1,5 +1,6 @@
 import { GLib, Gio } from "astal";
 import { Gtk } from "astal/gtk4";
+import GioUnix from "gi://GioUnix?version=2.0";
 // import GdkPixbuf from "gi://GdkPixbuf?version=2.0";
 import libTrem from "gi://libTrem?version=0.1";
 
@@ -67,7 +68,7 @@ export const setup_search = (search_settings: Gio.Settings) => {
       let desktop_id = null;
       try {
         desktop_id = keyfile.get_string(KEY_FILE_GROUP, "DesktopId");
-        app_info = Gio.DesktopAppInfo.new(desktop_id);
+        app_info = GioUnix.DesktopAppInfo.new(desktop_id);
         if (!app_info.should_show()) return;
       } catch (e) {
         log(`Ignoring search provider ${path}: missing DesktopId`);

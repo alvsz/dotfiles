@@ -31,7 +31,8 @@ template $Calendar: Astal.Window {
         Calendar calendar {
           show-heading: false;
 
-          notify => $on_day_selected();
+          notify::day => $on_day_selected();
+          notify::month => $on_month_selected();
         }
       }
 
@@ -46,7 +47,6 @@ template $Calendar: Astal.Window {
         contact-info: bind template.contact-info;
         auto-update: bind template.auto-update-weather;
       }
-      $mprisPlayerList { }
     }
 
     ScrolledWindow scrolled_window {

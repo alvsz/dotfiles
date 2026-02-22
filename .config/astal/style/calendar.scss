@@ -99,46 +99,4 @@ window.Calendar {
       @extend .verticalSpacer;
     }
   }
-
-  .mpris-list {
-    @extend .verticalSpacer;
-  }
-
-  .mpris {
-    @extend .module;
-    @extend .horizontalSpacer;
-
-    image.cover-art {
-      -gtk-icon-size: 5em;
-    }
-
-    .player-controls {
-      @extend .horizontalSpacer;
-      button {
-        padding: 0.1rem 0.3rem;
-      }
-    }
-
-    scale {
-      padding: 0.2rem 0rem;
-
-      trough {
-        highlight {
-          padding: 0.3rem;
-          background-color: css("@theme_fg_color");
-        }
-      }
-
-      slider {
-        all: unset;
-      }
-    }
-
-    .cava {
-      /* color: css("@accent_color"); */
-      min-height: 4rem;
-      min-width: 3rem;
-      margin: 1rem 1rem;
-    }
-  }
 }

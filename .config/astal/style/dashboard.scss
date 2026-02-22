@@ -1,0 +1,110 @@
+@use "sass:string";
+@use "./base.scss" as *;
+
+window.Dashboard {
+  @extend .basewindow;
+  min-width: 28em;
+  > *:first-child {
+    padding: 0rem;
+    margin: 0rem;
+  }
+  margin-right: 10px;
+
+  .userCenter {
+    .user-image {
+      -gtk-icon-size: 4.5rem;
+    }
+
+    revealer {
+      .vertical > * {
+        margin-top: 0.4rem;
+      }
+    }
+  }
+
+  .base {
+    padding: 1rem;
+  }
+
+  .header {
+    margin: 0rem;
+    border-top-right-radius: 0.6em;
+    border-top-left-radius: 0.6em;
+
+    background-color: css("@headerbar_bg_color");
+    padding: 0.5em;
+  }
+  .body {
+    @extend .verticalSpacer;
+    padding: 0.5rem 1rem;
+    > label {
+      font-weight: bold;
+    }
+    button {
+      margin-top: 0.4rem;
+      box {
+        @extend .horizontalSpacer;
+      }
+      label {
+        font-weight: normal;
+      }
+    }
+  }
+
+  .mpris-list {
+    @extend .verticalSpacer;
+  }
+
+  .mpris {
+    @extend .module;
+    @extend .horizontalSpacer;
+
+    image.cover-art {
+      -gtk-icon-size: 5em;
+    }
+
+    .player-controls {
+      @extend .horizontalSpacer;
+      button {
+        padding: 0.1rem 0.3rem;
+      }
+    }
+
+    scale {
+      padding: 0.2rem 0rem;
+
+      trough {
+        highlight {
+          padding: 0.3rem;
+          background-color: css("@theme_fg_color");
+        }
+      }
+
+      slider {
+        all: unset;
+      }
+    }
+
+    .cava {
+      /* color: css("@accent_color"); */
+      min-height: 4rem;
+      min-width: 3rem;
+      margin: 1rem 1rem;
+    }
+  }
+
+  .upowerDevices {
+    @extend .verticalSpacer;
+    .upowerDevice {
+      @extend .horizontalSpacer;
+      background-color: css("alpha(currentColor, 0.04)");
+      padding: 0.3em;
+      border-radius: 0.6em;
+
+      image {
+        -gtk-icon-size: 3rem;
+        // font-size: 3em;
+      }
+    }
+  }
+}
