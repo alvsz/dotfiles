@@ -3,15 +3,15 @@
 launch() {
 	# /usr/lib/gsd-xsettings &
 
-	agsv1 &
+	# agsv1 &
 
 	astal-notifd -d &
 
-	ags run --gtk4 -d ~/.config/astal &
+	ags run --gtk 4 -d ~/.config/astal &
 
 	systemctl --user start gammastep-indicator
 
-	pgrep udiskie || udiskie --tray &
+	# pgrep udiskie || udiskie --tray &
 
 	org.gnome.Geary --gapplication-service &
 
