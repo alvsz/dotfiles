@@ -27,7 +27,14 @@ const main = () => {
   auth_agent.connect("initiate", (self, a) => print(new PolkitDialog(a, self)));
 
   const network_agent = libTrem.NetworkSecretHandler.new(App.application_id);
-  network_agent.enable((source, res) => source?.enable_finish(res));
+  network_agent.enable((source, res) => {
+    print("enable");
+    try {
+      source?.enable_finish(res);
+    } catch (e) {
+      logError(e);
+    }
+  });
   network_agent.connect("initiate", (_, d) => print(new NetworkDialog(d)));
 
   monitorFile("./style/", (file) => {
