@@ -14,10 +14,11 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
  
 export QT_QPA_PLATFORMTHEME="qt5ct"
+# export QT_QPA_PLATFORMTHEME=gtk3
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export HISTFILE="$XDG_DATA_HOME/history"
 export PATH="$HOME/.local/bin:$PATH"
-export SAL_USE_VCLPLUGIN=gtk3
+export SAL_USE_VCLPLUGIN=qt6
  
 # ~/ Clean-up:
 export ANDROID_HOME="$XDG_DATA_HOME/android"
