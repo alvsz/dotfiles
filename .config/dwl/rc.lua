@@ -59,7 +59,7 @@ toggle_bar = function()
 
 	for _, j in ipairs(monitors) do
 		if j.focused then
-			os.execute("ags toggle Bar-" .. j.name)
+			os.execute("ags -i astal toggle Bar-" .. j.name)
 		end
 	end
 end
