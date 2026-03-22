@@ -3,6 +3,7 @@ Description=update duckdns address
 
 [Timer]
 OnCalendar=hourly
+Unit=duckdns.service
 
 [Install]
 WantedBy=timers.target
