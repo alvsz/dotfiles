@@ -81,6 +81,7 @@ dwl.cfg = {
 
 	env = {
 		["XDG_CURRENT_DESKTOP"] = "wlroots",
+		["_JAVA_AWT_WM_NONREPARENTING"] = 1,
 	},
 
 	theme = {

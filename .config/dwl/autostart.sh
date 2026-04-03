@@ -17,7 +17,9 @@ launch() {
 
 	pgrep swayidle || swayidle timeout 600 "astal lock" lock "astal lock" timeout 420 'dpms off' resume 'dpms on' &
 
-	pgrep swww-daemon || swww-daemon &
+	pgrep awww-daemon || awww-daemon &
+
+	pgrep ibus || ibus start --type=wayland &
 
 	pgrep kdeconnectd || kdeconnectd &
 

@@ -12,6 +12,10 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
+
+export DEVKITPRO=/opt/devkitpro
+export DEVKITARM=/opt/devkitpro/devkitARM
+export DEVKITPPC=/opt/devkitpro/devkitPPC
  
 export QT_QPA_PLATFORMTHEME="qt5ct"
 # export QT_QPA_PLATFORMTHEME=gtk3
@@ -19,6 +23,11 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export HISTFILE="$XDG_DATA_HOME/history"
 export PATH="$HOME/.local/bin:$PATH"
 export SAL_USE_VCLPLUGIN=qt6
+
+export GTK_IM_MODULE=wayland
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULES=wayland;ibus
+export QT_IM_MODULE=ibus
  
 # ~/ Clean-up:
 export ANDROID_HOME="$XDG_DATA_HOME/android"
@@ -34,8 +43,6 @@ export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
 export PERL_CPANM_HOME="$XDG_CACHE_HOME/cpanm"
 
 # export MOZ_DRM_DEVICE="/dev/dri/by-path/pci-0000:$(lspci | grep -E '(VGA|3D).*Intel' | awk '{print $1}')-render"
-#
-export _JAVA_AWT_WM_NONREPARENTING=1
 
 if [[ "$XDG_SESSION_TYPE" = "x11" ]]; then
     export MOZ_USE_XINPUT2=1
